@@ -3,7 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Team
 from .forms import TeamForm
 
-# Create a new team
+
+def home(request):
+    return render(request, 'index.html')
+
 @login_required
 def team_create(request):
     if request.method == 'POST':
