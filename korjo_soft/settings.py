@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
-import dj_database_url
+#import dj_database_url
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -64,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "korjo_soft.logging.RequestIDMiddleware",
 ]
 
 ROOT_URLCONF = "korjo_soft.urls"
@@ -104,8 +105,8 @@ DATABASES = {
 # Update database configuration from $DATABASE_URL.
 
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES["default"].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES["default"].update(db_from_env)
 
 
 # Password validation
@@ -193,9 +194,9 @@ SPECTACULAR_SETTINGS = {
 
 # cors headers
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
-
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+# CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+#
+# CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 
 
@@ -205,4 +206,59 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
+}
+
+
+# --- LOGGING ---
+LOG_REQUESTS = True
+LOG_USER_ATTRIBUTE = "email"
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'request_id': {
+            '()': 'korjo_soft.logging.RequestIDFilter'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'class': 'korjo_soft.logging.IgnoreMissingFormatter',
+            'format': "[%(asctime)s] %(levelname)s %(message)s  [%(request_id)s %(name)s:%(lineno)s]",
+            'datefmt': "%Y-%m-%d %H:%M:%S"
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'korjo_soft.logging.RotatingFileHandlerMakeDir',
+            'filename': 'logs/info.log',
+            'backupCount': 200,
+            'maxBytes': 50 * 1024 * 1024,  # 50 MB
+            'formatter': 'verbose',
+            'filters': ['request_id']
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'FDL_RECRUITMENT': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+        },
+    },
 }
