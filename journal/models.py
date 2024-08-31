@@ -179,5 +179,5 @@ class GeneralJournal(models.Model):
 
     objects = JournalManager()
 
-    class Meta:
-        unique_together = ('date', 'accounts', 'member')
+    # class Meta:
+    #     unique_together = ('date', 'accounts', 'member')
