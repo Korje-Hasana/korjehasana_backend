@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
-import dj_database_url
+#import dj_database_url
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -105,8 +105,8 @@ DATABASES = {
 # Update database configuration from $DATABASE_URL.
 
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES["default"].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES["default"].update(db_from_env)
 
 
 # Password validation
