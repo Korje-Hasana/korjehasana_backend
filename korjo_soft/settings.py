@@ -18,10 +18,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 
 # False if not in os.environ because of casting above
-DEBUG = False #env("DEBUG")
+DEBUG = env("DEBUG")
 
 #ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
-ALLOWED_HOSTS = ['korjehasana.com', 'localhost:8000']
+ALLOWED_HOSTS = ['korjehasana.com', 'localhost']
 
 # Application definition
 
@@ -197,7 +197,6 @@ SPECTACULAR_SETTINGS = {
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = [
     'https://korjehasana.com',
-    'korjehasana.com'
 ]
 # CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 #
