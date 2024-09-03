@@ -32,6 +32,7 @@
                     <td>{{ journal.balance }}</td>
                     <td>
                         <a class="btn btn-primary" href="{% url 'loan_disbursement' journal.member_id %}">কর্জ প্রদান</a>
+                        <a class="btn btn-primary" href="{% url 'withdrawal_posting' journal.member_id %}">উত্তোলন</a>
                     </td>
                 </tr>
 

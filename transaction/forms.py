@@ -26,6 +26,10 @@ class InstallmentForm(forms.Form):
     amount = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
 
+class WithdrawForm(DepositForm):
+    pass
+
+
 class LoanDisbursementForm(forms.ModelForm):
     class Meta:
         model = Loan
