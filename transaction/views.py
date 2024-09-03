@@ -13,7 +13,7 @@ from journal.models import GeneralJournal
 from peoples.models import Member
 from transaction.forms import InstallmentForm
 from transaction.utils import format_savings_date, format_loan_data
-from .forms import DepositForm, MemberChoiceForm, LoanDisbursementForm
+from .forms import DepositForm, MemberChoiceForm, LoanDisbursementForm, WithdrawForm
 
 
 from .models import Loan
@@ -202,3 +202,42 @@ class LoanDisbursementView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         messages.error(self.request, 'There was an error in the form. Please correct the issues below.')
         return super().form_invalid(form)
+
+
+class WithdrawalPostingView(LoginRequiredMixin, View):
+    template_name = 'transaction/withdrawal_posting.html'
+
+    def get(self, request, member_id):
+        member = get_object_or_404(Member, id=member_id)
+        withdraw_form = WithdrawForm()
+
+        context = {
+            "withdraw_form": withdraw_form,
+            "member": member,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, member_id):
+        member = get_object_or_404(Member, id=member_id)
+
+        withdraw_form = WithdrawForm(request.POST)
+        if withdraw_form.is_valid():
+            date = withdraw_form.cleaned_data['date']
+            amount = withdraw_form.cleaned_data['amount']
+            try:
+                GeneralJournal.objects.create_withdraw_entry(date, member, amount)
+                messages.success(request, f'{member.name} {amount} টাকা উত্তোলন করা হয়েছে')
+                return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id':member_id}))
+            except IntegrityError as e:
+                messages.error(request, str(e))
+                return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id': member_id}))
+
+
+    def get_member(self, team_id, serial_number):
+        if team_id and serial_number:
+            try:
+                return Member.objects.get(team=team_id, serial_number=serial_number)
+            except Member.DoesNotExist:
+                messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
+        return None
