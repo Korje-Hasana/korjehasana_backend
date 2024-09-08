@@ -36,7 +36,7 @@ class Member(models.Model):
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default="male")
     serial_number = models.IntegerField(default=1)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    team = models.ForeignKey("organization.Team", on_delete=models.RESTRICT)
+    team = models.ForeignKey("organization.Team", on_delete=models.RESTRICT, related_name='members')
     branch = models.ForeignKey("organization.Branch", on_delete=models.RESTRICT)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

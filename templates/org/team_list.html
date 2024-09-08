@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="card">
+<div class="card mt-4">
     <div class="card-header">
         দলের নাম
     </div>
@@ -13,7 +13,10 @@
         {% for team in teams %}
             <tr>
                 <td>
-                    <a href="{% url 'deposit_list' team.id %}">{{ team.name }}</a>
+                    <a href="{% url 'deposit_list' team.id %}">{{ team.name }} ({{ team.total_member_count }})</a>
+                </td>
+                <td>
+                    <a class="btn btn-success" href="{% url 'create-member' team.id %}">সদস্য ভর্তি</a>
                 </td>
                 <td>
                     <a class="btn btn-success" href="{% url 'deposit_posting' %}?team={{team.id}}&serial_number=1">সঞ্চয় জমা</a>

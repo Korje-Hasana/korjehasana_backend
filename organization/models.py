@@ -2,6 +2,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
+from django.urls import reverse
 from django.db import models
 from django.db.models import Sum
 
@@ -125,6 +126,9 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('deposit_list', kwargs={'team_id': self.id})
+
     def total_unpaid_loan(self):
         return self.loan_set.filter(is_paid=False).aggregate(Sum("total_due"))[
             "total_due__sum"
@@ -137,3 +141,6 @@ class Team(models.Model):
 
     def active_loan(self):
         return self.loan_set.filter(is_paid=False).count()
+
+    def total_member_count(self):
+        return self.members.count()

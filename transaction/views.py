@@ -7,9 +7,11 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.db import IntegrityError
+from django.db.models import Q, Sum
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from journal.models import GeneralJournal
+from organization.models import Branch
 from peoples.models import Member
 from transaction.forms import InstallmentForm
 from transaction.utils import format_savings_date, format_loan_data
@@ -21,7 +23,30 @@ from .models import Loan
 
 @login_required
 def dashboard(request):
-    return render(request, 'transaction/dashboard.html')
+    branch_journal = GeneralJournal.objects.filter(branch=request.user.branch)
+    balance = branch_journal.filter(accounts__code='CA') \
+        .aggregate(balance=Sum('debit') - Sum('credit'))['balance']
+
+    total_deposit = branch_journal.filter(accounts__code='DE').aggregate(deposit=Sum('credit'))['deposit']
+    total_withdraw = branch_journal.filter(accounts__code='WI').aggregate(withdraw=Sum('debit'))['withdraw']
+    if not total_deposit: total_deposit = 0
+    if not total_withdraw: total_withdraw = 0
+
+    total_loan = branch_journal.filter(accounts__code='LO').aggregate(loan=Sum('debit'))['loan']
+    total_installment = branch_journal.filter(accounts__code='IN').aggregate(loan=Sum('credit'))['loan']
+    if not total_loan: total_loan = 0
+    if not total_installment: total_installment = 0
+
+    # Sum of members current balance
+
+    context = {
+        "deposit_balance": total_deposit - total_withdraw,  # সঞ্চয় স্থিতি
+        "loan_balance": total_loan - total_installment,
+        "total_expense": "total_expense",
+        "total_income": "total_income",
+        "balance": balance,
+    }
+    return render(request, 'transaction/dashboard.html', context)
 
 
 @login_required
@@ -35,7 +60,8 @@ def deposit_list(request, team_id):
         savings_data = format_savings_date(member, now.month)
         data.append(savings_data)
     context = {
-        'journals': data
+        'journals': data,
+        'team_id': team_id
     }
 
     return render(request, 'transaction/deposit_list.html', context)
