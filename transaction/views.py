@@ -23,7 +23,8 @@ from .models import Loan
 
 @login_required
 def dashboard(request):
-    branch_journal = GeneralJournal.objects.filter(branch=request.user.branch)
+    branch = request.user.branch
+    branch_journal = GeneralJournal.objects.filter(branch=branch)
     balance = branch_journal.filter(accounts__code='CA') \
         .aggregate(balance=Sum('debit') - Sum('credit'))['balance']
 
@@ -45,6 +46,7 @@ def dashboard(request):
         "total_expense": "total_expense",
         "total_income": "total_income",
         "balance": balance,
+        "branch": branch
     }
     return render(request, 'transaction/dashboard.html', context)
 
