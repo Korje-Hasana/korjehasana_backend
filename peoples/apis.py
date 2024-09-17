@@ -27,7 +27,7 @@ class MemberListCreateView(ListCreateAPIView):
     search_fields = ["name", "mobile_number"]
 
     def get_queryset(self):
-        return Member.objects.filter(branch=self.request.user.branch)
+        return Member.active_objects.filter(branch=self.request.user.branch)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)

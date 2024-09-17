@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.core.exceptions import ValidationError
 
 
 class LedgerType(models.Model):
@@ -98,6 +99,9 @@ class JournalManager(models.Manager):
         return entry1
 
     def create_withdraw_entry(self, date, member, amount):
+        member_balance = self.get_member_balance(member)
+        if amount > member_balance:
+            raise ValidationError("Insufficient balance")
         withdraw_account_payable = Ledger.objects.get(code='WI')
         branch = member.branch
         remarks = f'{member.name} withdraw {amount}'
@@ -130,12 +134,9 @@ class JournalManager(models.Manager):
         return False
 
     def get_member_balance(self, member):
-        print("member: ", member)
         members_trans = self.get_queryset().filter(member=member, accounts__ledger_type__code='LP')  # Account Payable
-        print(members_trans)
         total_debit = members_trans.aggregate(total_debit=Sum('debit'))['total_debit']
         total_credit = members_trans.aggregate(total_credit=Sum('credit'))['total_credit']
-        print("debit, credit ", total_debit, total_credit)
         if total_credit:
             return total_credit - total_debit
         return 0

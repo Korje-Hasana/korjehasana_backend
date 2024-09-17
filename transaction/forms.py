@@ -35,6 +35,16 @@ class LoanDisbursementForm(forms.ModelForm):
         model = Loan
         fields = ['date', 'amount', 'total_installment']
 
+        widgets = {
+            'date': forms.DateInput(attrs={'class': 'form-control'}),
+            'amount': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
+            'total_installment': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(LoanDisbursementForm, self).__init__(*args, **kwargs)
+        self.fields['total_installment'].initial = 24
+
     def clean(self):
         cleaned_data = super().clean()
         amount = cleaned_data.get('amount')

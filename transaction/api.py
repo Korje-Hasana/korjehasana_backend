@@ -141,7 +141,7 @@ class MemberSavingsData(APIView):
         team = self.request.query_params.get("team", None)
         # staff_branch = request.user.branch
         # members = Member.objects.filter(branch=staff_branch)
-        members = Member.objects.filter(team__id=team_id).order_by("serial_number")
+        members = Member.active_objects.filter(team__id=team_id).order_by("serial_number")
 
         # TODO: If not needed, remove this if
         if team:

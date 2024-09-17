@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mt-4">
+  <div class="card-header">
+    সদস্য মুছুন
+  </div>
+  <div class="card-body">
+    <h2>সদস্য ডিলেট করুন</h2>
+    {% if member.balance > 0 or member.has_active_loan %}
+      <p>সদস্য ডিলেট করা যাবেনা, সদস্যের একাউন্টে টাকা আছে অথবা অপরিশোধিত কর্জ আছে </p>
+    {% else %}
+      <p>Are you sure you want to delete "{{ member.name }}"?</p>
+
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+      </form>
+    {% endif %}
+
+    </div>
+  <div class="card-footer">
+    <a href="{% url 'member_detail' member.pk %}" class="btn btn-success">Cancel</a>
+  </div>
+</div>
+
+{% endblock %}

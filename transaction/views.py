@@ -7,11 +7,12 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 from django.db.models import Q, Sum
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from journal.models import GeneralJournal
-from organization.models import Branch
+from organization.models import Branch, Team
 from peoples.models import Member
 from transaction.forms import InstallmentForm
 from transaction.utils import format_savings_date, format_loan_data
@@ -55,7 +56,7 @@ def dashboard(request):
 def deposit_list(request, team_id):
     data = []
     now = datetime.now()
-    members = Member.objects.filter(team__id=team_id).order_by("serial_number")
+    members = Member.active_objects.filter(team__id=team_id).order_by("serial_number")
 
     members = members.filter(team=team_id)
     for member in members:
@@ -79,12 +80,15 @@ def loan_list(request, team_id=None):
     ).select_related("member").order_by("member__serial_number")
 
     if team_id:
-        active_loans = active_loans.filter(team=team_id)
+        team = Team.objects.get(id=team_id)
+        active_loans = active_loans.filter(team=team)
     for loan in active_loans:
         installment_data = format_loan_data(loan, month)
         data.append(installment_data)
+
     context = {
-        'journals': data
+        'journals': data,
+        'team': team or None
     }
 
     return render(request, 'transaction/loan_list.html', context)
@@ -106,6 +110,7 @@ class DepositPostingView(LoginRequiredMixin, View):
             "deposit_form": deposit_form,
             "member": member,
             "team_id": team_id,
+            "serial_number": serial_number,
             "next_sl": int(serial_number) + 1
         }
 
@@ -141,7 +146,7 @@ class DepositPostingView(LoginRequiredMixin, View):
     def get_member(self, team_id, serial_number):
         if team_id and serial_number:
             try:
-                return Member.objects.get(team=team_id, serial_number=serial_number)
+                return Member.active_objects.get(team=team_id, serial_number=serial_number)
             except Member.DoesNotExist:
                 messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
         return None
@@ -155,7 +160,7 @@ def installment_posting(request):
     serial_number = request.GET.get('serial_number', 1)
     if team_id and serial_number:
         try:
-            member = Member.objects.get(team=team_id, serial_number=serial_number)
+            member = Member.active_objects.get(team=team_id, serial_number=serial_number)
             loan = member.get_my_loan()
         except:
             messages.error(request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
@@ -257,7 +262,7 @@ class WithdrawalPostingView(LoginRequiredMixin, View):
                 GeneralJournal.objects.create_withdraw_entry(date, member, amount)
                 messages.success(request, f'{member.name} {amount} টাকা উত্তোলন করা হয়েছে')
                 return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id':member_id}))
-            except IntegrityError as e:
+            except (IntegrityError, ValidationError) as e:
                 messages.error(request, str(e))
                 return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id': member_id}))
 
@@ -265,7 +270,7 @@ class WithdrawalPostingView(LoginRequiredMixin, View):
     def get_member(self, team_id, serial_number):
         if team_id and serial_number:
             try:
-                return Member.objects.get(team=team_id, serial_number=serial_number)
+                return Member.active_objects.get(team=team_id, serial_number=serial_number)
             except Member.DoesNotExist:
                 messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
         return None

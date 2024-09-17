@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 
 from journal.models import GeneralJournal
@@ -28,6 +29,11 @@ GENDER_CHOICES = (
 )
 
 
+class MemberManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
 class Member(models.Model):
     name = models.CharField(max_length=150)
     mobile_number = models.CharField(max_length=11, blank=True, null=True)
@@ -42,8 +48,11 @@ class Member(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
+    active_objects = MemberManager()
+
     class Meta:
-        unique_together = ("team", "serial_number")
+        unique_together = ("team", "serial_number", "is_active")
 
     def clean(self):
         super().clean()
@@ -52,6 +61,9 @@ class Member(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('member_detail', kwargs={'pk': self.id})
 
     def balance(self):
         return GeneralJournal.objects.get_member_balance(self)

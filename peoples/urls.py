@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import create_member
+from .views import create_member, MemberDeleteView, MemberDetailView, MemberUpdateView
 
 
 urlpatterns = [
-    path('members/<int:team_id>/crate/', create_member, name='create-member')
+    path('members/<int:team_id>/crate/', create_member, name='create-member'),
+    path('member/<int:pk>/', MemberDetailView.as_view(), name='member_detail'),
+    path('member/<int:pk>/update/', MemberUpdateView.as_view(), name='member_update'),
+    path('member/<int:pk>/delete/', MemberDeleteView.as_view(), name='member_delete'),
 ]

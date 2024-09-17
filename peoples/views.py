@@ -1,10 +1,13 @@
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, UpdateView, DeleteView, View
 from django.contrib import messages
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Member
 from .forms import MemberForm
 from organization.models import Branch, Team
+
 
 
 def create_member(request, team_id):
@@ -30,3 +33,34 @@ def create_member(request, team_id):
         form = MemberForm()
 
     return render(request, 'people/create_member.html', {'form': form, 'team': team})
+
+
+class MemberDetailView(DetailView):
+    model = Member
+    template_name = 'people/member_detail.html'
+    context_object_name = 'member'
+
+
+class MemberUpdateView(UpdateView):
+    model = Member
+    form_class = MemberForm
+    template_name = 'people/member_update.html'
+    context_object_name = 'member'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class MemberDeleteView(View):
+    template_name = 'people/member_confirm_delete.html'
+
+    def get(self, request, pk):
+        member = get_object_or_404(Member, pk=pk)
+        return render(request, self.template_name, {'member': member})
+
+    def post(self, request, pk):
+        member = get_object_or_404(Member, pk=pk)
+        member.is_active = False  # Soft delete by setting is_active to False
+        member.save()
+        messages.success(request, f"Member '{member.name}' has been deactivated.")
+        return redirect(reverse_lazy('deposit_list'), args={'team_id': member.team.id})

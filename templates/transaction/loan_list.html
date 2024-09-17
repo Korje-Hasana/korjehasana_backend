@@ -3,9 +3,9 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card mt-4">
     <div class="card-header">
-        কর্জ শিট
+        কর্জ শিট - {{ team }}
     </div>
     <div class="card-body">
         <table class="table">
@@ -23,7 +23,7 @@
             {% for journal in journals %}
                 <tr>
                     <td>{{ journal.sl }}</td>
-                    <td>{{ journal.member_name }}</td>
+                    <td><a href="{% url 'member_detail' journal.member_id %}">{{ journal.member_name }}</a></td>
                     <td>{{ journal.guardian_name }}</td>
                     <td>{{ journal.loan_amount }}</td>
                     <td>{{ journal.week1 }}</td>

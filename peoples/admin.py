@@ -14,5 +14,6 @@ class StaffAdmin(admin.ModelAdmin):
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'guardian_name', 'serial_number', 'team')
+    list_display = ('id', 'name', 'serial_number', 'team', 'is_active')
     search_fields = ('name',)
+    list_filter = ('team', 'is_active', 'branch')
