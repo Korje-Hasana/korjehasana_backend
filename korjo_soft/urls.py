@@ -36,7 +36,8 @@ urlpatterns = [
 
     path("dashboard/transactions/", include("transaction.urls")),
     path("dashboard/org/", include("organization.urls")),
-    path("accounts/", include("accounts.urls"))
+    path("accounts/", include("accounts.urls")),
+    path("loan/", include("loan.urls")),
 ]
 
 if settings.DEBUG:

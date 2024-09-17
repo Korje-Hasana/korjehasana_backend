@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>কর্জ তালিকা</span>
+    </div>
+    <div class="card-body">
+        <form method="get">
+    <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">Member</a></th>
+            <th><a href="?order_by=date&direction={{ request.GET.direction|default:'asc' }}">Date</a></th>
+            <th><a href="?order_by=amount&direction={{ request.GET.direction|default:'asc' }}">Amount</a></th>
+            <th>Paid</th>
+            <th>Due</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+            <tr>
+                <td>{{ loan.member.name }}</td>
+                <td>{{ loan.date }}</td>
+                <td>{{ loan.amount }}</td>
+                <td>{{ loan.total_paid }}</td>
+                <td>{{ loan.total_due }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No loans found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if loans.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ loans.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ loans.number }} of {{ loans.paginator.num_pages }}.
+        </span>
+
+        {% if loans.has_next %}
+            <a href="?page={{ loans.next_page_number }}">Next</a>
+            <a href="?page={{ loans.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </span>
+</div>
+
+    </div>
+</div>
+
+{% endblock %}
