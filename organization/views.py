@@ -12,11 +12,16 @@ def team_create(request):
     if request.method == 'POST':
         form = TeamForm(request.POST)
         if form.is_valid():
-            form.save()
+            team = form.save(commit=False)
+            team.branch = request.user.branch
+            team.owner = request.user
+            team.save()
             return redirect('team_list')
-    else:
-        form = TeamForm()
-    return render(request, 'team_form.html', {'form': form})
+
+
+    form = TeamForm(request.POST or None)
+    print(form.errors)
+    return render(request, 'org/team_form.html', {'form': form})
 
 
 # Read/Display list of teams

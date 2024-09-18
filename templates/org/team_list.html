@@ -4,8 +4,9 @@
 
 {% block content %}
 <div class="card mt-4">
-    <div class="card-header">
-        দলের নাম
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>দলের নাম</span>
+        <a class="btn btn-success" href="{% url 'team_create' %}"><i class="icon-plus"></i></a>
     </div>
     <div class="card-body">
         <table class="table table-bordered">

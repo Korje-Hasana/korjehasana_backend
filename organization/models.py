@@ -20,29 +20,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Division(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class District(models.Model):
-    name = models.CharField(max_length=50)
-    division = models.ForeignKey(Division, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
-class Thana(models.Model):
-    name = models.CharField(max_length=50)
-    district = models.ForeignKey(District, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
 class Organization(models.Model):
     name = models.CharField(max_length=255, db_index=True, unique=True)
     code = models.IntegerField(unique=True, db_index=True)
@@ -117,7 +94,7 @@ class BranchMember(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=150)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True)
 
     class Meta:
