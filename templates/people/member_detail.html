@@ -53,12 +53,19 @@
             </div>
         </div>
     </div>
-    <div class="card-footer">
-        <a class="btn btn-success" href="{% url 'member_update' member.pk %}" >Edit</a>
-        <a class="btn btn-danger" href="{% url 'member_delete' member.pk %}" >Delete</a>
-        <a class="btn btn-primary" href="{% url 'loan_disbursement' member.id %}">কর্জ প্রদান</a>
-        <a class="btn btn-warning" href="{% url 'installment_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">কর্জ ফেরত</a>
-        <a class="btn btn-secondary" href="{% url 'withdrawal_posting' member.id %}">উত্তোলন</a>
+    <div class="card-footer d-flex justify-content-between">
+        <span>
+            <a class="btn btn-success" href="{% url 'deposit_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">সঞ্চয় জমা</a>
+            <a class="btn btn-primary" href="{% url 'loan_disbursement' member.id %}">কর্জ প্রদান</a>
+            <a class="btn btn-warning" href="{% url 'installment_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">কর্জ ফেরত</a>
+            <a class="btn btn-secondary" href="{% url 'withdrawal_posting' member.id %}">উত্তোলন</a>
+        </span>
+        <span>
+            <a class="btn btn-success" href="{% url 'member_update' member.pk %}" >Edit</a>
+            <a class="btn btn-danger" href="{% url 'member_delete' member.pk %}" >Delete</a>
+        </span>
+
+
     </div>
 </div>
 

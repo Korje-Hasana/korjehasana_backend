@@ -133,8 +133,11 @@ class JournalManager(models.Manager):
             return True
         return False
 
-    def get_member_balance(self, member):
+    def get_member_balance(self, member, month=None):
         members_trans = self.get_queryset().filter(member=member, accounts__ledger_type__code='LP')  # Account Payable
+        if month:
+            members_trans = members_trans.filter(date__month__lte=month)
+
         total_debit = members_trans.aggregate(total_debit=Sum('debit'))['total_debit']
         total_credit = members_trans.aggregate(total_credit=Sum('credit'))['total_credit']
         if total_credit:
