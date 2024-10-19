@@ -6,7 +6,7 @@ def format_savings_date(member, month):
     balance = 0
     member_savings = GeneralJournal.objects.filter(member=member, accounts__code='DE')
     current_month_savings = member_savings.filter(date__month=month)
-    balance = GeneralJournal.objects.get_member_balance(member)
+    balance = GeneralJournal.objects.get_member_balance(member, month)
 
     # If no current month savings data, get last savings balance
     # if not current_month_savings:

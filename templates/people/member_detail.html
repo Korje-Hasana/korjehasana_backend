@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header">
+        সদস্য বিবরন
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th scope="row">সদস্যের নাম</th>
+                        <td>{{ member.name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">অভিভাবকের নাম</th>
+                        <td>{{ member.guardian_name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">দলের নাম</th>
+                        <td>{{ member.team }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">সিরিয়াল নম্বর</th>
+                        <td>{{ member.serial_number }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th scope="row">সঞ্চয় স্থিতি</th>
+                        <td>{{ member.balance }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">কর্জের পরিমান</th>
+                        <td>{{ member.get_my_loan.amount }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">কর্জের তারিখ</th>
+                        <td>{{  member.get_my_loan.date }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">কর্জ স্থিতি</th>
+                        <td>{{  member.get_my_loan.total_due }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <span>
+            <a class="btn btn-success" href="{% url 'deposit_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">সঞ্চয় জমা</a>
+            <a class="btn btn-primary" href="{% url 'loan_disbursement' member.id %}">কর্জ প্রদান</a>
+            <a class="btn btn-warning" href="{% url 'installment_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">কর্জ ফেরত</a>
+            <a class="btn btn-secondary" href="{% url 'withdrawal_posting' member.id %}">উত্তোলন</a>
+        </span>
+        <span>
+            <a class="btn btn-success" href="{% url 'member_update' member.pk %}" >Edit</a>
+            <a class="btn btn-danger" href="{% url 'member_delete' member.pk %}" >Delete</a>
+        </span>
+
+
+    </div>
+</div>
+
+
+{% endblock %}

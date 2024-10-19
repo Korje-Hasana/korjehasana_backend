@@ -7,13 +7,16 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
+from django.db.models import Q, Sum
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from journal.models import GeneralJournal
+from organization.models import Branch, Team
 from peoples.models import Member
 from transaction.forms import InstallmentForm
 from transaction.utils import format_savings_date, format_loan_data
-from .forms import DepositForm, MemberChoiceForm, LoanDisbursementForm
+from .forms import DepositForm, MemberChoiceForm, LoanDisbursementForm, WithdrawForm
 
 
 from .models import Loan
@@ -21,21 +24,50 @@ from .models import Loan
 
 @login_required
 def dashboard(request):
-    return render(request, 'transaction/dashboard.html')
+    branch = request.user.branch
+    branch_journal = GeneralJournal.objects.filter(branch=branch)
+    balance = branch_journal.filter(accounts__code='CA') \
+        .aggregate(balance=Sum('debit') - Sum('credit'))['balance']
+
+    total_deposit = branch_journal.filter(accounts__code='DE').aggregate(deposit=Sum('credit'))['deposit']
+    total_withdraw = branch_journal.filter(accounts__code='WI').aggregate(withdraw=Sum('debit'))['withdraw']
+    if not total_deposit: total_deposit = 0
+    if not total_withdraw: total_withdraw = 0
+
+    total_loan = branch_journal.filter(accounts__code='LO').aggregate(loan=Sum('debit'))['loan']
+    total_installment = branch_journal.filter(accounts__code='IN').aggregate(loan=Sum('credit'))['loan']
+    if not total_loan: total_loan = 0
+    if not total_installment: total_installment = 0
+
+    # Sum of members current balance
+
+    context = {
+        "deposit_balance": total_deposit - total_withdraw,  # সঞ্চয় স্থিতি
+        "loan_balance": total_loan - total_installment,
+        "total_expense": "total_expense",
+        "total_income": "total_income",
+        "balance": balance,
+        "branch": branch
+    }
+    return render(request, 'transaction/dashboard.html', context)
 
 
 @login_required
 def deposit_list(request, team_id):
-    data = []
     now = datetime.now()
-    members = Member.objects.filter(team__id=team_id).order_by("serial_number")
+    month = request.GET.get('month', now.month)
 
+    data = []
+    members = Member.active_objects.filter(team__id=team_id).order_by("serial_number")
     members = members.filter(team=team_id)
+
     for member in members:
-        savings_data = format_savings_date(member, now.month)
+        savings_data = format_savings_date(member, month)
         data.append(savings_data)
     context = {
-        'journals': data
+        'journals': data,
+        'team_id': team_id,
+        'month': month
     }
 
     return render(request, 'transaction/deposit_list.html', context)
@@ -51,12 +83,15 @@ def loan_list(request, team_id=None):
     ).select_related("member").order_by("member__serial_number")
 
     if team_id:
-        active_loans = active_loans.filter(team=team_id)
+        team = Team.objects.get(id=team_id)
+        active_loans = active_loans.filter(team=team)
     for loan in active_loans:
         installment_data = format_loan_data(loan, month)
         data.append(installment_data)
+
     context = {
-        'journals': data
+        'journals': data,
+        'team': team or None
     }
 
     return render(request, 'transaction/loan_list.html', context)
@@ -78,6 +113,7 @@ class DepositPostingView(LoginRequiredMixin, View):
             "deposit_form": deposit_form,
             "member": member,
             "team_id": team_id,
+            "serial_number": serial_number,
             "next_sl": int(serial_number) + 1
         }
 
@@ -113,7 +149,7 @@ class DepositPostingView(LoginRequiredMixin, View):
     def get_member(self, team_id, serial_number):
         if team_id and serial_number:
             try:
-                return Member.objects.get(team=team_id, serial_number=serial_number)
+                return Member.active_objects.get(team=team_id, serial_number=serial_number)
             except Member.DoesNotExist:
                 messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
         return None
@@ -127,7 +163,7 @@ def installment_posting(request):
     serial_number = request.GET.get('serial_number', 1)
     if team_id and serial_number:
         try:
-            member = Member.objects.get(team=team_id, serial_number=serial_number)
+            member = Member.active_objects.get(team=team_id, serial_number=serial_number)
             loan = member.get_my_loan()
         except:
             messages.error(request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
@@ -202,3 +238,42 @@ class LoanDisbursementView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         messages.error(self.request, 'There was an error in the form. Please correct the issues below.')
         return super().form_invalid(form)
+
+
+class WithdrawalPostingView(LoginRequiredMixin, View):
+    template_name = 'transaction/withdrawal_posting.html'
+
+    def get(self, request, member_id):
+        member = get_object_or_404(Member, id=member_id)
+        withdraw_form = WithdrawForm()
+
+        context = {
+            "withdraw_form": withdraw_form,
+            "member": member,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, member_id):
+        member = get_object_or_404(Member, id=member_id)
+
+        withdraw_form = WithdrawForm(request.POST)
+        if withdraw_form.is_valid():
+            date = withdraw_form.cleaned_data['date']
+            amount = withdraw_form.cleaned_data['amount']
+            try:
+                GeneralJournal.objects.create_withdraw_entry(date, member, amount)
+                messages.success(request, f'{member.name} {amount} টাকা উত্তোলন করা হয়েছে')
+                return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id':member_id}))
+            except (IntegrityError, ValidationError) as e:
+                messages.error(request, str(e))
+                return HttpResponseRedirect(reverse('withdrawal_posting', kwargs={'member_id': member_id}))
+
+
+    def get_member(self, team_id, serial_number):
+        if team_id and serial_number:
+            try:
+                return Member.active_objects.get(team=team_id, serial_number=serial_number)
+            except Member.DoesNotExist:
+                messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
+        return None

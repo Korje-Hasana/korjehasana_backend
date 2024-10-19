@@ -2,6 +2,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
+from django.urls import reverse
 from django.db import models
 from django.db.models import Sum
 
@@ -17,29 +18,6 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Division(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class District(models.Model):
-    name = models.CharField(max_length=50)
-    division = models.ForeignKey(Division, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
-class Thana(models.Model):
-    name = models.CharField(max_length=50)
-    district = models.ForeignKey(District, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
 
 
 class Organization(models.Model):
@@ -116,7 +94,7 @@ class BranchMember(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=150)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True)
 
     class Meta:
@@ -124,6 +102,9 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('deposit_list', kwargs={'team_id': self.id})
 
     def total_unpaid_loan(self):
         return self.loan_set.filter(is_paid=False).aggregate(Sum("total_due"))[
@@ -137,3 +118,6 @@ class Team(models.Model):
 
     def active_loan(self):
         return self.loan_set.filter(is_paid=False).count()
+
+    def total_member_count(self):
+        return self.members.count()

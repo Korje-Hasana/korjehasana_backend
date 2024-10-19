@@ -1,72 +1,66 @@
-from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from rest_framework import viewsets
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
-from django_filters.rest_framework import DjangoFilterBackend
-from transaction.models import Loan, Savings
-
-# App related
-from peoples.models import Member, Staff
-from peoples.permissions import IsSameBranch
-from peoples.serializers import (
-    MemberCreateSerializer,
-    MemberDetailSerializer,
-    MemberSavingsLoanInfoSerializer,
-)
-
-
-class MemberListCreateView(ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ["team", "branch", "is_active", "gender"]
-    search_fields = ["name", "mobile_number"]
-
-    def get_queryset(self):
-        return Member.objects.filter(branch=self.request.user.branch)
-
-    def perform_create(self, serializer):
-        serializer.save(branch=self.request.user.branch)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return MemberCreateSerializer
-        return MemberDetailSerializer
-
-
-class MemberDetailsView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsSameBranch]
-    serializer_class = MemberDetailSerializer
-    
-
-    # def get_queryset(self):
-    #     return Member.objects.filter(branch=self.request.user.branch)
-
-    def get_object(self):
-        return get_object_or_404(Member, id=self.kwargs.get("id"))
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, UpdateView, DeleteView, View
+from django.contrib import messages
+from django.db import IntegrityError
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Member
+from .forms import MemberForm
+from organization.models import Branch, Team
 
 
 
-class MemberSavingLoanInfo(APIView):
-    serializer_class = MemberSavingsLoanInfoSerializer
+def create_member(request, team_id):
+    # Get the branch from the logged-in user (assuming user has a related branch)
+    user_branch = request.user.branch
+    team = get_object_or_404(Team, id=team_id)
 
-    def get(self, request, *args, **kwargs):
-        member = get_object_or_404(Member, id=kwargs.get('id'))
-        savings=Savings.objects.filter(member=member).aggregate(Sum('amount'))['amount__sum']
-        last_loan = Loan.objects.filter(member=member).last()
-        total_loan = Loan.objects.filter(member=member).count()
+    if request.method == 'POST':
+        form = MemberForm(request.POST)
+        if form.is_valid():
+            try:
+                member = form.save(commit=False)
+                member.branch = user_branch  # Set branch to logged-in user's branch
+                member.team = team
+                member.save()
+                # Redirect or show success message
+                messages.success(request, f'সদস্য ভর্তি সফল হয়েছে')
+                return redirect(team)
+            except IntegrityError:
+                messages.error(request, f'এই সিরিয়ালে সদস্য ভর্তি আছে')
 
-        data = {
-            "total_savings": savings if savings else 0,
-            "last_loan": last_loan.amount if last_loan else 0,
-            "loan_date": last_loan.date if last_loan else None,
-            "loan_paid": last_loan.total_paid if last_loan else 0,
-            "installment_paid": last_loan.installment_paid if last_loan else 0,
-            "total_loan_count": total_loan
-        }
-        serializer = self.serializer_class(data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        form = MemberForm()
+
+    return render(request, 'people/create_member.html', {'form': form, 'team': team})
+
+
+class MemberDetailView(DetailView):
+    model = Member
+    template_name = 'people/member_detail.html'
+    context_object_name = 'member'
+
+
+class MemberUpdateView(UpdateView):
+    model = Member
+    form_class = MemberForm
+    template_name = 'people/member_update.html'
+    context_object_name = 'member'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class MemberDeleteView(View):
+    template_name = 'people/member_confirm_delete.html'
+
+    def get(self, request, pk):
+        member = get_object_or_404(Member, pk=pk)
+        return render(request, self.template_name, {'member': member})
+
+    def post(self, request, pk):
+        member = get_object_or_404(Member, pk=pk)
+        member.is_active = False  # Soft delete by setting is_active to False
+        member.save()
+        messages.success(request, f"Member '{member.name}' has been deactivated.")
+        return redirect(reverse_lazy('deposit_list'), args={'team_id': member.team.id})

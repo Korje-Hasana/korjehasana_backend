@@ -24,7 +24,7 @@ class SavingPostingSerializer(serializers.Serializer):
 
         print(date)
 
-        member = Member.objects.get(team_id=team, serial_number=serial_number)
+        member = Member.active_objects.get(team_id=team, serial_number=serial_number)
         # staff, branch
         savings = Savings.objects.create(
             amount=amount,

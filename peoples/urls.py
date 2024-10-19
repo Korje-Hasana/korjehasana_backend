@@ -1,20 +1,10 @@
 from django.urls import path
-from rest_framework import routers
-from peoples.views import (
-    MemberListCreateView,
-    MemberDetailsView,
-    MemberSavingLoanInfo
-)
-
-
-# peoples router config
-peoples_router = routers.DefaultRouter()
+from .views import create_member, MemberDeleteView, MemberDetailView, MemberUpdateView
 
 
 urlpatterns = [
-    path("members/", MemberListCreateView.as_view(), name="list_create"),
-    path("members/<int:id>/", MemberDetailsView.as_view(), name="details"),
-    path("members/<int:id>/saving-loan-info/", MemberSavingLoanInfo.as_view(), name="saving_loan_info"),
+    path('members/<int:team_id>/crate/', create_member, name='create-member'),
+    path('member/<int:pk>/', MemberDetailView.as_view(), name='member_detail'),
+    path('member/<int:pk>/update/', MemberUpdateView.as_view(), name='member_update'),
+    path('member/<int:pk>/delete/', MemberDeleteView.as_view(), name='member_delete'),
 ]
-
-urlpatterns += peoples_router.urls

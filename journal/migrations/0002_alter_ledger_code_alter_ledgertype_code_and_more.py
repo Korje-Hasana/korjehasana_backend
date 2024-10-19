@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
             name="code",
             field=models.CharField(max_length=10, unique=True),
         ),
-        migrations.AlterUniqueTogether(
-            name="generaljournal",
-            unique_together={("date", "accounts", "member")},
-        ),
+        # migrations.AlterUniqueTogether(
+        #     name="generaljournal",
+        #     unique_together={("date", "accounts", "member")},
+        # ),
     ]

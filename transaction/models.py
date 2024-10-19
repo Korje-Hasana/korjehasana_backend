@@ -2,6 +2,25 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from organization.models import BaseModel
 from report.models import CIHCalculation
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class TransactionLogManager(models.Manager):
+    def create_transaction_log(self, amount, detail, entry1=None, entry2=None):
+        self.get_queryset().create(
+
+        )
+
+class TransactionLog(models.Model):
+    amount = models.IntegerField()
+    detail = models.CharField(max_length=150, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
+
+
+
 
 SAVINGS_TRANS_TYPE = (
     ("deposit", "Deposit"),

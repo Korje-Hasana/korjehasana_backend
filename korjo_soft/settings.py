@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
-import dj_database_url
+#import dj_database_url
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -20,7 +20,8 @@ SECRET_KEY = env("SECRET_KEY")
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+#ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = ['korjehasana.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -49,7 +50,8 @@ LOCAL_APPS = [
     "transaction.apps.TransactionConfig",
     "api.apps.ApiConfig",
     "report",
-    "journal"
+    "journal",
+    "loan",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -105,8 +107,8 @@ DATABASES = {
 # Update database configuration from $DATABASE_URL.
 
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES["default"].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES["default"].update(db_from_env)
 
 
 # Password validation
@@ -194,6 +196,9 @@ SPECTACULAR_SETTINGS = {
 
 # cors headers
 CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = [
+    'https://korjehasana.com',
+]
 # CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 #
 # CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
