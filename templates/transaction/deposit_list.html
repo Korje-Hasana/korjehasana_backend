@@ -5,7 +5,7 @@
 
 <div class="card mt-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span>সঞ্চয় তালিকা</span>
+        <span>সঞ্চয় তালিকা - {{ team }}</span>
         <form action="" method="GET" class="form-inline">
             <div class="form-group mb-2">
                 <label for="month" class="mr-2">মাস:</label>
@@ -26,8 +26,11 @@
             </div>
             <button type="submit" class="btn btn-info mb-2">Submit</button>
         </form>
+        <div>
+            <a class="btn btn-success" href="{% url 'create-member' team.id %}"><i class="fa-solid fa-user-plus"></i></a>
+            <a class="btn btn-info" href="{% url 'loan_list' team.id %}"><i class="fa-solid fa-hand-holding-dollar"></i></a>
+        </div>
 
-        <a class="btn btn-success" href="{% url 'create-member' team_id %}">সদস্য ভর্তি</a>
     </div>
     <div class="card-body">
         <table class="table">

@@ -1,17 +1,27 @@
 {% extends 'base/base.html' %}
 
+{% block extrahead %}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+
+{% endblock %}
+
 
 {% block content %}
 
 <div class="card mt-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span>কর্জ তালিকা</span>
+        <h4>কর্জ তালিকা</h4>
+        <h4>কর্জ বিতরণঃ {{ total_loan }}</h4>
     </div>
     <div class="card-body">
         <form method="get">
-    <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
-    <button type="submit">Search</button>
-</form>
+        <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
+
+            <!-- Date Range Inputs -->
+        <input name="startdate" id="startdate" placeholder="Start Date" value="{{ request.GET.startdate }}">
+        <input name="enddate" id="enddate" placeholder="End Date" value="{{ request.GET.enddate }}">
+        <button type="submit">Submit</button>
+    </form>
 
 <table class="table">
     <thead>
@@ -19,8 +29,16 @@
             <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">Member</a></th>
             <th>অভিভাবকের নাম</th>
             <th>দল</th>
-            <th><a href="?order_by=date&direction={{ request.GET.direction|default:'asc' }}">Date</a></th>
-            <th><a href="?order_by=amount&direction={{ request.GET.direction|default:'asc' }}">Amount</a></th>
+            <th>
+                <a href="?order_by=date&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
+                Date
+                <a href="?order_by=date&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
+            </th>
+            <th>
+                <a href="?order_by=amount&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
+                Amount
+                <a href="?order_by=amount&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
+            </th>
             <th>Paid</th>
             <th>Due</th>
         </tr>
@@ -65,4 +83,18 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+  <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#startdate" ).datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+    $("#enddate" ).datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+  } );
+  </script>
 {% endblock %}

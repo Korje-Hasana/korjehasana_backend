@@ -56,17 +56,18 @@ def dashboard(request):
 def deposit_list(request, team_id):
     now = datetime.now()
     month = request.GET.get('month', now.month)
+    team = Team.objects.get(id=team_id)
 
     data = []
     members = Member.active_objects.filter(team__id=team_id).order_by("serial_number")
-    members = members.filter(team=team_id)
+    members = members.filter(team=team)
 
     for member in members:
         savings_data = format_savings_date(member, month)
         data.append(savings_data)
     context = {
         'journals': data,
-        'team_id': team_id,
+        'team': team,
         'month': month
     }
 
@@ -76,7 +77,9 @@ def deposit_list(request, team_id):
 @login_required
 def loan_list(request, team_id=None):
     data = []
-    month = datetime.now().month
+    now = datetime.now()
+    month = request.GET.get('month', now.month)
+
     staff_branch = request.user.branch
     active_loans = Loan.objects.filter(
         branch=staff_branch, is_paid=False
@@ -85,13 +88,15 @@ def loan_list(request, team_id=None):
     if team_id:
         team = Team.objects.get(id=team_id)
         active_loans = active_loans.filter(team=team)
+
     for loan in active_loans:
         installment_data = format_loan_data(loan, month)
         data.append(installment_data)
 
     context = {
         'journals': data,
-        'team': team or None
+        'team': team or None,
+        'month': month
     }
 
     return render(request, 'transaction/loan_list.html', context)
