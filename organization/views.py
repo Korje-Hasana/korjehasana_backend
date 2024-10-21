@@ -100,3 +100,5 @@ def team_delete(request, pk):
         team.delete()
         messages.success(request, 'Team deleted successfully.')
         return redirect('team_list')
+
+    return render(request, 'team_confirm_delete.html', {'team': team})
