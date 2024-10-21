@@ -20,7 +20,7 @@ SECRET_KEY = env("SECRET_KEY")
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+# ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 ALLOWED_HOSTS = ['korjehasana.com', 'localhost']
 # ALLOWED_HOSTS = ['korjehasana.com', 'localhost', '127.0.0.1']
 
