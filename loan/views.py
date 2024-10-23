@@ -2,6 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.db.models import Q
 from transaction.models import Loan
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import LoanReason
+from .forms import LoadReasonForm
 
 
 class LoanListView(LoginRequiredMixin, ListView):
@@ -36,3 +40,59 @@ class LoanListView(LoginRequiredMixin, ListView):
         queryset = queryset.order_by(order_by)
 
         return queryset
+    
+ 
+# Show Data Loan Reason Data
+@login_required  
+def loan_reason_list(request):
+    reasons = LoanReason.objects.all()
+    return render(request, 'loan/loan_reason_list.html', {'reasons': reasons})
+
+# Create Loan Reason Data
+@login_required
+def loan_reason_create(request):
+    if request.method == 'POST':
+        form = LoadReasonForm(request.POST)  
+        if form.is_valid():
+            form.save()
+            return redirect('loan_reason_list') 
+    else:
+        form = LoadReasonForm()  
+    
+  
+    return render(request, 'loan/loan_reason_form.html', {'form': form})
+    
+#Edit or Update Loan Reason
+@login_required
+def loan_reason_edit(request, pk): 
+    reason = get_object_or_404(LoanReason, pk=pk)  
+    if request.method == 'POST':
+        form = LoadReasonForm(request.POST, instance=reason)  
+        if form.is_valid():
+            form.save()
+            return redirect('loan_reason_list')
+    else:
+        form = LoadReasonForm(instance=reason)
+    
+    return render(request, 'loan/loan_reason_update.html', {'form': form})
+
+# Delete Loan Reason
+@login_required
+def loan_reason_delete(request, pk):
+    
+    reason = get_object_or_404(LoanReason, pk=pk)
+    
+    if request.method == 'POST':
+        reason.delete()
+        return redirect('loan_reason_list')
+    
+    return render(request, 'loan/loan_reason_confirm_delete.html', {'reason': reason})
+         
+    
+        
+        
+            
+            
+            
+
+

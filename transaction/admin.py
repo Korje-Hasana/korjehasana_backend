@@ -16,7 +16,7 @@ class SavingsAdmin(admin.ModelAdmin):
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
     list_display = [
-        'id', 'member', 'team','branch', 'is_paid', 'amount',
+        'id', 'member', 'team','branch', 'reason', 'is_paid', 'amount',
         'total_installment', 'installment_paid', 'total_paid', 'total_due'
     ]
     list_display_links = ['id']

@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>লোন নেওয়ার কারন</span>
+        <a class="btn btn-success" href="{% url 'loan_reason_create' %}">
+            <i class="icon-plus"></i>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">সিরিয়াল নং</th>
+                            <th scope="col">লোনের কারন</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in reasons %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.reason }}</td>
+                            <td>
+                                <a class="btn btn-success btn-sm" href="{% url 'loan_reason_edit' i.pk %}">Edit</a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'loan_reason_delete' i.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

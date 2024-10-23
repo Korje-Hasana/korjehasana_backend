@@ -2,6 +2,7 @@ from django import forms
 from organization.models import Team
 from peoples.models import Member
 from .models import Loan
+from loan.models import LoanReason
 
 
 class MemberChoiceForm(forms.Form):
@@ -33,17 +34,19 @@ class WithdrawForm(DepositForm):
 class LoanDisbursementForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = ['date', 'amount', 'total_installment']
+        fields = ['date', 'amount', 'total_installment', 'reason']
 
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
             'total_installment': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
+            'reason': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super(LoanDisbursementForm, self).__init__(*args, **kwargs)
         self.fields['total_installment'].initial = 24
+        self.fields['reason'].queryset = LoanReason.objects.all()
 
     def clean(self):
         cleaned_data = super().clean()

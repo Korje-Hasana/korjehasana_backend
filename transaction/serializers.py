@@ -14,7 +14,8 @@ class DepositSerializer(serializers.ModelSerializer):
 class LoanDisbursementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan
-        fields = ("amount", "date", "member", "total_installment")
+        fields = ("amount", "date", "member", "total_installment", "reason")
+        # read_only_fields = ['total_paid', 'total_due']
 
 
 class LoanInstallmentSerializer(serializers.ModelSerializer):

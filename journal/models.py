@@ -44,24 +44,55 @@ class JournalManager(models.Manager):
             remarks=remarks
         )
         return entry
+    
+    def create_loan_entry(self, date, member, amount, reason):
+        try:
+            # Get the loan account ledger (LO code)
+            loan_account_receivable = Ledger.objects.get(code='LO')
+        except Ledger.DoesNotExist:
+            raise ValidationError("Loan Ledger account is not configured.")
 
-    def create_loan_entry(self, date, member, amount):
-        loan_account_receivable = Ledger.objects.get(code='LO')
         branch = member.branch
         remarks = f'{member.name} loan {amount}'
 
-        # As double entry accounting, Deposit (Account payable) debit
-        entry1 = self.get_queryset().create(
-            date=date,
-            member=member,
-            accounts=loan_account_receivable,
-            branch=branch,
-            debit=amount,
-            remarks=remarks
-        )
-        # Cash Credit
-        self.cash_credit(date, member, amount, branch, remarks)
-        return entry1
+        try:
+            # Create a double-entry journal transaction
+            with transaction.atomic():
+                # Debit the loan account receivable
+                entry1 = self.create(
+                    date=date,
+                    member=member,
+                    accounts=loan_account_receivable,
+                    branch=branch,
+                    debit=amount,
+                    remarks=remarks,
+                )
+
+                # Credit cash (or equivalent ledger)
+                self.cash_credit(date, member, amount, branch, remarks)
+
+            return entry1
+        except Exception as e:
+            raise ValidationError(f"Error creating loan entry: {e}")
+
+    # def create_loan_entry(self, date, member, amount, reason):
+    #     loan_account_receivable = Ledger.objects.get(code='LO')
+    #     branch = member.branch
+    #     remarks = f'{member.name} loan {amount}'
+
+    #     # As double entry accounting, Deposit (Account payable) debit
+    #     entry1 = self.get_queryset().create(
+    #         date=date,
+    #         member=member,
+    #         accounts=loan_account_receivable,
+    #         branch=branch,
+    #         debit=amount,
+    #         remarks=remarks,
+    #         reason = reason
+    #     )
+    #     # Cash Credit
+    #     self.cash_credit(date, member, amount, branch, remarks)
+    #     return entry1
 
     def create_installment_entry(self, date, member, amount):
         loan_account_receivable = Ledger.objects.get(code='IN')

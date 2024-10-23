@@ -201,6 +201,8 @@ class LoanDisbursementView(LoginRequiredMixin, CreateView):
     form_class = LoanDisbursementForm
     template_name = 'transaction/loan_disbursement_form.html'
     success_url = reverse_lazy('loan_list')  # Change to the appropriate URL
+    
+    
 
     def get_success_url(self):
         return reverse_lazy('loan_list', kwargs={'team_id': self.get_member().team_id})
@@ -218,6 +220,7 @@ class LoanDisbursementView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         date = form.cleaned_data["date"]
         amount = form.cleaned_data["amount"]
+        reason = form.cleaned_data.get("reason")
         member = self.get_member()
 
         if member.has_active_loan():
@@ -229,12 +232,16 @@ class LoanDisbursementView(LoginRequiredMixin, CreateView):
         loan.member = member
         loan.branch = member.branch
         loan.team = member.team
+        loan.reason = reason
         loan.save()
 
-        GeneralJournal.objects.create_loan_entry(date, member, amount)
+        # Call the create_loan_entry method with the required parameters
+        GeneralJournal.objects.create_loan_entry(date, member, amount, reason)
+
         messages.success(self.request, f'Loan of {loan.amount} has been successfully disbursed to {loan.member.name}.')
         return super().form_valid(form)
-
+        
+        
     def form_invalid(self, form):
         messages.error(self.request, 'There was an error in the form. Please correct the issues below.')
         return super().form_invalid(form)
@@ -277,3 +284,4 @@ class WithdrawalPostingView(LoginRequiredMixin, View):
             except Member.DoesNotExist:
                 messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
         return None
+    

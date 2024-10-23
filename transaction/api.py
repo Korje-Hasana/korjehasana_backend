@@ -79,6 +79,7 @@ class LoanDisbursementView(APIView):
         date = serializer.validated_data["date"]
         member = serializer.validated_data["member"]
         amount = serializer.validated_data["amount"]
+        reason = serializer.validated_data["reason"]
         # check member already have unpaid loan
         unpaid_loan = Loan.objects.filter(member=member, is_paid=False).exists()
         if unpaid_loan:
@@ -94,8 +95,9 @@ class LoanDisbursementView(APIView):
             team=member.team,
             organization=request.user.branch.organization,
             created_by=request.user,
+            reason=reason,
         )
-        GeneralJournal.objects.create_loan_entry(date, member, amount)
+        GeneralJournal.objects.create_loan_entry(date, member, amount, reason)
         return Response({"status": "success"}, status=201)
 
 
