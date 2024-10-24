@@ -5,7 +5,9 @@ from transaction.models import Loan
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import LoanReason
-from .forms import LoadReasonForm
+from .forms import LoanReasonForm
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 
 class LoanListView(LoginRequiredMixin, ListView):
@@ -42,51 +44,33 @@ class LoanListView(LoginRequiredMixin, ListView):
         return queryset
     
  
-# Show Data Loan Reason Data
-@login_required  
-def loan_reason_list(request):
-    reasons = LoanReason.objects.all()
-    return render(request, 'loan/loan_reason_list.html', {'reasons': reasons})
+# List View for LoanReason
+class LoanReasonListView(LoginRequiredMixin, ListView):
+    model = LoanReason
+    template_name = 'loan/loan_reason_list.html'
+    context_object_name = 'reasons'
 
-# Create Loan Reason Data
-@login_required
-def loan_reason_create(request):
-    if request.method == 'POST':
-        form = LoadReasonForm(request.POST)  
-        if form.is_valid():
-            form.save()
-            return redirect('loan_reason_list') 
-    else:
-        form = LoadReasonForm()  
-    
-  
-    return render(request, 'loan/loan_reason_form.html', {'form': form})
-    
-#Edit or Update Loan Reason
-@login_required
-def loan_reason_edit(request, pk): 
-    reason = get_object_or_404(LoanReason, pk=pk)  
-    if request.method == 'POST':
-        form = LoadReasonForm(request.POST, instance=reason)  
-        if form.is_valid():
-            form.save()
-            return redirect('loan_reason_list')
-    else:
-        form = LoadReasonForm(instance=reason)
-    
-    return render(request, 'loan/loan_reason_update.html', {'form': form})
+# Create View for LoanReason
+class LoanReasonCreateView(LoginRequiredMixin, CreateView):
+    model = LoanReason
+    form_class = LoanReasonForm
+    template_name = 'loan/loan_reason_form.html'
+    success_url = reverse_lazy('loan_reason_list')
 
-# Delete Loan Reason
-@login_required
-def loan_reason_delete(request, pk):
     
-    reason = get_object_or_404(LoanReason, pk=pk)
-    
-    if request.method == 'POST':
-        reason.delete()
-        return redirect('loan_reason_list')
-    
-    return render(request, 'loan/loan_reason_confirm_delete.html', {'reason': reason})
+# Update View for LoanReason
+class LoanReasonUpdateView(LoginRequiredMixin, UpdateView):
+    model = LoanReason
+    form_class = LoanReasonForm
+    template_name = 'loan/loan_reason_update.html'
+    success_url = reverse_lazy('loan_reason_list')
+
+# Delete View for LoanReason
+class LoanReasonDeleteView(LoginRequiredMixin, DeleteView):
+    model = LoanReason
+    template_name = 'loan/loan_reason_confirm_delete.html'
+    success_url = reverse_lazy('loan_reason_list')
+    context_object_name = 'reason'
          
     
         
