@@ -8,6 +8,10 @@ from .forms import LoginForm, ChangePasswordForm
 
 
 def login_view(request):
+    
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():

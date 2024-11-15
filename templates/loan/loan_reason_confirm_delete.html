@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mt-4">
+  <div class="card-header">
+    লোনের কারন মুছুন
+  </div>
+  <div class="card-body">
+    <h2>লোনের কারন ডিলেট করুন</h2>
+    <p>Are you sure you want to delete "{{ reason.reason }}"?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, delete</button>
+    </form>
+  </div>
+  <div class="card-footer">
+    <a href="{% url 'loan_reason_list' %}" class="btn btn-success">Cancel</a>
+  </div>
+</div>
+
+{% endblock %}

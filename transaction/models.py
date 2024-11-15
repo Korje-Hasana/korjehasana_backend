@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from organization.models import BaseModel
 from report.models import CIHCalculation
 from django.contrib.auth import get_user_model
+from loan.models import LoanReason
 
 User = get_user_model()
 
@@ -120,6 +121,7 @@ class Loan(BaseModel):
     date = models.DateField()
     member = models.ForeignKey("peoples.Member", on_delete=models.PROTECT)
     team = models.ForeignKey("organization.Team", on_delete=models.PROTECT)
+    reason = models.ForeignKey(LoanReason, blank=True, null=True, on_delete=models.CASCADE)
     is_paid = models.BooleanField(default=False)
     total_installment = models.IntegerField(default=0)
     installment_paid = models.IntegerField(default=0)
