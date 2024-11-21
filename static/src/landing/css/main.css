@@ -1126,7 +1126,7 @@ section,
 }
 
 .why-us .card p {
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  color: color-mix(in srgb, var(--default-color));
   font-size: 15px;
   margin: 0;
   padding: 0;
