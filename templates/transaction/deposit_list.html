@@ -4,12 +4,14 @@
 {% block content %}
 
 <div class="card mt-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
         <span>সঞ্চয় তালিকা - {{ team }}</span>
-        <form action="" method="GET" class="form-inline">
-            <div class="form-group mb-2">
+
+        <!-- Responsive Form -->
+        <form action="" method="GET" class="form-inline d-flex flex-wrap">
+            <div class="form-group mb-2 mr-2">
                 <label for="month" class="mr-2">মাস:</label>
-                <select id="month" name="month" class="form-control mr-2">
+                <select id="month" name="month" class="form-control">
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -26,45 +28,67 @@
             </div>
             <button type="submit" class="btn btn-info mb-2">Submit</button>
         </form>
-        <div>
-            <a class="btn btn-success" href="{% url 'create-member' team.id %}"><i class="fa-solid fa-user-plus"></i></a>
-            <a class="btn btn-info" href="{% url 'loan_list' team.id %}"><i class="fa-solid fa-hand-holding-dollar"></i></a>
+
+        <!-- Button Group (Mobile Friendly) -->
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-success btn-sm" href="{% url 'create-member' team.id %}">
+                <i class="fa-solid fa-user-plus"></i>
+            </a>
+            <a class="btn btn-info btn-sm" href="{% url 'loan_list' team.id %}">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+            </a>
         </div>
-
     </div>
-    <div class="card-body">
-        <table class="table">
-            <tr>
-                <th>SL</th>
-                <th>নাম</th>
-                <th>অভিভাবকের নাম</th>
-                <th>সপ্তাহ ১</th>
-                <th>সপ্তাহ ২</th>
-                <th>সপ্তাহ ৩</th>
-                <th>সপ্তাহ ৪</th>
-                <th>ব্যালেন্স</th>
-                <th></th>
-            </tr>
-            {% for journal in journals %}
-                <tr>
-                    <td>{{ journal.sl }}</td>
-                    <td><a href="{% url 'member_detail' journal.member_id %}">{{ journal.member_name }}</a></td>
-                    <td>{{ journal.guardian_name }}</td>
-                    <td>{{ journal.week1 }}</td>
-                    <td>{{ journal.week2 }}</td>
-                    <td>{{ journal.week3 }}</td>
-                    <td>{{ journal.week4 }}</td>
-                    <td>{{ journal.balance }}</td>
-                    <td>
-                        <a class="btn btn-primary" href="{% url 'loan_disbursement' journal.member_id %}">কর্জ প্রদান</a>
-                        <a class="btn btn-primary" href="{% url 'withdrawal_posting' journal.member_id %}">উত্তোলন</a>
-                    </td>
-                </tr>
 
-            {% endfor %}
-        </table>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>নাম</th>
+                        <th>অভিভাবকের নাম</th>
+                        <th>সপ্তাহ ১</th>
+                        <th>সপ্তাহ ২</th>
+                        <th>সপ্তাহ ৩</th>
+                        <th>সপ্তাহ ৪</th>
+                        <th>ব্যালেন্স</th>
+                        <th>অপশন</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for journal in journals %}
+                        <tr>
+                            <td>{{ journal.sl }}</td>
+                            <td>
+                                <a href="{% url 'member_detail' journal.member_id %}">
+                                    {{ journal.member_name }}
+                                </a>
+                            </td>
+                            <td>{{ journal.guardian_name }}</td>
+                            <td>{{ journal.week1 }}</td>
+                            <td>{{ journal.week2 }}</td>
+                            <td>{{ journal.week3 }}</td>
+                            <td>{{ journal.week4 }}</td>
+                            <td>{{ journal.balance }}</td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a class="btn btn-primary btn-sm" href="{% url 'loan_disbursement' journal.member_id %}">
+                                        কর্জ প্রদান
+                                    </a>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'withdrawal_posting' journal.member_id %}">
+                                        উত্তোলন
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 
 {% endblock %}
 

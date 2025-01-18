@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def report(reqeust):
+    return render(reqeust, 'report/report.html', context={})

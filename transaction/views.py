@@ -282,3 +282,49 @@ class WithdrawalPostingView(LoginRequiredMixin, View):
             except Member.DoesNotExist:
                 messages.error(self.request, f'দুঃখিত, এই সিরিয়ালে কোন সদস্য নেই')
         return None
+
+
+from django.views.generic import TemplateView
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from journal.models import GeneralJournal
+from .forms import IncomeTransactionForm
+
+class IncomeTransactionListCreateView(LoginRequiredMixin, TemplateView):
+    template_name = "transactions/income_transaction_list_create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        # context["transactions"] = GeneralTransaction.objects.filter(
+        #     transaction_type="income", branch=user.branch
+        # )
+        context["form"] = IncomeTransactionForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = IncomeTransactionForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            data = form.cleaned_data
+
+            # Save the transaction
+            # transaction = GeneralTransaction.objects.create(
+            #     transaction_type="income",
+            #     branch=user.branch,
+            #     organization=user.branch.organization,
+            #     **data,
+            # )
+
+            # Create a journal entry
+            category = data["category"].name
+            GeneralJournal.objects.create_income_entry(
+                date=data["date"],
+                branch=user.branch,
+                amount=data["amount"],
+                remarks=f"{category}: {data['summary']}",
+            )
+            return JsonResponse({"success": True, "message": "Transaction created successfully."})
+
+        return JsonResponse({"success": False, "errors": form.errors})

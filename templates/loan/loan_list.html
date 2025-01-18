@@ -13,73 +13,97 @@
         <h4>কর্জ তালিকা</h4>
         <h4>কর্জ বিতরণঃ {{ total_loan }}</h4>
     </div>
+
     <div class="card-body">
+        <!-- Responsive Search & Date Filter Form -->
         <form method="get">
-        <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
+            <div class="row">
+                <!-- Search Input -->
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}" class="form-control">
+                </div>
 
-            <!-- Date Range Inputs -->
-        <input name="startdate" id="startdate" placeholder="Start Date" value="{{ request.GET.startdate }}">
-        <input name="enddate" id="enddate" placeholder="End Date" value="{{ request.GET.enddate }}">
-        <button type="submit">Submit</button>
-    </form>
+                <!-- Start Date -->
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <input name="startdate" id="startdate" placeholder="Start Date" value="{{ request.GET.startdate }}" class="form-control">
+                </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">Member</a></th>
-            <th>অভিভাবকের নাম</th>
-            <th>দল</th>
-            <th>
-                <a href="?order_by=date&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
-                Date
-                <a href="?order_by=date&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
-            </th>
-            <th>
-                <a href="?order_by=amount&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
-                Amount
-                <a href="?order_by=amount&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
-            </th>
-            <th>Paid</th>
-            <th>Due</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for loan in loans %}
-            <tr>
-                <td><a href="{% url 'member_detail' loan.member.id %}">{{ loan.member.name }}</a></td>
-                <td>{{ loan.member.guardian_name }}</td>
-                <td>{{ loan.member.team }}</td>
-                <td>{{ loan.date }}</td>
-                <td>{{ loan.amount }}</td>
-                <td>{{ loan.total_paid }}</td>
-                <td>{{ loan.total_due }}</td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="4">No loans found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <!-- End Date -->
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <input name="enddate" id="enddate" placeholder="End Date" value="{{ request.GET.enddate }}" class="form-control">
+                </div>
 
-<div class="pagination">
-    <span class="step-links">
-        {% if loans.has_previous %}
-            <a href="?page=1">First</a>
-            <a href="?page={{ loans.previous_page_number }}">Previous</a>
-        {% endif %}
+                <!-- Submit Button -->
+                <div class="col-md-2 col-sm-6 mb-2 d-flex align-items-center">
+                    <button type="submit" class="btn btn-info w-100">Submit</button>
+                </div>
+            </div>
+        </form>
 
-        <span class="current">
-            Page {{ loans.number }} of {{ loans.paginator.num_pages }}.
-        </span>
+        <!-- Responsive Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">Member</a></th>
+                        <th>অভিভাবকের নাম</th>
+                        <th>দল</th>
+                        <th>
+                            <a href="?order_by=date&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
+                            Date
+                            <a href="?order_by=date&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
+                        </th>
+                        <th>
+                            <a href="?order_by=amount&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
+                            Amount
+                            <a href="?order_by=amount&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
+                        </th>
+                        <th>Paid</th>
+                        <th>Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                        <tr>
+                            <td><a href="{% url 'member_detail' loan.member.id %}">{{ loan.member.name }}</a></td>
+                            <td>{{ loan.member.guardian_name }}</td>
+                            <td>{{ loan.member.team }}</td>
+                            <td>{{ loan.date }}</td>
+                            <td>{{ loan.amount }}</td>
+                            <td>{{ loan.total_paid }}</td>
+                            <td>{{ loan.total_due }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No loans found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        {% if loans.has_next %}
-            <a href="?page={{ loans.next_page_number }}">Next</a>
-            <a href="?page={{ loans.paginator.num_pages }}">Last</a>
-        {% endif %}
-    </span>
-</div>
+        <!-- Responsive Pagination -->
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination pagination-sm">
+                    {% if loans.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ loans.previous_page_number }}">Previous</a></li>
+                    {% endif %}
 
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Page {{ loans.number }} of {{ loans.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if loans.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ loans.next_page_number }}">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ loans.paginator.num_pages }}">Last</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 

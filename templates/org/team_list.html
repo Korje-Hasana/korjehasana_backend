@@ -6,32 +6,44 @@
 <div class="card mt-4">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span>দলের নাম</span>
-        <a class="btn btn-success" href="{% url 'team_create' %}"><i class="icon-plus"></i></a>
+        <a class="btn btn-success" href="{% url 'team_create' %}">
+            <i class="icon-plus"></i>
+        </a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
-
-        {% for team in teams %}
-            <tr>
-                <td>
-                    <a href="{% url 'deposit_list' team.id %}">{{ team.name }} ({{ team.total_member_count }})</a>
-                </td>
-                <td>
-                    <a class="btn btn-success" href="{% url 'create-member' team.id %}">সদস্য ভর্তি</a>
-                </td>
-                <td>
-                    <a class="btn btn-success" href="{% url 'deposit_posting' %}?team={{team.id}}&serial_number=1">সঞ্চয় জমা</a>
-                </td>
-                <td>
-                    <a class="btn btn-warning" href="{% url 'installment_posting' %}?team={{team.id}}&serial_number=1">কর্জ ফেরত</a>
-                </td>
-                <td>
-                    <a class="btn btn-info" href="{% url 'loan_list' team.id %}">কর্জ তালিকা</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tbody>
+                {% for team in teams %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'deposit_list' team.id %}">
+                                {{ team.name }} ({{ team.total_member_count }})
+                            </a>
+                        </td>
+                        <td colspan="4">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-success btn-sm" href="{% url 'create-member' team.id %}">
+                                    সদস্য ভর্তি
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'deposit_posting' %}?team={{team.id}}&serial_number=1">
+                                    সঞ্চয় জমা
+                                </a>
+                                <a class="btn btn-warning btn-sm" href="{% url 'installment_posting' %}?team={{team.id}}&serial_number=1">
+                                    কর্জ ফেরত
+                                </a>
+                                <a class="btn btn-info btn-sm" href="{% url 'loan_list' team.id %}">
+                                    কর্জ তালিকা
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 
 {% endblock %}

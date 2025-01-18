@@ -58,3 +58,7 @@ class LoanDisbursementForm(forms.ModelForm):
             self.add_error('total_installment', "Total installments must be a positive number.")
 
         return cleaned_data
+
+
+class IncomeTransactionForm:
+    pass
