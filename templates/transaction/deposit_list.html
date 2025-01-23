@@ -25,6 +25,8 @@
                     <option value="11">November</option>
                     <option value="12">December</option>
                 </select>
+                <label for="year">বছর:</label>
+                <select id="yearDropdown" name="year"  class="form-control"></select>
             </div>
             <button type="submit" class="btn btn-info mb-2">Submit</button>
         </form>
@@ -99,5 +101,24 @@
         // Set the current month as selected
         document.getElementById('month').value = currentMonth;
     </script>
+<script>
+    // Get the current year
+    const selectedYear = {{ year }};
+    const currentYear = new Date().getFullYear();
+    const startYear = 2024; // Change this if you want an earlier start year
+
+    // Get dropdown element
+    const yearDropdown = document.getElementById("yearDropdown");
+
+
+    // Populate dropdown with years from startYear to currentYear
+    for (let year = currentYear; year >= startYear; year--) {
+        let option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearDropdown.appendChild(option);
+    }
+    yearDropdown.value = selectedYear;
+</script>
 
 {% endblock %}

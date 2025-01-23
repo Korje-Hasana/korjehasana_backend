@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
 
@@ -133,10 +134,13 @@ class JournalManager(models.Manager):
             return True
         return False
 
-    def get_member_balance(self, member, month=None):
+    def get_member_balance(self, member, month=None, year=None):
         members_trans = self.get_queryset().filter(member=member, accounts__ledger_type__code='LP')  # Account Payable
         if month:
-            members_trans = members_trans.filter(date__month__lte=month)
+            members_trans = members_trans.filter(
+                Q(date__year__lt=year) |  # All previous years
+                Q(date__year=year, date__month__lte=month)
+            )
 
         total_debit = members_trans.aggregate(total_debit=Sum('debit'))['total_debit']
         total_credit = members_trans.aggregate(total_credit=Sum('credit'))['total_credit']

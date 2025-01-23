@@ -56,6 +56,7 @@ def dashboard(request):
 def deposit_list(request, team_id):
     now = datetime.now()
     month = request.GET.get('month', now.month)
+    year = request.GET.get('year', now.year)
     team = Team.objects.get(id=team_id)
 
     data = []
@@ -63,12 +64,13 @@ def deposit_list(request, team_id):
     members = members.filter(team=team)
 
     for member in members:
-        savings_data = format_savings_date(member, month)
+        savings_data = format_savings_date(member, month, year)
         data.append(savings_data)
     context = {
         'journals': data,
         'team': team,
-        'month': month
+        'month': month,
+        'year': year,
     }
 
     return render(request, 'transaction/deposit_list.html', context)

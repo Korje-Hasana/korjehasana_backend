@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Member
 from .forms import MemberForm
 from organization.models import Branch, Team
+from journal.repositories.journal_reposity import GeneralJournalRepository
 
 
 
@@ -39,6 +40,13 @@ class MemberDetailView(DetailView):
     model = Member
     template_name = 'people/member_detail.html'
     context_object_name = 'member'
+
+    # Add context to pass members GeneralJournal entries
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        member = self.object
+        context['member_transactions'] = GeneralJournalRepository.get_member_account_payable(member.id)
+        return context
 
 
 class MemberUpdateView(UpdateView):
