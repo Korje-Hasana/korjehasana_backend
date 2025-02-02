@@ -1,22 +1,33 @@
+# Standard Library Imports
 from datetime import datetime
+
+# Django Core Imports
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from django.db.models import Q, Sum
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.views import View
+from django.views.generic import TemplateView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.views import View
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.db import IntegrityError
-from django.core.exceptions import ValidationError
-from django.db.models import Q, Sum
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
+
+# Project-Level Imports (Local Apps)
 from journal.models import GeneralJournal
 from organization.models import Branch, Team
 from peoples.models import Member
-from transaction.forms import InstallmentForm
+from transaction.forms import (
+    InstallmentForm, DepositForm, MemberChoiceForm,
+    LoanDisbursementForm, WithdrawForm, IncomeTransactionForm
+)
+from transaction.services import IncomeService
+from journal.repositories import GeneralJournalRepository
 from transaction.utils import format_savings_date, format_loan_data
-from .forms import DepositForm, MemberChoiceForm, LoanDisbursementForm, WithdrawForm
+
+# Initialize the service with repository dependency
+income_service = IncomeService()
 
 
 from .models import Loan
@@ -286,47 +297,62 @@ class WithdrawalPostingView(LoginRequiredMixin, View):
         return None
 
 
-from django.views.generic import TemplateView
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from journal.models import GeneralJournal
-from .forms import IncomeTransactionForm
 
-class IncomeTransactionListCreateView(LoginRequiredMixin, TemplateView):
-    template_name = "transactions/income_transaction_list_create.html"
+class IncomeCreateView(CreateView):
+    """Handles the income form submission."""
+    model = GeneralJournal
+    form_class = IncomeTransactionForm
+    template_name = "income_create.html"
+    success_url = reverse_lazy("income_list")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        # context["transactions"] = GeneralTransaction.objects.filter(
-        #     transaction_type="income", branch=user.branch
-        # )
-        context["form"] = IncomeTransactionForm()
-        return context
+    def form_valid(self, form):
+        """Validate and save the form using service."""
+        try:
+            branch = self.request.user.branch
+            form_data = form.cleaned_data
+            income_service.create_income(form_data, branch)
+            return redirect(self.success_url)
+        except ValueError as e:
+            print(e)
+            form.add_error('amount', str(e))
+            return self.form_invalid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = IncomeTransactionForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            data = form.cleaned_data
 
-            # Save the transaction
-            # transaction = GeneralTransaction.objects.create(
-            #     transaction_type="income",
-            #     branch=user.branch,
-            #     organization=user.branch.organization,
-            #     **data,
-            # )
+class IncomeListView(ListView):
+    """Displays the list of incomes."""
+    model = GeneralJournal
+    template_name = "income_list.html"
+    context_object_name = "incomes"
 
-            # Create a journal entry
-            category = data["category"].name
-            GeneralJournal.objects.create_income_entry(
-                date=data["date"],
-                branch=user.branch,
-                amount=data["amount"],
-                remarks=f"{category}: {data['summary']}",
-            )
-            return JsonResponse({"success": True, "message": "Transaction created successfully."})
+    def get_queryset(self):
+        """Fetch data using the service layer."""
+        return income_service.get_all_incomes()
 
-        return JsonResponse({"success": False, "errors": form.errors})
+# class IncomeCreateView(LoginRequiredMixin, TemplateView):
+#     template_name = "transaction/income_create.html"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         user = self.request.user
+#         context["form"] = IncomeTransactionForm()
+#         return context
+#
+#     def post(self, request, *args, **kwargs):
+#         form = IncomeTransactionForm(request.POST)
+#         if form.is_valid():
+#             user = request.user
+#             data = form.cleaned_data
+#             account = form.cleaned_data["income_type"]
+#
+#
+#
+#             # Create a journal entry
+#             GeneralJournal.objects.create_income_entry(
+#                 date=data["date"],
+#                 branch=user.branch,
+#                 amount=data["amount"],
+#                 remarks=f"{category}: {data['summary']}",
+#             )
+#             return JsonResponse({"success": True, "message": "Transaction created successfully."})
+#
+#         return JsonResponse({"success": False, "errors": form.errors})

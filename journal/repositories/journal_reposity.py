@@ -1,23 +1,42 @@
 from django.db.models import Q
-from journal.models import GeneralJournal
+from journal.models import GeneralJournal, Ledger
 
 class GeneralJournalRepository:
-    @staticmethod
-    def get_all():
-        """Fetch all General Journal records"""
-        return GeneralJournal.objects.all()
 
-    @staticmethod
-    def get_by_member(member_id):
-        """Fetch journal entries for a specific member"""
-        return GeneralJournal.objects.filter(member_id=member_id)
+    def cash_credit(self, date, member, amount, branch, remarks=""):
+        cash_account = Ledger.objects.get(code='CA')
+        entry = GeneralJournal.objects.create(
+            date=date,
+            member=member,
+            accounts=cash_account,
+            branch=branch,
+            credit=amount,
+            remarks=remarks
+        )
+        return entry
 
-    @staticmethod
-    def get_by_account_type_lp():
-        """Fetch journal entries where account type is 'LP' (assuming 'LP' is stored in a related Ledger model)"""
-        return GeneralJournal.objects.filter(accounts__account_type="LP")
+    def cash_debit(self, date, member, amount, branch, remarks):
+        cash_account = Ledger.objects.get(code='CA')
+        entry = GeneralJournal.objects.create(
+            date=date,
+            member=member,
+            accounts=cash_account,
+            branch=branch,
+            debit=amount,
+            remarks=remarks
+        )
+        return entry
 
-    @staticmethod
-    def get_member_account_payable(member_id):
-        """Fetch journal entries for a specific member where account type is 'LP'"""
-        return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__ledger_type__code="LP")).order_by('-date')
+
+    def create_income_entry(self, account, date, branch, amount, remarks=""):
+        GeneralJournal.objects.create(
+            date=date,
+            accounts=account,
+            branch=branch,
+            credit=amount,
+            remarks=remarks
+        )
+        self.cash_debit(date=date, member=None, amount=amount, branch=branch, remarks=remarks)
+
+    def get_all_incomes(self):
+        return GeneralJournal.objects.filter(accounts__ledger_type__code='OI') # OI = Owner Equity Income

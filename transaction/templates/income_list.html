@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+
+
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>দলের নাম</span>
+        <a class="btn btn-success" href="{% url 'team_create' %}">
+            <i class="icon-plus"></i>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>তারিখ</th>
+                    <th>আয়ের খাত</th>
+                    <th>আয়ের পরিমান</th>
+                </tr>
+                <tbody>
+                {% for income in incomes %}
+                    <tr>
+                        <td>{{ income.date }}</td>
+                        <td>{{ income.accounts }}</td>
+                        <td>{{ income.credit }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

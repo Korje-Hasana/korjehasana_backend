@@ -1,0 +1,1 @@
+from .journal_reposity import GeneralJournalRepository
