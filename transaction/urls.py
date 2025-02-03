@@ -9,5 +9,7 @@ urlpatterns =[
     path('withdraw-posting/<int:member_id>', WithdrawalPostingView.as_view(), name="withdrawal_posting"),
     path('loans/create/<int:member>', LoanDisbursementView.as_view(), name='loan_disbursement'),
     path('loans/installment/', installment_posting, name='installment_posting'),
+    path('income/create', IncomeCreateView.as_view(), name='income_create'),
+    path('income-expense/list', income_expense_list, name='income_list'),
 
 ]

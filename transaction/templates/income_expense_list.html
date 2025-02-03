@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>আয়-ব্যয়</span>
+        <span>
+            <a class="btn btn-success" href="{% url 'income_create' %}" title="আয় যুক্ত করুন">
+                <i class="icon-plus"></i>
+            </a>
+            <a class="btn btn-danger" href="" title="ব্যয় যুক্ত করুন">
+                <i class="icon-plus"></i>
+            </a>
+        </span>
+    </div>
+    <div class="card-body">
+        <!-- Use Bootstrap Grid System for Two Columns -->
+        <div class="row">
+            <!-- Income Table (Left Column) -->
+            <div class="col-md-6">
+                <h5 class="text-center">আয়ের তালিকা</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>আয়ের খাত</th>
+                                <th>আয়ের পরিমান</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for income in incomes %}
+                                <tr>
+                                    <td>{{ income.date }}</td>
+                                    <td>{{ income.accounts }}</td>
+                                    <td>{{ income.credit }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Expense Table (Right Column) -->
+            <div class="col-md-6">
+                <h5 class="text-center">ব্যয়ের তালিকা</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>ব্যয়ের খাত</th>
+                                <th>ব্যয়ের পরিমান</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                                <tr>
+                                    <td>{{ expense.date }}</td>
+                                    <td>{{ expense.accounts }}</td>
+                                    <td>{{ expense.debit }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

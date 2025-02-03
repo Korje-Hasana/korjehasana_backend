@@ -1,4 +1,6 @@
 from django import forms
+
+from journal.models import Ledger, GeneralJournal
 from organization.models import Team
 from peoples.models import Member
 from .models import Loan
@@ -60,5 +62,12 @@ class LoanDisbursementForm(forms.ModelForm):
         return cleaned_data
 
 
-class IncomeTransactionForm:
-    pass
+class IncomeTransactionForm(forms.ModelForm):
+    income_type = forms.ModelChoiceField(queryset=Ledger.objects.filter(ledger_type__code='OI'), widget=forms.Select(attrs={'class': 'form-control'}), label='আয়ের খাত')
+    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    amount = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = GeneralJournal  # Link this form to GeneralJournal model
+        fields = ['income_type', 'date', 'amount']
+

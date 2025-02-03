@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="card mt-4 col-md-6">
+        <div class="card-header">
+            আয়
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="invalid-feedback">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+  <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#id_date" ).datepicker({
+  dateFormat: "yy-mm-dd"
+});
+  } );
+  </script>
+{% endblock %}
+
+
