@@ -22,12 +22,13 @@ from transaction.forms import (
     InstallmentForm, DepositForm, MemberChoiceForm,
     LoanDisbursementForm, WithdrawForm, IncomeTransactionForm
 )
-from transaction.services import IncomeService
+from transaction.services import IncomeService, ExpenseService
 from journal.repositories import GeneralJournalRepository
 from transaction.utils import format_savings_date, format_loan_data
 
 # Initialize the service with repository dependency
 income_service = IncomeService()
+expense_service = ExpenseService()
 
 
 from .models import Loan
@@ -318,15 +319,21 @@ class IncomeCreateView(CreateView):
             return self.form_invalid(form)
 
 
-class IncomeListView(ListView):
-    """Displays the list of incomes."""
-    model = GeneralJournal
-    template_name = "income_list.html"
-    context_object_name = "incomes"
+def income_expense_list(request):
+    """
+    Displays the list of incomes and expenses.
+    """
+    # Fetch incomes and expenses using the service layer
+    incomes = income_service.get_all_incomes()
+    expenses = expense_service.get_all_expenses()
 
-    def get_queryset(self):
-        """Fetch data using the service layer."""
-        return income_service.get_all_incomes()
+    # Pass both incomes and expenses to the template
+    context = {
+        'incomes': incomes,
+        'expenses': expenses,
+    }
+
+    return render(request, 'income_expense_list.html', context)
 
 # class IncomeCreateView(LoginRequiredMixin, TemplateView):
 #     template_name = "transaction/income_create.html"

@@ -38,5 +38,18 @@ class GeneralJournalRepository:
         )
         self.cash_debit(date=date, member=None, amount=amount, branch=branch, remarks=remarks)
 
+    def create_expense_entry(self, account, date, branch, amount, remarks=""):
+        GeneralJournal.objects.create(
+            date=date,
+            accounts=account,
+            branch=branch,
+            debit=amount,
+            remarks=remarks
+        )
+        self.cash_credit(date=date, member=None, amount=amount, branch=branch, remarks=remarks)
+
     def get_all_incomes(self):
         return GeneralJournal.objects.filter(accounts__ledger_type__code='OI') # OI = Owner Equity Income
+
+    def get_all_expenses(self):
+        return GeneralJournal.objects.filter(accounts__ledger_type__code='OE') # OI = Owner Equity Income
