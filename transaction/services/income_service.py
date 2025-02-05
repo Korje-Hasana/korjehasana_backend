@@ -3,11 +3,12 @@ from journal.repositories.ledger_repository import LedgerRepository
 
 
 class IncomeService:
-    def __init__(self):
-        self.general_journal_repository = GeneralJournalRepository()
+    def __init__(self, branch):
+        self.general_journal_repository = GeneralJournalRepository(branch=branch)
         self.account_repository = LedgerRepository()
+        self.branch = branch
 
-    def create_income(self, form_data, branch):
+    def create_income(self, form_data):
         account = form_data['income_type']
         date = form_data['date']
         amount = form_data['amount']
@@ -16,7 +17,7 @@ class IncomeService:
             account=account,
             date=date,
             amount=amount,
-            branch=branch,
+            branch=self.branch,
             remarks=f"Income: {account.name}"
         )
 

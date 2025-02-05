@@ -2,9 +2,10 @@ from journal.repositories import GeneralJournalRepository
 from journal.repositories.ledger_repository import LedgerRepository
 
 class ExpenseService:
-    def __init__(self):
-        self.general_journal_repository = GeneralJournalRepository()
+    def __init__(self, branch):
+        self.general_journal_repository = GeneralJournalRepository(branch=branch)
         self.account_repository = LedgerRepository()
+        self.branch = branch
 
     def create_expense(self, form_data, branch):
         account = form_data['expense_type']

@@ -26,10 +26,6 @@ from transaction.services import IncomeService, ExpenseService
 from journal.repositories import GeneralJournalRepository
 from transaction.utils import format_savings_date, format_loan_data
 
-# Initialize the service with repository dependency
-income_service = IncomeService()
-expense_service = ExpenseService()
-
 
 from .models import Loan
 
@@ -306,12 +302,13 @@ class IncomeCreateView(CreateView):
     template_name = "income_create.html"
     success_url = reverse_lazy("income_list")
 
+
     def form_valid(self, form):
         """Validate and save the form using service."""
         try:
-            branch = self.request.user.branch
             form_data = form.cleaned_data
-            income_service.create_income(form_data, branch)
+            income_service = IncomeService(branch=self.request.user.branch)
+            income_service.create_income(form_data)
             return redirect(self.success_url)
         except ValueError as e:
             print(e)
@@ -324,6 +321,10 @@ def income_expense_list(request):
     Displays the list of incomes and expenses.
     """
     # Fetch incomes and expenses using the service layer
+    # Initialize the service with repository dependency
+    income_service = IncomeService(branch=request.user.branch)
+    expense_service = ExpenseService(branch=request.user.branch)
+
     incomes = income_service.get_all_incomes()
     expenses = expense_service.get_all_expenses()
 
@@ -334,32 +335,3 @@ def income_expense_list(request):
     }
 
     return render(request, 'income_expense_list.html', context)
-
-# class IncomeCreateView(LoginRequiredMixin, TemplateView):
-#     template_name = "transaction/income_create.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         user = self.request.user
-#         context["form"] = IncomeTransactionForm()
-#         return context
-#
-#     def post(self, request, *args, **kwargs):
-#         form = IncomeTransactionForm(request.POST)
-#         if form.is_valid():
-#             user = request.user
-#             data = form.cleaned_data
-#             account = form.cleaned_data["income_type"]
-#
-#
-#
-#             # Create a journal entry
-#             GeneralJournal.objects.create_income_entry(
-#                 date=data["date"],
-#                 branch=user.branch,
-#                 amount=data["amount"],
-#                 remarks=f"{category}: {data['summary']}",
-#             )
-#             return JsonResponse({"success": True, "message": "Transaction created successfully."})
-#
-#         return JsonResponse({"success": False, "errors": form.errors})

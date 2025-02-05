@@ -31,7 +31,7 @@
                     <tbody>
                         <tr>
                             <th scope="row">সদস্যের নাম</th>
-                            <td>{{ member.name }}</td>
+                            <td><a href="{{ member.get_absolute_url }}">{{ member.name }}</a></td>
                         </tr>
                         <tr>
                             <th scope="row">অভিভাবকের নাম</th>

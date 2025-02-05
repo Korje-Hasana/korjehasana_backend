@@ -30,7 +30,7 @@ urlpatterns = [
     # organization
     path("api/v1/organization/", include("organization.routes")),
     # peoples
-    path("api/v1/peoples/", include("peoples.urls")),
+    path("peoples/", include("peoples.urls")),
     # transaction
     path("api/v1/transaction/", include("transaction.routes")),
 

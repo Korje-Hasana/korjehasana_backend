@@ -2,6 +2,8 @@ from django.db.models import Q
 from journal.models import GeneralJournal, Ledger
 
 class GeneralJournalRepository:
+    def __init__(self, branch=None):
+        self.branch = branch
 
     def cash_credit(self, date, member, amount, branch, remarks=""):
         cash_account = Ledger.objects.get(code='CA')
@@ -49,7 +51,12 @@ class GeneralJournalRepository:
         self.cash_credit(date=date, member=None, amount=amount, branch=branch, remarks=remarks)
 
     def get_all_incomes(self):
-        return GeneralJournal.objects.filter(accounts__ledger_type__code='OI') # OI = Owner Equity Income
+        return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OI') # OI = Owner Equity Income
 
     def get_all_expenses(self):
-        return GeneralJournal.objects.filter(accounts__ledger_type__code='OE') # OI = Owner Equity Income
+        return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OE') # OI = Owner Equity Income
+
+    def get_member_account_payable(self, member_id):
+        """Fetch journal entries for a specific member where account type is 'LP'"""
+        return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__ledger_type__code="LP")).order_by('-date')
+

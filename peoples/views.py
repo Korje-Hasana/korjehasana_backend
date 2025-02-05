@@ -8,7 +8,7 @@ from .models import Member
 from .forms import MemberForm
 from organization.models import Branch, Team
 from journal.repositories.journal_reposity import GeneralJournalRepository
-
+from .services.member_services import MemberService
 
 
 def create_member(request, team_id):
@@ -41,11 +41,13 @@ class MemberDetailView(DetailView):
     template_name = 'people/member_detail.html'
     context_object_name = 'member'
 
+
     # Add context to pass members GeneralJournal entries
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         member = self.object
-        context['member_transactions'] = GeneralJournalRepository.get_member_account_payable(member.id)
+        member_service = MemberService(branch=self.request.user.branch)
+        context['member_transactions'] = member_service.get_member_transactions(member.id)
         return context
 
 
