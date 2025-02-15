@@ -27,12 +27,15 @@ from journal.repositories import GeneralJournalRepository
 from transaction.utils import format_savings_date, format_loan_data
 
 
-from .models import Loan
+from .models import Loan, Installment
 
 
 @login_required
 def dashboard(request):
     branch = request.user.branch
+    journal_repository = GeneralJournalRepository(branch=branch)
+
+
     branch_journal = GeneralJournal.objects.filter(branch=branch)
     balance = branch_journal.filter(accounts__code='CA') \
         .aggregate(balance=Sum('debit') - Sum('credit'))['balance']
@@ -52,8 +55,8 @@ def dashboard(request):
     context = {
         "deposit_balance": total_deposit - total_withdraw,  # সঞ্চয় স্থিতি
         "loan_balance": total_loan - total_installment,
-        "total_expense": "total_expense",
-        "total_income": "total_income",
+        "total_income": journal_repository.get_income_total(),
+        "total_expense": journal_repository.get_expense_total(),
         "balance": balance,
         "branch": branch
     }
@@ -191,11 +194,13 @@ def installment_posting(request):
             try:
                 loan = member.get_my_loan()
                 loan.pay_installment(amount)
+                Installment.objects.create(loan=loan, date=date, amount=amount)
                 GeneralJournal.objects.create_installment_entry(date, member, amount)
                 messages.success(request, f'{member.name} {amount} টাকা কর্জ ফেরত জমা হয়েছে')
                 if loan.is_paid:
                     messages.success(request, f'{member.name} কর্জ পরিশোধ হয়েছে')
             except IntegrityError as e:
+                print(e)
                 messages.error(request, f'দুঃখিত, {member.name} ৳{amount} ইতোমধ্যে জমা হয়েছে')
 
     form = MemberChoiceForm({'team': team_id, 'serial_number': serial_number}, user=request.user)
