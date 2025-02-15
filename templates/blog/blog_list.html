@@ -1,15 +1,27 @@
 {% extends 'base/base.html' %}
 
+{% block title %}Blog List{% endblock %}
+
 {% block content %}
-<h2>Blog List</h2>
-<div class="blog-list">
-    {% for blog in blogs %}
-    <div class="blog-item">
-        <h3><a href="{% url 'blog_detail' blog.pk %}">{{ blog.title }}</a></h3>
-        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" width="200">
-        <p>{{ blog.short_description }}</p>
-        <a href="{% url 'blog_detail' blog.pk %}">Read More</a>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Our Latest Blogs</h2>
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-md-4"> <!-- এক লাইনে ৩টি আইটেম দেখাবে -->
+            <div class="card mb-4 shadow-sm">
+                <!-- Image with fixed size -->
+                <a href="{% url 'blog-detail' blog.id %}">
+                    <img src="{{ blog.image.url }}" class="card-img-top img-fluid" alt="{{ blog.title }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-text">{{ blog.short_description }}</p>
+                    <!-- Read More button below -->
+                    <a href="{% url 'blog-detail' blog.id %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
