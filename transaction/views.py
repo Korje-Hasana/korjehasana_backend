@@ -97,7 +97,6 @@ def loan_list(request, team_id=None):
     active_loans = Loan.objects.filter(
         branch=staff_branch, is_paid=False
     ).select_related("member").order_by("member__serial_number")
-    print(active_loans)
 
     if team_id:
         team = Team.objects.get(id=team_id)
