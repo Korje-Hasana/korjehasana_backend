@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Sum
 from journal.models import GeneralJournal, Ledger
 
 class GeneralJournalRepository:
@@ -52,6 +52,14 @@ class GeneralJournalRepository:
 
     def get_all_incomes(self):
         return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OI') # OI = Owner Equity Income
+
+    # update get_all_incomes function to get sum of all incomes
+    def get_income_total(self):
+        return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OI').aggregate(Sum('credit'))['credit__sum']
+
+    # update get_all_incomes function to get sum of all expenses
+    def get_expense_total(self):
+        return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OE').aggregate(Sum('debit'))['debit__sum']
 
     def get_all_expenses(self):
         return GeneralJournal.objects.filter(branch=self.branch, accounts__ledger_type__code='OE') # OI = Owner Equity Income

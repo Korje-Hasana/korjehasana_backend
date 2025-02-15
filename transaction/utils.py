@@ -58,6 +58,7 @@ def format_loan_data(loan, month):
 
     # Format current month installment
     installments = Installment.objects.filter(loan=loan, date__month=month)
+    print(installments)
     for installment in installments:
         # Get saving posting date int.
         installment_date = installment.date.day
