@@ -68,3 +68,8 @@ class GeneralJournalRepository:
         """Fetch journal entries for a specific member where account type is 'LP'"""
         return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__ledger_type__code="LP")).order_by('-date')
 
+
+    def get_monthly_loan_installment(self, member_id, month, year):
+        """Fetch journal entries for a specific member where account type is 'LP'"""
+        return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__ledger_type__code="LP") & Q(date__month=month) & Q(date__year=year)).order_by('-date')
+

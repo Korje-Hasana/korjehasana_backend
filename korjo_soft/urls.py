@@ -36,6 +36,7 @@ urlpatterns = [
 
     path("dashboard/transactions/", include("transaction.urls")),
     path("dashboard/org/", include("organization.urls")),
+    path("dashboard/report/", include("report.urls")),
     path("accounts/", include("accounts.urls")),
     path("loan/", include("loan.urls")),
 ]
