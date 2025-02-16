@@ -1,0 +1,61 @@
+{% extends 'base/base.html' %}
+
+{% block extrahead %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}
+
+
+
+
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="card-title">কর্জ প্রদান এবং আদায় তুলনা রিপোর্ট</h4>
+    </div>
+    <div class="card-body">
+        <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+            <canvas id="loanChart"></canvas>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+        // Get data from Django context
+        var months = {{ months|safe }};
+        var totalLoans = {{ total_loans|safe }};
+        var totalInstallments = {{ total_installments|safe }};
+
+        var ctx = document.getElementById('loanChart').getContext('2d');
+        var loanChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,  // X-axis labels (Months)
+                datasets: [
+                    {
+                        label: 'Total Loan',
+                        data: totalLoans,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Total Installment',
+                        data: totalInstallments,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+            }
+        });
+    </script>
+{% endblock %}
