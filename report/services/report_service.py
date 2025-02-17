@@ -15,7 +15,7 @@ class ReportService:
 
     def get_monthly_loan_installment_report(self, branch):
         # Get the date 12 months ago from today
-        twelve_months_ago = now().replace(day=1) - timedelta(days=180)
+        twelve_months_ago = now().replace(day=1) - timedelta(days=365)
         # Query GeneralJournal for Loan (code = "LO")
         loan_data = (
             GeneralJournal.objects
