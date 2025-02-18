@@ -1,2 +1,2 @@
 # Qard al hasana
-interest free loan
+interest free loan razzak
