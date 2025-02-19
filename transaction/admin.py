@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Savings, Loan, GeneralTransaction
+from .models import Savings, Loan, GeneralTransaction, LoanReason
 
 from django.contrib.admin.sites import AlreadyRegistered
 from django.contrib import admin
@@ -20,8 +20,11 @@ class LoanAdmin(admin.ModelAdmin):
         'total_installment', 'installment_paid', 'total_paid', 'total_due'
     ]
     list_display_links = ['id']
-    #list_editable = ['is_paid']
-    ordering = ['id']
+
+
+@admin.register(LoanReason)
+class LoanReasonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
 
 
 @admin.register(GeneralTransaction)

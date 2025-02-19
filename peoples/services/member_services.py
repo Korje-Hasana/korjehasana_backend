@@ -11,3 +11,7 @@ class MemberService:
     # create function to get all transaction of a  member (deposit, withdraw)
     def get_member_transactions(self, member_id):
         return self.general_journal_repository.get_member_account_payable(member_id)
+
+
+    def get_member_installment_list(self, member_id):
+        return self.general_journal_repository.get_member_installment(member_id)
