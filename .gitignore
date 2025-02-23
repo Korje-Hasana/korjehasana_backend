@@ -147,6 +147,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+korjehasana_beckend/
 
 # Spyder project settings
 .spyderproject
@@ -431,4 +432,6 @@ sketch
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/react,django,pycharm,visualstudiocode,git,python
+# End of https://www.toptal.com/developers/gitignore/api/react,django,pycharm,visualstudiocode,git,pythonv e n v / 
+ 
+ 
