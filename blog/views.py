@@ -7,7 +7,7 @@ class BlogListView(ListView):
     template_name = 'blog/blog_list.html'
     context_object_name = 'blogs'
 
-# update code
+
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blog/blog_detail.html'
