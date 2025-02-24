@@ -42,10 +42,10 @@ deactivate nondestructive
 if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath "C:\Users\Administrator\Desktop\korjehasana_backend\korjehasana_backend")
+    export VIRTUAL_ENV=$(cygpath "C:\Users\Administrator\Desktop\korjehasana_backend\korjehasana_beckend")
 else
     # use the path as-is
-    export VIRTUAL_ENV="C:\Users\Administrator\Desktop\korjehasana_backend\korjehasana_backend"
+    export VIRTUAL_ENV="C:\Users\Administrator\Desktop\korjehasana_backend\korjehasana_beckend"
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -62,9 +62,9 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
-    PS1="(korjehasana_backend) ${PS1:-}"
+    PS1="(korjehasana_beckend) ${PS1:-}"
     export PS1
-    VIRTUAL_ENV_PROMPT="(korjehasana_backend) "
+    VIRTUAL_ENV_PROMPT="(korjehasana_beckend) "
     export VIRTUAL_ENV_PROMPT
 fi
 

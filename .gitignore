@@ -147,7 +147,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-korjehasana_beckend/
+
 
 # Spyder project settings
 .spyderproject
