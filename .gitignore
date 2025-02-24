@@ -148,6 +148,7 @@ ENV/
 env.bak/
 venv.bak/
 
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -431,4 +432,6 @@ sketch
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/react,django,pycharm,visualstudiocode,git,python
+# End of https://www.toptal.com/developers/gitignore/api/react,django,pycharm,visualstudiocode,git,pythonv e n v / 
+ 
+ 

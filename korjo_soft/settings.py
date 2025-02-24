@@ -53,6 +53,7 @@ LOCAL_APPS = [
     "report",
     "journal",
     "loan",
+    "blog"
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -92,7 +93,6 @@ WSGI_APPLICATION = "korjo_soft.wsgi.application"
 
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -103,7 +103,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 # Update database configuration from $DATABASE_URL.
 
