@@ -1,2 +1,2 @@
 # Qard al hasana
-interest free loan abrazzak
+interest free loan newrazzak
