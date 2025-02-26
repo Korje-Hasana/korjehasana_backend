@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">কর্জে হাসানা ব্লগ</h2>
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <!-- Image with fixed size update -->
+                <a href="{% url 'blog-detail' blog.id %}">
+                    <img src="{% if blog.image %}{{ blog.image.url }}{% else %}{{ '/media/default_image.jpg' }}{% endif %}" class="card-img-top img-fluid" alt="{{ blog.title }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-text">{{ blog.short_description }}</p>
+
+                    <a href="{% url 'blog-detail' blog.id %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

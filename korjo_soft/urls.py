@@ -39,6 +39,7 @@ urlpatterns = [
     path("dashboard/report/", include("report.urls")),
     path("accounts/", include("accounts.urls")),
     path("loan/", include("loan.urls")),
+    path("blog/", include("blog.urls")),
 ]
 
 if settings.DEBUG:
