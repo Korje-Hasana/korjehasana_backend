@@ -115,6 +115,13 @@ class Savings(BaseModel):
         unique_together = ("member", "date", "transaction_type")
 
 
+class LoanReason(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 class Loan(BaseModel):
     amount = models.IntegerField()
     date = models.DateField()
@@ -125,6 +132,7 @@ class Loan(BaseModel):
     installment_paid = models.IntegerField(default=0)
     total_paid = models.IntegerField(default=0)
     total_due = models.IntegerField(default=0)
+    loan_reason = models.ForeignKey(LoanReason, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f"Loan of {self.amount} to {self.member.name}"

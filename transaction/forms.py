@@ -35,13 +35,23 @@ class WithdrawForm(DepositForm):
 class LoanDisbursementForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = ['date', 'amount', 'total_installment']
+        fields = ['date', 'amount', 'total_installment', 'loan_reason']
 
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
             'total_installment': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
+            'loan_reason': forms.Select(attrs={'class': 'form-control'}),
         }
+
+        # add labels for all fields
+        labels = {
+            'date': 'তারিখ',
+            'amount': 'পরিমাণ',
+            'total_installment': 'মোট কিস্তি',
+            'loan_reason': 'কর্জের কারণ'
+        }
+
 
     def __init__(self, *args, **kwargs):
         super(LoanDisbursementForm, self).__init__(*args, **kwargs)
