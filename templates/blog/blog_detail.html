@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load dmd_extras %}
 
 {% block title %}{{ blog.title }}{% endblock %}
 
@@ -9,11 +10,11 @@
         <img src="{{ blog.image.url }}" class="img-fluid w-100" alt="{{ blog.title }}">
     </div>
     <h2 class="text-center mb-3">{{ blog.title }}</h2>
-    <p class="text-muted text-center">Published on: {{ blog.public_date }}</p>
-    <p class="text-center">Category: {{ blog.category }}</p>
+    <p class="text-muted text-center">Published on: {{ blog.publication_date }}</p>
+    <p class="text-center">Category: {{ blog.category.name }}</p>
 
     <div class="mt-4">
-        <p>{{ blog.description }}</p>
+        <p>{{ blog.description | render_markdown }}</p>
     </div>
     <a href="{% url 'blog-list' %}" class="btn btn-secondary mt-4">Back to List</a>
 </div>
