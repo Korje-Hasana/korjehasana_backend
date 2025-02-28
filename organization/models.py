@@ -120,4 +120,4 @@ class Team(models.Model):
         return self.loan_set.filter(is_paid=False).count()
 
     def total_member_count(self):
-        return self.members.count()
+        return self.members.filter(is_active=True).count()
