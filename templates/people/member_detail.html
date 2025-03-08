@@ -1,6 +1,10 @@
 {% extends 'base/base.html' %}
+{% load permission_tags %}
+
+{% block title %}সদস্য বিবরন{% endblock %}
 
 {% block content %}
+{% has_group request.user "collector" as user_has_permission %}
 <div class="card mt-4">
     <div class="card-header">
         সদস্য বিবরন
@@ -54,6 +58,7 @@
         </div>
     </div>
     <div class="card-footer d-flex justify-content-between">
+        {% if user_has_permission %}
         <span>
             <a class="btn btn-success" href="{% url 'deposit_posting' %}?team={{member.team_id}}&serial_number={{member.serial_number}}">সঞ্চয় জমা</a>
             <a class="btn btn-primary" href="{% url 'loan_disbursement' member.id %}">কর্জ প্রদান</a>
@@ -64,7 +69,7 @@
             <a class="btn btn-success" href="{% url 'member_update' member.pk %}" >Edit</a>
             <a class="btn btn-danger" href="{% url 'member_delete' member.pk %}" >Delete</a>
         </span>
-
+        {% endif %}
 
     </div>
 </div>

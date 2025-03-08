@@ -1,9 +1,14 @@
 {% extends 'base/base.html' %}
+{% load permission_tags %}
+
+{% block title %}আয়-ব্যয়{% endblock %}
 
 {% block content %}
+{% has_group request.user "collector" as user_has_permission %}
 <div class="card mt-4">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span>আয়-ব্যয়</span>
+        {% if user_has_permission %}
         <span>
             <a class="btn btn-success" href="{% url 'income_create' %}" title="আয় যুক্ত করুন">
                 <i class="icon-plus"></i>
@@ -12,6 +17,7 @@
                 <i class="icon-plus"></i>
             </a>
         </span>
+        {% endif %}
     </div>
     <div class="card-body">
         <!-- Use Bootstrap Grid System for Two Columns -->
