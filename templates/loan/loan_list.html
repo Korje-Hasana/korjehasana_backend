@@ -45,33 +45,33 @@
             <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
-                        <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">Member</a></th>
-                        <th>অভিভাবকের নাম</th>
-                        <th>দল</th>
                         <th>
                             <a href="?order_by=date&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
-                            Date
+                            কর্জ প্রদানের তারিখ
                             <a href="?order_by=date&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
                         </th>
+                        <th><a href="?order_by=member&direction={{ request.GET.direction|default:'asc' }}">সদস্যের নাম</a></th>
+
                         <th>
                             <a href="?order_by=amount&direction=asc"><i class="fa-solid fa-arrow-up"></i></a>
-                            Amount
+                            কর্জের পরিমাণ
                             <a href="?order_by=amount&direction=desc"><i class="fa-solid fa-arrow-down"></i></a>
                         </th>
-                        <th>Paid</th>
-                        <th>Due</th>
+                        <th>পরিশোধ</th>
+                        <th>বাঁকি</th>
+                        <th>কর্জের খাত</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for loan in loans %}
                         <tr>
-                            <td><a href="{% url 'member_detail' loan.member.id %}">{{ loan.member.name }}</a></td>
-                            <td>{{ loan.member.guardian_name }}</td>
-                            <td>{{ loan.member.team }}</td>
                             <td>{{ loan.date }}</td>
+                            <td><a href="{% url 'member_detail' loan.member.id %}">{{ loan.member.name }}</a></td>
+
                             <td>{{ loan.amount }}</td>
                             <td>{{ loan.total_paid }}</td>
                             <td>{{ loan.total_due }}</td>
+                            <td>{{ loan.loan_reason }}</td>
                         </tr>
                     {% empty %}
                         <tr>

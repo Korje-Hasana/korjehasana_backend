@@ -20,7 +20,7 @@ from organization.models import Branch, Team
 from peoples.models import Member
 from transaction.forms import (
     InstallmentForm, DepositForm, MemberChoiceForm,
-    LoanDisbursementForm, WithdrawForm, IncomeTransactionForm
+    LoanDisbursementForm, WithdrawForm, IncomeTransactionForm, ExpenseTransactionForm
 )
 from transaction.services import IncomeService, ExpenseService
 from journal.repositories import GeneralJournalRepository
@@ -314,6 +314,25 @@ class IncomeCreateView(CreateView):
             form_data = form.cleaned_data
             income_service = IncomeService(branch=self.request.user.branch)
             income_service.create_income(form_data)
+            return redirect(self.success_url)
+        except ValueError as e:
+            print(e)
+            form.add_error('amount', str(e))
+            return self.form_invalid(form)
+
+
+# Create class based view for expense creation, following IncomeCreateView as an example
+class ExpenseCreateView(CreateView):
+    model = GeneralJournal
+    form_class = ExpenseTransactionForm
+    template_name = "expense_create.html"
+    success_url = reverse_lazy("income_list")
+
+    def form_valid(self, form):
+        try:
+            form_data = form.cleaned_data
+            expense_service = ExpenseService(branch=self.request.user.branch)
+            expense_service.create_expense(form_data)
             return redirect(self.success_url)
         except ValueError as e:
             print(e)

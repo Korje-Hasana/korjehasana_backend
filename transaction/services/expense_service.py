@@ -7,7 +7,7 @@ class ExpenseService:
         self.account_repository = LedgerRepository()
         self.branch = branch
 
-    def create_expense(self, form_data, branch):
+    def create_expense(self, form_data):
         account = form_data['expense_type']
         date = form_data['date']
         amount = form_data['amount']
@@ -15,7 +15,7 @@ class ExpenseService:
             account=account,
             date=date,
             amount=amount,
-            branch=branch,
+            branch=self.branch,
             remarks=f"Expense: {account.name}"
         )
 

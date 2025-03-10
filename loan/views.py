@@ -46,7 +46,7 @@ class LoanListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(date__lte=enddate)
 
         # Handle ordering
-        order_by = self.request.GET.get('order_by', 'date')
+        order_by = self.request.GET.get('order_by', '-date')
         direction = self.request.GET.get('direction', 'asc')
         if direction == 'desc':
             order_by = f'-{order_by}'

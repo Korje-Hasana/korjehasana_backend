@@ -81,3 +81,12 @@ class IncomeTransactionForm(forms.ModelForm):
         model = GeneralJournal  # Link this form to GeneralJournal model
         fields = ['income_type', 'date', 'amount']
 
+
+class ExpenseTransactionForm(forms.ModelForm):
+    expense_type = forms.ModelChoiceField(queryset=Ledger.objects.filter(ledger_type__code='OE'), widget=forms.Select(attrs={'class': 'form-control'}), label='ব্যয়ের খাত')
+    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    amount = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = GeneralJournal  # Link this form to GeneralJournal model
+        fields = ['expense_type', 'date', 'amount']
