@@ -35,7 +35,7 @@ urlpatterns = [
     path("api/v1/transaction/", include("transaction.routes")),
 
     path("dashboard/transactions/", include("transaction.urls")),
-    path("dashboard/org/", include("organization.urls")),
+    path("org/", include("organization.urls")),
     path("dashboard/report/", include("report.urls")),
     path("accounts/", include("accounts.urls")),
     path("loan/", include("loan.urls")),
