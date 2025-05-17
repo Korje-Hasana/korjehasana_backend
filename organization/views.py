@@ -1,11 +1,24 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+
+from blog.models import Blog
+from peoples.models import Member
+from transaction.repositories.loan_repo import LoanRepository
 from .models import Team
 from .forms import TeamForm
 
 
 def home(request):
-    return render(request, 'index.html')
+    total_loan_count = LoanRepository.get_total_loan_count()
+    total_loan_amount = LoanRepository.get_total_loan_amount()
+    blogs = Blog.objects.all().order_by('-id')[:3]
+    context = {
+        'total_loan_count': total_loan_count,
+        'total_loan_amount': total_loan_amount,
+        'total_member': Member.objects.filter(is_active=True).count(),
+        'blogs': blogs,
+    }
+    return render(request, 'index.html', context)
 
 @login_required
 def team_create(request):

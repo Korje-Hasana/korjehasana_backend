@@ -1,717 +1,714 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>আন-নূর কর্জে হাসানা</title>
+    <meta name="description" content="A social organization dedicated to provide interest free loan to rural people" />
+    <meta name="author" content="আন-নূর কর্জে হাসানা" />
 
+    <link rel="icon" href="{% static '/src/img/annur_logo.png' %}" type="image/x-icon">
 
-  <main class="main">
+    <meta property="og:title" content="আন-নূর কর্জে হাসানা" />
+    <meta property="og:description" content="A social organization dedicated to provide interest free loan to rural people" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://source.unsplash.com/random/1200x630/?community" />
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section accent-background">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@samajiksongoton" />
+    <meta name="twitter:image" content="https://source.unsplash.com/random/1200x630/?community" />
 
-      <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    <!-- Hind Siliguri Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        <div class="carousel-item active">
-          <img src="{% static 'src/landing/img/hero-carousel/hero-carousel-1.jpg' %}" alt="">
-          <div class="carousel-container">
-            <h2>কর্জে হাসানা বাংলাদেশ</h2>
-            <p>সুদ থেকে নিজে বাঁচুন, অন্যকে বাঁচান</p>
-            <a href="#featured-services" class="btn-get-started"></a>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS Animation Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#1FD19D',
+                50: '#E0FAF3',
+                100: '#C2F5E7',
+                200: '#86EBCF',
+                300: '#4AE0B8',
+                400: '#1FD19D',
+                500: '#19A67C',
+                600: '#14795B',
+                700: '#0E4D3A',
+                800: '#072218',
+                900: '#000000',
+              },
+              secondary: {
+                DEFAULT: '#6C63FF',
+                light: '#8C85FF',
+                dark: '#4B44CC'
+              },
+              accent: {
+                DEFAULT: '#FF6584',
+                light: '#FF8CA3',
+                dark: '#E13E5F'
+              }
+            },
+            fontFamily: {
+              'hind': ['Hind Siliguri', 'sans-serif']
+            },
+            backgroundImage: {
+              'hero-pattern': "url('https://images.unsplash.com/photo-1559024094-4a1e4495c3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
+              'cta-pattern': "linear-gradient(90deg, rgba(31,209,157,0.9) 0%, rgba(108,99,255,0.9) 100%)",
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      body {
+        font-family: 'Hind Siliguri', sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      .slider {
+        position: relative;
+        overflow: hidden;
+        height: 650px;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 1;
+        transition: opacity 1s ease-in-out;
+        pointer-events: none;       /* Prevent clicks on hidden slides */
+        visibility: hidden;         /* Hide from screen readers/layout */
+      }
+
+      .slide.active {
+          opacity: 1;
+          z-index: 2;
+          pointer-events: auto;       /* Allow interactions */
+          visibility: visible;
+        }
+
+      .counter-item {
+        transition: all 0.5s ease;
+      }
+
+      .counter-item:hover {
+        transform: translateY(-10px);
+      }
+
+      .project-card {
+        transition: all 0.3s ease;
+      }
+
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      .blog-card {
+        transition: all 0.3s ease;
+      }
+
+      .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      .navbar-fixed {
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      .gradient-text {
+        background: linear-gradient(90deg, #1FD19D 0%, #6C63FF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .custom-shape-divider-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        z-index: 1;
+      }
+
+      .custom-shape-divider-bottom svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 80px;
+      }
+
+      .custom-shape-divider-bottom .shape-fill {
+        fill: #FFFFFF;
+      }
+
+      .section-title::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #1FD19D 0%, #6C63FF 100%);
+        margin: 0.5rem auto 0;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+
+  <body class="font-hind bg-gray-50">
+    <!-- Header/Navigation -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center">
+            <a href="#" class="text-2xl font-bold">
+              <span class="text-primary">আন-নূর</span>
+              <span class="text-secondary">কর্জে হাসানা</span>
+            </a>
           </div>
-        </div><!-- End Carousel Item -->
 
-        <div class="carousel-item">
-          <img src="{% static 'src/landing/img/hero-carousel/hero-carousel-2.jpg' %}" alt="">
-          <div class="carousel-container">
-            <h2>সুদ বর্জন করো</h2>
-            <p>হে ঈমানদারগণ, আল্লাহকে ভয় কর এবং যদি তোমরা মুমিন হও, তবে সুদের মধ্যে যা অবশিষ্ট রয়েছে, তা বর্জন কর।” (সূরা বাকারা - ২৭৮)</p>
-            <a href="#featured-services" class="btn-get-started">Get Started</a>
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-8">
+            <a href="#home" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">হোম</a>
+            <a href="#about" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">আমাদের সম্পর্কে</a>
+            <a href="#projects" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">প্রকল্প</a>
+            <a href="#blog" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">ব্লগ</a>
+            <a href="#contact" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">যোগাযোগ</a>
+          </nav>
+
+          <!-- CTA Button -->
+          <div class="hidden md:block">
+            <a href="{% url 'login' %}" class="bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
+              এডমিন লগিন
+            </a>
           </div>
-        </div><!-- End Carousel Item -->
 
-        <div class="carousel-item">
-          <img src="{% static 'src/landing/img/hero-carousel/hero-carousel-3.jpg' %}" alt="">
-          <div class="carousel-container">
-            <h2>আল্লাহর সাথে যুদ্ধ</h2>
-            <p>“কিন্তু যদি তা না কর, তবে আল্লাহ এবং তার রাসুলের পক্ষ হতে যুদ্ধের ঘোষণা থাকবে।” (সূরা বাকারা - ২৭৯)</p>
-            <a href="#featured-services" class="btn-get-started">Get Started</a>
+          <!-- Mobile Menu Button -->
+          <div class="md:hidden">
+            <button id="mobile-menu-btn" class="text-gray-700">
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
           </div>
-        </div><!-- End Carousel Item -->
-
-        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </a>
-
-        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
-          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-        </a>
-
-        <ol class="carousel-indicators"></ol>
-
-      </div>
-
-    </section><!-- /Hero Section -->
-
-    <!-- Featured Services Section -->
-    <section id="featured-services" class="featured-services section light-background">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="bi bi-activity icon"></i></div>
-              <h4><a href="" class="stretched-link">আল্লাহ তা'আলা স্বয়ং এর প্রতিদান দেন</a></h4>
-              <p>"কে আছে যে আল্লাহকে উত্তম ঋণ দেবে? আল্লাহ তা দ্বিগুণ বা বহুগুণে বৃদ্ধি করে দিবেন।" (সূরা বাকারা: ২৪৫)</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="bi bi-bounding-box-circles icon"></i></div>
-              <h4> পরকালে বিশেষ প্রতিদান</h4>
-              <p>“যে ব্যক্তি কোন মুসলমানের সংকট দূর করে দেয়, আল্লাহ কিয়ামতের দিনে তার সংকট দূর করবেন।”
-(মুসলিম, হাদিস: ২৬৯৯)</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
-              <h4>সম্পদ বৃদ্ধি ও বরকত লাভ</h4>
-              <p>“যা কিছু তুমি ব্যয় করো বা যা কিছু কর্জ দাও, আল্লাহ তা জানেন এবং তিনি এর প্রতিদান দেবেন।”
-(সূরা তাগাবুন: ১৭)</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="bi bi-broadcast icon"></i></div>
-              <h4>ইমানের নিদর্শন</h4>
-              <p>“তোমরা একে অপরের প্রতি দয়া দেখাও এবং সহযোগিতা কর। এটি ইমানের নিদর্শন।” (সহিহ বুখারি)</p>
-            </div>
-          </div><!-- End Service Item -->
-
         </div>
 
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="md:hidden hidden pb-4">
+          <a href="#home" class="block py-2 text-gray-700 hover:text-primary font-medium">হোম</a>
+          <a href="#about" class="block py-2 text-gray-700 hover:text-primary font-medium">আমাদের সম্পর্কে</a>
+          <a href="#projects" class="block py-2 text-gray-700 hover:text-primary font-medium">প্রকল্প</a>
+          <a href="#blog" class="block py-2 text-gray-700 hover:text-primary font-medium">ব্লগ</a>
+          <a href="#contact" class="block py-2 text-gray-700 hover:text-primary font-medium">যোগাযোগ</a>
+          <a href="#contact" class="inline-block mt-2 bg-gradient-to-r from-primary to-secondary text-white font-medium px-6 py-2 rounded-full">যোগাযোগ করুন</a>
+        </div>
       </div>
+    </header>
 
-    </section><!-- /Featured Services Section -->
+    <!-- Hero Section with Slider -->
+    <section id="home" class="slider relative pt-20">
+      <div class="slide active bg-gradient-to-r from-primary-50 to-blue-50 relative overflow-hidden">
+        <div class="container mx-auto px-4 h-full flex items-center">
+          <div class="w-full md:w-1/2 z-10" data-aos="fade-right" data-aos-duration="1000">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4"><span class="gradient-text">আন-নূর কর্জে হাসানা</span></h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">সুদ থেকে নিজে বাঁচুন, অন্যকে বাঁচান</p>
+            <div class="flex flex-wrap gap-4">
+              <a href="#about" class="bg-primary hover:bg-primary-600 text-white font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl">আরও জানুন</a>
+              <a href="#contact" class="bg-white border-2 border-primary text-primary hover:bg-primary-50 font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl">যোগাযোগ করুন</a>
+            </div>
+          </div>
+          <div class="hidden md:block w-1/2 z-10" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
+            <img src="{% static '/src/img/aqsa.jpg' %}" alt="Community" class="rounded-lg shadow-xl mx-auto w-full max-w-lg">
+          </div>
+          <div class="absolute -right-32 -bottom-32 w-64 h-64 bg-accent opacity-10 rounded-full"></div>
+          <div class="absolute -left-32 -top-32 w-96 h-96 bg-secondary opacity-10 rounded-full"></div>
+        </div>
+        <div class="custom-shape-divider-bottom">
+          <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
 
     <!-- About Section -->
-    <section id="about" class="about section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>কর্জে হাসানা কী?</h2>
-        <p>কর্জে হাসানা হচ্ছে সুদমুক্ত ঋণ। আপনাকে আমরা যে পরিমান কর্জ দিবো আপনি ঠিক তত টাকাই ফেরত দিবেন ধাপে ধাপে (কিস্তিতে), কোন জরিমানা ফি নেই, কোন সার্ভিস চার্জ নেই। </p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-4">
-          <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="100">
-            <img src="{% static 'src/landing/about.png' %}" class="img-fluid" alt="">
-
-          </div>
-          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="200">
-            <h3>  ✔ আমরা কিভাবে কাজ করি</h3>
-            <p class="fst-italic">
-
-কর্জ পেতে হলে আপনাকে অবশ্যই আমাদের প্রতিষ্ঠানের সদস্য হতে হবে। আমাদের বাঞ্চের আওতাধীন যে কেউ সদস্য হতে পারবেন। ব্রাঞ্চ আওতার বাইরে হলে "গ্লোবাল" সদস্য হতে পারবেন। "গ্লোবাল" সদস্যগন বিকাশ নগদ বা ব্যাংকের মাধ্যমে সঞ্চয় জমা রাখতে পারবেন, কিন্তু কর্জ নিতে পারবেন না।
- সদস্য হওয়ার পর সাপ্তাহিক বা মাসিক সঞ্চয় জমা দেয়ার অনুরোধ থাকবে। জমাকৃত টাকা ১ বছর পরে উত্তলন করতে পারবেন। আপনার দেয়া সঞ্চেয়ের টাকা থেকেই আমরা বিপদগ্রস্থ ব্যাক্তিকে ঋণ প্রদান করি।
-            </p>
-            <h3>✔ যেভাবে কর্জ পাবেন</h3>
-            <p>যেসব গ্রামে “কর্জে হাসানা”র ব্রাঞ্চ স্থাপিত হয়েছে শুধুমাত্র ঐ সব ব্রাঞ্চের আওতাধীন এলাকার লোকদের পক্ষেই এই ঋণ বা কর্জে হাসানা পাওয়ার সুযোগ এবং সম্ভাবনা রয়েছে। অন্যথায়, বর্তমান কাঠামোতে কোনভাবেই এই ঋণ পাওয়ার সুযোগ নেই। "গ্লোবাল" সদস্যগণ কর্জে হাসানা নিতে পারবেন না। কর্জ প্রার্থীকে অবশ্যই আমাদের সদস্য হতে হবে এবং কর্জের আবেদন ফর্ম পূরণ করতে হবে। কর্জ ফর্মে দুই জন সাক্ষীর সাক্ষর থাকতে হবে। </p>
-            <h3>✔ কর্জের ধরণ, সর্বোচ্চ সীমা এবং টার্গেট গ্রুপ</h3>
-            <p>
-এটি ক্ষুদ্র ঋণ । দেশের প্রান্তিক দরিদ্র শ্রেণী এবং সংকটে নিপতিত মানুষদের জন্য এই ঋণ। সাধারণভাবে এই ঋণের সর্বোচ্চ সীমা মাত্র ১০ হাজার টাকা। ৮-১০ মাস মেয়াদে সাপ্তাহিক কিস্তিতে কর্জ পরিশোধ করতে পারবেন। কোন কারনে নির্দিষ্ট মেয়াদে কর্জ পরিশোধ করতে না পারলে কোন চার্জ নেয়া হয়না, কর্জ গ্রহীতাকে কর্জ পরিশোধের সময় বৃদ্ধি করে দেয়া হয়।
-অনেক মানুষ হঠাৎ বিপদে পরেন, মানুষের দ্বারে দ্বারে ঘুরেও টাকা পান না। অবশেষে বাধ্য হয়ে সুদি এনজিও বা মহাজনের কাছে যেতে হয়। এই শ্রেনীর মানুষকে সুদ থেকে বাঁচানোই আমাদের প্রধান লক্ষ।
-এছাড়া  নুতন ব্যবসায়ের জন্যে ক্ষুদ্র ঋণ, ঘর মেরামত, রিক্সা ভ্যান ইত্যাদি মেরামত বা ক্রয়, সাইকেল ক্রয়, সেলাই মেশিন ক্রয়, জমির সার বীজ ক্রয় এবং সেচ, সন্তানের লেখাপড়া বা চিকিৎসা কাজে, মেয়ের বিয়ের জন্যে সহ নানা প্রয়োজনে এই ঋণ প্রদান করা হয়।</p>
-<p>♦ ঋণ প্রদানের সাথে সাথে আমরা ঋণগ্রহীতা কে সুদের বিপক্ষে সচেতনতা তৈরী করতে চেষ্টা করি। কর্জে হাসানার মত মৃতপ্রায় সুন্নাহ বাস্তবায়নে একদিন সুদমুক্ত হবে প্রতিটি গ্রাম ইনশাআল্লাহ।
-♦♦ শুধুমাত্র ব্রাঞ্চ থেকে কর্জ বিতরণ করা হয়,  অনলাইনে কাউকে কর্জ প্রদান করা হয়না ♦♦</p>
-          </div>
+    <section id="about" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">আমাদের সম্পর্কে</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমরা একটি সেচ্ছাসেবী সংগঠন। যার প্রধান উদ্দ্যেশ্য সুদমুক্ত ঋণ বা কর্জে হাসানা প্রদান করা। আমাদের লক্ষ হল, প্রতিষ্ঠানিকভাবে কর্জে হাসানা প্রদান করার মাধ্যমে সুদমুক্ত সমাজ গঠন করা</p>
         </div>
 
-      </div>
-
-    </section><!-- /About Section -->
-
-    <!-- Why Us Section -->
-    <section id="why-us" class="why-us section">
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>কর্জে হাসানা নিয়ে যারা কাজ করছেন</h2>
-        <p>কর্জে হাসানা নিয়ে প্রাতিষ্ঠানিকভাবে যে সমস্ত প্রতিষ্ঠান কাজ করছেন </p>
-      </div>
-
-      <div class="container">
-
-        <div class="row no-gutters">
-
-          <div class="col-lg-4 col-md-6 card" data-aos="fade-up" data-aos-delay="100">
-            <span>01</span>
-            <h4><a href="#">আন-নূর কর্জে হাসানা</a></h4>
-            <p>আন-নূর কর্জে হাসানা একটি সেচ্ছাসেবী সংগঠন। যার প্রধান উদ্দ্যেশ্য সুদমুক্ত ঋণ বা কর্জে হাসানা প্রদান করা। ২০১৭ সাল থেকে যাত্রা শুরু করে বর্তমান সদস্য সংখ্যা ২৫৫ জন।</p>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6 card" data-aos="fade-up" data-aos-delay="200">
-            <span>02</span>
-            <h4><a href="https://masjid.life/">মসজিদ লাইফ</a></h4>
-            <p> ১০০% সুদ মুক্ত ঋণ বা কর্জে হাসানা বিতরণ - মসজিদ ডট লাইফের প্রধান সেবা। এছাড়া Help Disabled, Under Privileged Education, Education Loan ইত্যাদি সেবা দিয়ে আসছে</p>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6 card" data-aos="fade-up" data-aos-delay="300">
-            <span>03</span>
-            <h4><a href="https://www.facebook.com/groups/461261802483482">হালাল লোন ফাউন্ডেশন</a></h4>
-            <p></p>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6 card" data-aos="fade-up" data-aos-delay="400">
-            <span>04</span>
-            <h4><a href="https://arafatfoundation.org">আরাফাত ফাউন্ডেশন</a></h4>
-            <p>আরাফাত ফাউন্ডেশন একটি অরাজনৈতিক, অলাভজনক মূলত মানবকল্যাণে নিবেদিত সেবামূলক প্রতিষ্ঠান। এই প্রতিষ্ঠান মানবতার শিক্ষক, মানুষের মুক্তি ও শান্তির দূত, মানবসেবার আদর্শ, হযরত মুহাম্মদ সা.-এর দেখানো পথ অনুসরণ করে আর্তমানবতার সেবা, কর্জে হাসানা প্রদান, সমাজ সংস্কার, কর্মসংস্থান তৈরি, দারিদ্র্য বিমোচন, বহুমুখী শিক্ষা প্রকল্প পরিচালনা, ত্রাণ বিতরণ, স্বল্পমূল্যে বা বিনামূল্যে স্বাস্থ্যসেবা প্রদান।</p>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6 card" data-aos="fade-up" data-aos-delay="400">
-            <span>05</span>
-            <h4><a href="https://www.annasr.org/">আন-নাসর ফাউন্ডেশন</a></h4>
-            <p>আন-নাসর ফাউন্ডেশন একটি অলাভজনক ও অরাজনৈতিক সেবামূলক প্রতিষ্ঠান। আল-কুরআনের ১১০ নাম্বার সূরার নাম আন-নাসর, যার অর্থ- "সাহায্য", যা আল্লাহর পক্ষ থেকে আসে। আল্লাহ প্রদত্ত আমাদের নিয়ামতসমূহ থেকে কিছু অংশ অন্যান্যদের সাথে ভাগাভাগি করার প্রচেষ্টাই আন-নাসর ফাউন্ডেশন।</p>
-          </div><!-- End Card Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Why Us Section -->
-
-    {% comment %}
-
-    <!-- Clients Section -->
-    <section id="clients" class="clients section light-background">
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="swiper init-swiper">
-          <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 600,
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": "auto",
-              "pagination": {
-                "el": ".swiper-pagination",
-                "type": "bullets",
-                "clickable": true
-              },
-              "breakpoints": {
-                "320": {
-                  "slidesPerView": 2,
-                  "spaceBetween": 40
-                },
-                "480": {
-                  "slidesPerView": 3,
-                  "spaceBetween": 60
-                },
-                "640": {
-                  "slidesPerView": 4,
-                  "spaceBetween": 80
-                },
-                "992": {
-                  "slidesPerView": 6,
-                  "spaceBetween": 120
-                }
-              }
-            }
-          </script>
-          <div class="swiper-wrapper align-items-center">
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-1.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-2.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-3.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-4.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-5.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-6.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-7.png' %}" class="img-fluid" alt=""></div>
-            <div class="swiper-slide"><img src="{% static 'src/landing//clients/client-8.png' %}" class="img-fluid" alt=""></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="100">
+            <div class="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+              <i class="fas fa-heart text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">আমাদের মিশন</h3>
+            <p class="text-gray-600">সমাজের সর্বস্তর থেকে সুদ মুক্ত করা, কর্জে হাসানার সুন্নাহকে প্রতিষ্ঠিত করা</p>
           </div>
-          <div class="swiper-pagination"></div>
-        </div>
 
-      </div>
-
-    </section><!-- /Clients Section -->
-
-    <!-- Services Section -->
-    <section id="services" class="services section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row g-5">
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-item item-cyan position-relative">
-              <i class="bi bi-activity icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Nesciunt Mete</a></h3>
-              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="w-20 h-20 bg-gradient-to-br from-secondary-light to-secondary rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+              <i class="fas fa-users text-white text-3xl"></i>
             </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-item item-orange position-relative">
-              <i class="bi bi-broadcast icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Eosle Commodi</a></h3>
-              <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-item item-teal position-relative">
-              <i class="bi bi-easel icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Ledo Markt</a></h3>
-              <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-item item-red position-relative">
-              <i class="bi bi-bounding-box-circles icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Asperiores Commodi</a></h3>
-              <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-            <div class="service-item item-indigo position-relative">
-              <i class="bi bi-calendar4-week icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Velit Doloremque.</a></h3>
-              <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-            <div class="service-item item-pink position-relative">
-              <i class="bi bi-chat-square-text icon"></i>
-              <h3><a href="service-details.html" class="read-more stretched-link">Dolori Architecto</a></h3>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Services Section -->
-
-    <!-- Call To Action Section -->
-    <section id="call-to-action" class="call-to-action section accent-background">
-
-      <div class="container">
-
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-xl-9 text-center text-xl-start">
-            <h3>Call To Action</h3>
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <h3 class="text-2xl font-bold mb-4">আমাদের দল</h3>
+            <p class="text-gray-600">আমাদের দলে রয়েছে বিভিন্ন ক্ষেত্রের অভিজ্ঞ ব্যক্তিবর্গ যারা সমাজের উন্নয়নের জন্য নিবেদিত ভাবে কাজ করেন।</p>
           </div>
-          <div class="col-xl-3 cta-btn-container text-center">
-            <a class="cta-btn align-middle" href="#">Call To Action</a>
+
+          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="300">
+            <div class="w-20 h-20 bg-gradient-to-br from-accent-light to-accent rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+              <i class="fas fa-lightbulb text-white text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">আমাদের দৃষ্টি</h3>
+            <p class="text-gray-600">আমরা একটি এমন সমাজ গড়তে চাই যেখানে সবাই সমান অধিকার ও সুযোগ পাবে এবং নিজের ভবিষ্যত নিজে গড়তে পারবে।</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-20 bg-cta-pattern bg-cover bg-fixed relative">
+      <div class="absolute inset-0 bg-black opacity-10"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 section-title inline-block" data-aos="fade-up">আমাদের অর্জন</h2>
+          <p class="text-lg text-white/90 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">গত কয়েক বছরে আমরা অনেক মানুষের জীবনে পরিবর্তন এনেছি। আমাদের সাফল্যের কিছু পরিসংখ্যান:</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="100">
+            <div class="text-4xl md:text-6xl font-bold text-primary mb-2 counter" data-target="{{ total_loan_amount }}">০</div>
+            <p class="text-gray-600 font-medium">কর্জ প্রদান</p>
+          </div>
+
+          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="200">
+            <div class="text-4xl md:text-6xl font-bold text-secondary mb-2 counter" data-target="{{ total_loan_count }}">জন</div>
+            <p class="text-gray-600 font-medium">কর্জ পেয়েছেন</p>
+          </div>
+
+          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="300">
+            <div class="text-4xl md:text-6xl font-bold text-accent mb-2 counter" data-target="{{ total_member }}">০</div>
+            <p class="text-gray-600 font-medium">মোট সদস্য</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">আমাদের প্রকল্প</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের বর্তমান ও সম্পূর্ণ হওয়া প্রকল্পগুলি দেখুন। আমরা সর্বদা নতুন প্রকল্প গ্রহণ করি।</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="100">
+            <div class="relative overflow-hidden">
+              <img src="https://img.freepik.com/free-photo/woman-hand-holding-plant-growing-from-coins-bottle_1150-17738.jpg" alt="Education Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                <div class="p-6">
+                  <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">শিক্ষা</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3">কর্জে হাসানা</h3>
+              <p class="text-gray-600 mb-4">শিক্ষা, কর্ম-সংস্থান, চিকিৎসা, কৃষি, সুদ মুক্তি, ইত্যাদি খাতে সুদমুক্ত ঋণ প্রদান করা হয়</p>
+              <a href="#" class="inline-block bg-gradient-to-r from-primary to-primary-500 hover:from-primary-600 hover:to-primary-700 text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+            </div>
+          </div>
+
+          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="200">
+            <div class="relative overflow-hidden">
+              <img src="https://img.freepik.com/free-photo/sunset-desert-with-muslim-mosque-foreground_1385-1.jpg" alt="Healthcare Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                <div class="p-6">
+                  <span class="bg-secondary text-white text-sm font-medium px-3 py-1 rounded-full">স্বাস্থ্য</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3">দাওয়াহ</h3>
+              <p class="text-gray-600 mb-4">দ্বীন শিক্ষা এবং দাওয়াতের কার্যক্রম পরিচালনা করা</p>
+              <a href="#" class="inline-block bg-gradient-to-r from-secondary to-secondary-dark hover:from-secondary-dark hover:to-secondary text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+            </div>
+          </div>
+
+          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="300">
+            <div class="relative overflow-hidden">
+              <img src="https://img.freepik.com/free-photo/islamic-elements-with-quran-top-view_23-2148231005.jpg" alt="Environment Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                <div class="p-6">
+                  <span class="bg-accent text-white text-sm font-medium px-3 py-1 rounded-full">পরিবেশ</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3">সাদাকা</h3>
+              <p class="text-gray-600 mb-4">গরীব এবং দুস্থদের মাঝে সাদাকা প্রদান করা</p>
+              <a href="#" class="inline-block bg-gradient-to-r from-accent to-accent-dark hover:from-accent-dark hover:to-accent text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+            </div>
           </div>
         </div>
 
+        <div class="text-center mt-12">
+          <a href="#" class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up">সব প্রকল্প দেখুন</a>
+        </div>
       </div>
+    </section>
 
-    </section><!-- /Call To Action Section -->
+    <!-- Call to Action -->
+    <section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">আমাদের সাথে যোগ দিন এবং পরিবর্তন আনুন</h2>
+        <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90" data-aos="fade-up" data-aos-delay="100">আমরা সবসময় নতুন স্বেচ্ছাসেবী এবং সহযোগী খুঁজছি। আমাদের সাথে যোগ দিন এবং সমাজের উন্নয়নে অবদান রাখুন।</p>
+        <a href="#contact" class="inline-block bg-white text-primary font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">আজই যোগাযোগ করুন</a>
+      </div>
+    </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio section">
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">সাম্প্রতিক ব্লগ</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের সাম্প্রতিক ব্লগ পোস্ট পড়ুন এবং আমাদের কাজ সম্পর্কে জানুন।</p>
+        </div>
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Portfolio</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
-
-          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-app">App</li>
-            <li data-filter=".filter-product">Product</li>
-            <li data-filter=".filter-branding">Branding</li>
-            <li data-filter=".filter-books">Books</li>
-          </ul><!-- End Portfolio Filters -->
-
-          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/app-1.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/app-1.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">App 1</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {% for blog in blogs %}
+            <div class="blog-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="100">
+            <div class="relative overflow-hidden">
+              <img src="{% if blog.image %}{{ blog.image.url }}{% else %}{{ '/media/default_image.jpg' }}{% endif %}" alt="Blog 1" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
+              <div class="absolute top-4 right-4">
+                <span class="bg-primary/90 text-white text-sm font-medium px-3 py-1 rounded-full backdrop-blur-sm">শিক্ষা</span>
               </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/product-1.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/product-1.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Product 1</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center text-sm text-gray-500 mb-3">
+                <i class="far fa-calendar-alt mr-2"></i>
+                <span>{{ blog.publication_date|date:"Y-m-d" }}</span>
+                <span class="mx-2">•</span>
+                <i class="far fa-user mr-2"></i>
+                <span>হারুনুর রশিদ</span>
               </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/branding-1.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/branding-1.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Branding 1</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/books-1.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/books-1.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Books 1</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/app-2.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/app-2.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">App 2</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/product-2.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/product-2.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Product 2</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/branding-2.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/branding-2.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Branding 2</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/books-2.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/books-2.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Books 2</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/app-3.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/app-3.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">App 3</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/product-3.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/product-3.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Product 3</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/branding-3.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/branding-3.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Branding 3</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-              <div class="portfolio-content h-100">
-                <a href="{% static 'src/landing//portfolio/books-3.jpg' %}" data-gallery="portfolio-gallery-app" class="glightbox"><img src="{% static 'src/landing//portfolio/books-3.jpg' %}" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="portfolio-details.html" title="More Details">Books 3</a></h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-          </div><!-- End Portfolio Container -->
+              <h3 class="text-xl font-bold mb-3">{{ blog.title }}</h3>
+              <p class="text-gray-600 mb-4">{{ blog.short_description }}</p>
+              <a href="{% url 'blog-detail' blog.id %}" class="inline-flex items-center text-primary hover:text-primary-600 font-medium transition-colors">
+                আরও পড়ুন
+                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
 
         </div>
 
-      </div>
-
-    </section><!-- /Portfolio Section -->
-
-    <!-- Team Section -->
-    <section id="team" class="team section light-background">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Team</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row">
-
-          <div class="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
-            <div class="member">
-              <img src="{% static 'src/landing//team/team-1.jpg' %}" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Walter White</h4>
-                <span>Web Development</span>
-                <p>
-                  Magni qui quod omnis unde et eos fuga et exercitationem. Odio veritatis perspiciatis quaerat qui aut aut aut
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-          <div class="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
-            <div class="member">
-              <img src="{% static 'src/landing//team/team-2.jpg' %}" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Sarah Jhinson</h4>
-                <span>Marketing</span>
-                <p>
-                  Repellat fugiat adipisci nemo illum nesciunt voluptas repellendus. In architecto rerum rerum temporibus
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-          <div class="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <img src="{% static 'src/landing//team/team-3.jpg' %}" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>William Anderson</h4>
-                <span>Content</span>
-                <p>
-                  Voluptas necessitatibus occaecati quia. Earum totam consequuntur qui porro et laborum toro des clara
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
+        <div class="text-center mt-12">
+          <a href="#" class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up">সব ব্লগ দেখুন</a>
         </div>
-
       </div>
-
-    </section><!-- /Team Section -->
+    </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact section">
+    <section id="contact" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">যোগাযোগ করুন</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের সাথে যোগাযোগ করতে নিচের ফর্মটি পূরণ করুন বা আমাদের অফিসে আসুন।</p>
+        </div>
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Contact</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div data-aos="fade-right">
+            <form class="bg-white p-8 rounded-xl shadow-xl">
+              <div class="mb-6">
+                <label for="name" class="block text-gray-700 mb-2 font-medium">নাম</label>
+                <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার নাম">
+              </div>
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+              <div class="mb-6">
+                <label for="email" class="block text-gray-700 mb-2 font-medium">ইমেইল</label>
+                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার ইমেইল">
+              </div>
 
-        <div class="row gy-4">
+              <div class="mb-6">
+                <label for="subject" class="block text-gray-700 mb-2 font-medium">বিষয়</label>
+                <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="বার্তার বিষয়">
+              </div>
 
-          <div class="col-lg-5">
+              <div class="mb-6">
+                <label for="message" class="block text-gray-700 mb-2 font-medium">বার্তা</label>
+                <textarea id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার বার্তা লিখুন"></textarea>
+              </div>
 
-            <div class="info-wrap">
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-                <i class="bi bi-geo-alt flex-shrink-0"></i>
-                <div>
-                  <h3>Address</h3>
-                  <p>A108 Adam Street, New York, NY 535022</p>
+              <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">পাঠিয়ে দিন</button>
+            </form>
+          </div>
+
+          <div class="flex flex-col h-full" data-aos="fade-left">
+            <div class="bg-white p-8 rounded-xl shadow-xl mb-8">
+              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">আমাদের ঠিকানা</h3>
+              <div class="flex items-start mb-6">
+                <div class="bg-primary-100 rounded-full p-3 mr-4">
+                  <i class="fas fa-map-marker-alt text-primary text-xl"></i>
                 </div>
-              </div><!-- End Info Item -->
-
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-                <i class="bi bi-telephone flex-shrink-0"></i>
                 <div>
-                  <h3>Call Us</h3>
-                  <p>+1 5589 55488 55</p>
+                  <h4 class="font-medium text-gray-800 mb-1">অফিসের ঠিকানা</h4>
+                  <p class="text-gray-600">কুমারখালী, কুষ্টিয়া</p>
                 </div>
-              </div><!-- End Info Item -->
+              </div>
 
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-                <i class="bi bi-envelope flex-shrink-0"></i>
+              <div class="flex items-start mb-6">
+                <div class="bg-primary-100 rounded-full p-3 mr-4">
+                  <i class="fas fa-envelope text-primary text-xl"></i>
+                </div>
                 <div>
-                  <h3>Email Us</h3>
-                  <p>info@example.com</p>
+                  <h4 class="font-medium text-gray-800 mb-1">ইমেইল</h4>
+                  <p class="text-gray-600">annurkorjehasana@gmail.com</p>
                 </div>
-              </div><!-- End Info Item -->
+              </div>
 
-              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-xl">
+              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">সামাজিক মাধ্যম</h3>
+              <div class="flex justify-center space-x-6">
+                <a href="https://www.facebook.com/annurkorjehasana" class="bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">
+                  <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+<!--                <a href="#" class="bg-sky-500 hover:bg-sky-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
+<!--                  <i class="fab fa-twitter text-xl"></i>-->
+<!--                </a>-->
+<!--                <a href="#" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
+<!--                  <i class="fab fa-instagram text-xl"></i>-->
+<!--                </a>-->
+                <a href="https://www.youtube.com/@annurkorjehasana" class="bg-red-600 hover:bg-red-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">
+                  <i class="fab fa-youtube text-xl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Section -->
+    <div class="h-96 w-full">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116758.44731228056!2d89.16803331537962!3d23.864731968559962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fe91fa6bfcc263%3A0x8b46bb4a0ef47a22!2sKumarkhali%20Upazila!5e0!3m2!1sen!2sbd!4v1747455480127!5m2!1sen!2sbd" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          <div>
+            <a href="#" class="text-2xl font-bold mb-4 inline-block">
+              <span class="text-primary">আন-নূর</span>
+              <span class="text-secondary">কর্জে হাসানা</span>
+            </a>
+            <p class="text-gray-400 mb-6">আন-নূর কর্জে হাসানা একটি সমবায়ভিত্তিক আর্থিক মডেল,
+              যা সুদমুক্ত লেনদেনের মাধ্যমে আর্থিকভাবে দুর্বল মানুষদের সহায়তা করে। এটি ইসলামিক নীতিমালার আলোকে পরিচালিত হয় এবং সম্পূর্ণরূপে কর্জে হাসানার ভিত্তিতে গঠিত, যেখানে কোনো প্রকার সুদ গ্রহণ বা প্রদান করা হয় না।</p>
+            <div class="flex space-x-4">
+              <a href="https://www.facebook.com/annurkorjehasana" class="text-gray-400 hover:text-primary transition-colors">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://www.youtube.com/@annurkorjehasana" class="text-gray-400 hover:text-primary transition-colors">
+                <i class="fab fa-youtube"></i>
+              </a>
             </div>
           </div>
 
-          <div class="col-lg-7">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <div class="row gy-4">
+          <div>
+            <h3 class="text-xl font-bold mb-4">দ্রুত লিঙ্ক</h3>
+            <ul class="space-y-3">
+              <li><a href="#home" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> হোম
+              </a></li>
+              <li><a href="#about" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> আমাদের সম্পর্কে
+              </a></li>
+              <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> প্রকল্প
+              </a></li>
+              <li><a href="#blog" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> ব্লগ
+              </a></li>
+              <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> যোগাযোগ
+              </a></li>
+            </ul>
+          </div>
 
-                <div class="col-md-6">
-                  <label for="name-field" class="pb-2">Your Name</label>
-                  <input type="text" name="name" id="name-field" class="form-control" required="">
-                </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4">প্রকল্প</h3>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> শিক্ষা প্রকল্প
+              </a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> স্বাস্থ্য সেবা
+              </a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> বৃক্ষ রোপণ
+              </a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> পানি প্রকল্প
+              </a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> নারী উন্নয়ন
+              </a></li>
+            </ul>
+          </div>
 
-                <div class="col-md-6">
-                  <label for="email-field" class="pb-2">Your Email</label>
-                  <input type="email" class="form-control" name="email" id="email-field" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <label for="subject-field" class="pb-2">Subject</label>
-                  <input type="text" class="form-control" name="subject" id="subject-field" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <label for="message-field" class="pb-2">Message</label>
-                  <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
-                </div>
-
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                  <button type="submit">Send Message</button>
-                </div>
-
-              </div>
-            </form>
-          </div><!-- End Contact Form -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Contact Section -->
-    {% endcomment %}
-
-  </main>
-
-  <footer id="footer" class="footer dark-background">
-
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">কর্জে হাসানা</span>
-          </a>
-          <p>সুদ থেকে নিজে বাঁচুন, অন্যকে বাঁচান</p>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href="https://www.facebook.com/groups/korjehasanabd"><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+          <div>
           </div>
         </div>
 
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
-          </ul>
+        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-400 text-center md:text-left">© ২০২৫ আন-নূর কর্জে হাসানা। সর্বস্বত্ব সংরক্ষিত।</p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <p>Powered by <a href="https://lxroot.com" class="text-primary">LxRoot</a></p>
+<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">গোপনীয়তা নীতি</a>-->
+<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">ব্যবহারের শর্তাবলী</a>-->
+<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">সাহায্য</a>-->
+          </div>
         </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact Us</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
-          <p>United States</p>
-          <p class="mt-4"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-          <p><strong>Email:</strong> <span>info@example.com</span></p>
-        </div>
-
       </div>
-    </div>
+    </footer>
 
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">কর্জে হাসানা</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Powered By <a href="https://lxroot.com">LxRoot</a>
-      </div>
-    </div>
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary hover:bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 z-50 opacity-0 invisible">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 
-  </footer>
+    <!-- AOS Animation Library -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- JavaScript for Functionality -->
+    <script>
+      // Initialize AOS Animation
+      AOS.init({
+        duration: 800,
+        once: true
+      });
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
-{% endblock %}
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // Sticky header
+      const navbar = document.getElementById('navbar');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+          navbar.classList.add('navbar-fixed');
+          navbar.classList.add('shadow-md');
+        } else {
+          navbar.classList.remove('navbar-fixed');
+          navbar.classList.remove('shadow-md');
+        }
+      });
+
+      // Counter animation
+      const counters = document.querySelectorAll('.counter');
+
+      function runCounter(counter) {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const step = (target / duration) * 10;
+        let current = 0;
+
+        const updateCounter = () => {
+          current += step;
+          if (current < target) {
+            counter.innerText = Math.floor(current).toLocaleString('bn-BD');
+            setTimeout(updateCounter, 10);
+          } else {
+            counter.innerText = target.toLocaleString('bn-BD');
+          }
+        };
+
+        updateCounter();
+      }
+
+
+
+      // Intersection Observer for counters
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            runCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(counter => {
+        counterObserver.observe(counter);
+      });
+
+      // Back to top button
+      const backToTopBtn = document.getElementById('back-to-top');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.remove('opacity-0', 'invisible');
+          backToTopBtn.classList.add('opacity-100', 'visible');
+        } else {
+          backToTopBtn.classList.add('opacity-0', 'invisible');
+          backToTopBtn.classList.remove('opacity-100', 'visible');
+        }
+      });
+
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute('href');
+          const targetElement = document.querySelector(targetId);
+
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+
+            // Close mobile menu if open
+            if (!mobileMenu.classList.contains('hidden')) {
+              mobileMenu.classList.add('hidden');
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
