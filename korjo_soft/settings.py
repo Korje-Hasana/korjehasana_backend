@@ -68,7 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "korjo_soft.logging.RequestIDMiddleware",
+    # "korjo_soft.logging.RequestIDMiddleware",
 ]
 
 ROOT_URLCONF = "korjo_soft.urls"
@@ -267,3 +267,7 @@ LOGGING = {
         },
     },
 }
+
+# --- Recapcha ---
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
