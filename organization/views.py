@@ -9,38 +9,48 @@ from .models import Team
 from .forms import TeamForm, ContactUsForm
 
 
-def handle_contact_form(request):
+def contact_us(request):
     if request.method == "POST":
         contact_form = ContactUsForm(request.POST)
         if contact_form.is_valid():
             contact_form.save()
             messages.success(request, "আপনার বার্তা সফলভাবে পাঠানো হয়েছে!")
-            return True, contact_form
+            return redirect('home')
         else:
             messages.error(request, "আপনার বার্তা পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।")
-            contact_form = ContactUsForm()
-            return False, contact_form
+            # contact_form = ContactUsForm()
+            return redirect('home')
     else:
-        contact_form = ContactUsForm()
-        return False, contact_form
+        # contact_form = ContactUsForm()
+        return redirect('home')
+
+# def handle_contact_form(request):
+#     if request.method == "POST":
+#         contact_form = ContactUsForm(request.POST)
+#         if contact_form.is_valid():
+#             contact_form.save()
+#             messages.success(request, "আপনার বার্তা সফলভাবে পাঠানো হয়েছে!")
+#             return True, contact_form
+#         else:
+#             messages.error(request, "আপনার বার্তা পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।")
+#             contact_form = ContactUsForm()
+#             return False, contact_form
+#     else:
+#         contact_form = ContactUsForm()
+#         return False, contact_form
 
 
 def home(request):
     total_loan_count = LoanRepository.get_total_loan_count()
     total_loan_amount = LoanRepository.get_total_loan_amount()
     blogs = Blog.objects.all().order_by("-id")[:3]
-    # Handle contact form submission
-    success, contact_form = handle_contact_form(request)
-    # If the contact form was successfully submitted, redirect to home
-    if success:
-        return redirect("home")
 
     context = {
         "total_loan_count": total_loan_count,
         "total_loan_amount": total_loan_amount,
         "total_member": Member.objects.filter(is_active=True).count(),
         "blogs": blogs,
-        "contact_form": contact_form,
+        "contact_form": ContactUsForm,
     }
     return render(request, "index.html", context)
 

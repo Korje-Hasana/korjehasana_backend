@@ -1,5 +1,5 @@
 {% include 'messages.html' %}
-<form method="post" action="." class="bg-white p-8 rounded-xl shadow-xl">
+<form method="post" action="{% url 'contact_us' %}" class="bg-white p-8 rounded-xl shadow-xl">
   {% csrf_token %}
   <div class="mb-6">
     <label
