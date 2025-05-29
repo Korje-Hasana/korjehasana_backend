@@ -15,29 +15,12 @@ def contact_us(request):
         if contact_form.is_valid():
             contact_form.save()
             messages.success(request, "আপনার বার্তা সফলভাবে পাঠানো হয়েছে!")
-            return redirect('home')
+            return redirect("home")
         else:
             messages.error(request, "আপনার বার্তা পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।")
-            # contact_form = ContactUsForm()
-            return redirect('home')
+            return redirect("home")
     else:
-        # contact_form = ContactUsForm()
-        return redirect('home')
-
-# def handle_contact_form(request):
-#     if request.method == "POST":
-#         contact_form = ContactUsForm(request.POST)
-#         if contact_form.is_valid():
-#             contact_form.save()
-#             messages.success(request, "আপনার বার্তা সফলভাবে পাঠানো হয়েছে!")
-#             return True, contact_form
-#         else:
-#             messages.error(request, "আপনার বার্তা পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।")
-#             contact_form = ContactUsForm()
-#             return False, contact_form
-#     else:
-#         contact_form = ContactUsForm()
-#         return False, contact_form
+        return redirect("home")
 
 
 def home(request):

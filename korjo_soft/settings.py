@@ -70,7 +70,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "korjo_soft.logging.RequestIDMiddleware",
+    "korjo_soft.logging.RequestIDMiddleware",
 ]
 
 ROOT_URLCONF = "korjo_soft.urls"
