@@ -2,7 +2,7 @@ from django.contrib.admin.sites import AlreadyRegistered
 from django.contrib import admin
 from django.apps import apps
 
-from .models import Team, User, Branch
+from .models import Team, User, Branch, ContactUs
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -32,6 +32,14 @@ class BranchAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "code", "organization", "address", "bank_account"]
     list_display_links = ["name"]
     ordering = ["id"]
+
+
+@admin.register(ContactUs)
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ["id", "name", "email", "subject", "created_at"]
+    list_display_links = ["name"]
+    ordering = ["-created_at"]
+    search_fields = ["name", "email", "subject"]
 
 
 # register all the models from this app

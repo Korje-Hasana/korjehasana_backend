@@ -11,7 +11,7 @@ from drf_spectacular.views import (
 )
 
 from organization.api import ChangePasswordAPIView, LoginView, RegisterView, LogoutView
-from organization.views import home
+from organization.views import home, contact_us
 
 
 urlpatterns = [
@@ -20,6 +20,7 @@ urlpatterns = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
     path("", home, name='home'),
+    path("contact-us/", contact_us, name='contact_us'),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     # authentications
     path("api/v1/auth/login/", LoginView.as_view(), name="login"),
