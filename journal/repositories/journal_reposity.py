@@ -76,5 +76,5 @@ class GeneralJournalRepository:
 
     def get_member_installment(self, member_id):
         """Fetch journal entries for a specific member where account type is 'IN' (Installment Ledger)"""
-        return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__ledger_code='IN')).order_by('-date')
+        return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__code='IN')).order_by('-date')
 

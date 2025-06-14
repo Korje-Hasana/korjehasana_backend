@@ -48,6 +48,7 @@ class MemberDetailView(DetailView):
         member = self.object
         member_service = MemberService(branch=self.request.user.branch)
         context['member_transactions'] = member_service.get_member_transactions(member.id)
+        context['installment_list'] = member_service.get_member_installment_list(member.id)
         return context
 
 
