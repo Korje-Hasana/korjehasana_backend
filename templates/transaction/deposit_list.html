@@ -55,12 +55,14 @@
                         <th>SL</th>
                         <th>নাম</th>
                         <th>অভিভাবকের নাম</th>
-                        <th>সপ্তাহ ১</th>
-                        <th>সপ্তাহ ২</th>
-                        <th>সপ্তাহ ৩</th>
-                        <th>সপ্তাহ ৪</th>
-                        <th>ব্যালেন্স</th>
-                        <th>অপশন</th>
+                        {% if user_has_permission %}
+                            <th>সপ্তাহ ১</th>
+                            <th>সপ্তাহ ২</th>
+                            <th>সপ্তাহ ৩</th>
+                            <th>সপ্তাহ ৪</th>
+                            <th>ব্যালেন্স</th>
+                            <th>অপশন</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -68,28 +70,35 @@
                         <tr>
                             <td>{{ journal.sl }}</td>
                             <td>
-                                <a href="{% url 'member_detail' journal.member_id %}">
-                                    {{ journal.member_name }}
-                                </a>
-                            </td>
-                            <td>{{ journal.guardian_name }}</td>
-                            <td>{{ journal.week1 }}</td>
-                            <td>{{ journal.week2 }}</td>
-                            <td>{{ journal.week3 }}</td>
-                            <td>{{ journal.week4 }}</td>
-                            <td>{{ journal.balance }}</td>
-                            <td>
                                 {% if user_has_permission %}
-                                <div class="d-flex flex-wrap gap-2">
-                                    <a class="btn btn-primary btn-sm" href="{% url 'loan_disbursement' journal.member_id %}">
-                                        কর্জ প্রদান
+                                    <a href="{% url 'member_detail' journal.member_id %}">
+                                        {{ journal.member_name }}
                                     </a>
-                                    <a class="btn btn-primary btn-sm" href="{% url 'withdrawal_posting' journal.member_id %}">
-                                        উত্তোলন
-                                    </a>
-                                </div>
+                                {% else %}
+                                    {{ journal.member_name }}
                                 {% endif %}
                             </td>
+                            <td>{{ journal.guardian_name }}</td>
+
+                            {% if user_has_permission %}
+                                <td>{{ journal.week1 }}</td>
+                                <td>{{ journal.week2 }}</td>
+                                <td>{{ journal.week3 }}</td>
+                                <td>{{ journal.week4 }}</td>
+                                <td>{{ journal.balance }}</td>
+                                <td>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a class="btn btn-primary btn-sm" href="{% url 'loan_disbursement' journal.member_id %}">
+                                            কর্জ প্রদান
+                                        </a>
+                                        <a class="btn btn-primary btn-sm" href="{% url 'withdrawal_posting' journal.member_id %}">
+                                            উত্তোলন
+                                        </a>
+                                    </div>
+
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
