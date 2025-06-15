@@ -52,6 +52,31 @@ class MemberDetailView(DetailView):
         return context
 
 
+class MyDetailView(DetailView):
+    model = Member
+    template_name = 'people/member_detail.html'
+    context_object_name = 'member'
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.member = Member.objects.get(user=request.user)
+        except Member.DoesNotExist:
+            messages.error(request, "You do not have a member account.")
+            return redirect('dashboard')  # Replace with your actual dashboard URL name
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.member
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        member = self.object
+        member_service = MemberService(branch=self.request.user.branch)
+        context['member_transactions'] = member_service.get_member_transactions(member.id)
+        context['installment_list'] = member_service.get_member_installment_list(member.id)
+        return context
+
 class MemberUpdateView(UpdateView):
     model = Member
     form_class = MemberForm
