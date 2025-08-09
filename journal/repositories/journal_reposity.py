@@ -1,5 +1,11 @@
-from django.db.models import Q, Sum
+import calendar
+from datetime import date
+from django.db.models import Q, Sum, Count
+from django.db.models.functions import TruncMonth
+from collections import OrderedDict
 from journal.models import GeneralJournal, Ledger
+from peoples.models import Member
+
 
 class GeneralJournalRepository:
     def __init__(self, branch=None):
@@ -77,4 +83,6 @@ class GeneralJournalRepository:
     def get_member_installment(self, member_id):
         """Fetch journal entries for a specific member where account type is 'IN' (Installment Ledger)"""
         return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__code='IN')).order_by('-date')
+
+
 

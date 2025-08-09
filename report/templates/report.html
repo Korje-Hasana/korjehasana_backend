@@ -21,6 +21,15 @@
 
     </div>
 </div>
+<!------- Another Card to show monthly collection percentage ------->
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="card-title">মাসিক কর্জ আদায় শতাংশ</h4>
+    </div>
+    <div class="card-body">
+        <canvas id="monthlyCollectionChart"></canvas>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
@@ -55,6 +64,53 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+            }
+        });
+    </script>
+
+<script>
+        const ctx_collection = document.getElementById('monthlyCollectionChart').getContext('2d');
+        const collectionChart = new Chart(ctx_collection, {
+            type: 'line',
+            data: {
+                labels: {{ collection_month|safe }},
+                datasets: [{
+                    label: 'Collection Percentage',
+                    data: {{ collection_percentages|safe }},
+                    fill: false,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Percentage'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
             }
         });
     </script>
