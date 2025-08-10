@@ -1,0 +1,20 @@
+{% if messages %}
+<div class="mb-4">
+  {% for message in messages %}
+  <div
+    class="relative rounded-lg p-4 {{ message.tags }} shadow-md bg bg-{% if message.tags == 'success' %}green-400{% else %}red-400{% endif %}"
+    id="alert-{{ forloop.counter }}"
+  >
+    <span>{{ message }}</span>
+    <button
+      type="button"
+      onclick="document.getElementById('alert-{{ forloop.counter }}').style.display='none'"
+      class="absolute top-2 right-2 text-xl font-bold text-gray hover:text-gray-900 focus:outline-none"
+      aria-label="Close"
+    >
+      &times;
+    </button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

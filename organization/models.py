@@ -104,7 +104,7 @@ class Team(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('deposit_list', kwargs={'team_id': self.id})
+        return reverse("deposit_list", kwargs={"team_id": self.id})
 
     def total_unpaid_loan(self):
         return self.loan_set.filter(is_paid=False).aggregate(Sum("total_due"))[
@@ -121,3 +121,15 @@ class Team(models.Model):
 
     def total_member_count(self):
         return self.members.filter(is_active=True).count()
+
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField()
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

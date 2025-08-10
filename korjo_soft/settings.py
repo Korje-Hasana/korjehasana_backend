@@ -2,7 +2,8 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
-#import dj_database_url
+
+# import dj_database_url
 from django.contrib.messages import constants as messages
 
 env = environ.Env(DEBUG=(bool, False))
@@ -20,8 +21,8 @@ SECRET_KEY = env("SECRET_KEY")
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
-#ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
-ALLOWED_HOSTS = ['korjehasana.com', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = ["korjehasana.com", "localhost", "127.0.0.1"]
 
 # Application definition
 
@@ -41,7 +42,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "django_extensions",
-    "fontawesomefree"
+    "fontawesomefree",
 ]
 
 LOCAL_APPS = [
@@ -53,7 +54,8 @@ LOCAL_APPS = [
     "report",
     "journal",
     "loan",
-    "blog"
+    "blog",
+    "django_recaptcha",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -94,13 +96,13 @@ WSGI_APPLICATION = "korjo_soft.wsgi.application"
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -190,27 +192,26 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Your project description",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SCHEMA_PATH_PREFIX": "/api/v[0-9]"
+    "SCHEMA_PATH_PREFIX": "/api/v[0-9]",
     # OTHER SETTINGS
 }
 
 # cors headers
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = [
-    'https://korjehasana.com',
+    "https://korjehasana.com",
 ]
 # CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 #
 # CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 
-
 MESSAGE_TAGS = {
-    messages.DEBUG: 'info',
-    messages.INFO: 'info',
-    messages.SUCCESS: 'success',
-    messages.WARNING: 'warning',
-    messages.ERROR: 'danger',
+    messages.DEBUG: "info",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
 }
 
 
@@ -218,52 +219,52 @@ MESSAGE_TAGS = {
 LOG_REQUESTS = True
 LOG_USER_ATTRIBUTE = "email"
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'request_id': {
-            '()': 'korjo_soft.logging.RequestIDFilter'
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {"request_id": {"()": "korjo_soft.logging.RequestIDFilter"}},
+    "formatters": {
+        "verbose": {
+            "class": "korjo_soft.logging.IgnoreMissingFormatter",
+            "format": "[%(asctime)s] %(levelname)s %(message)s  [%(request_id)s %(name)s:%(lineno)s]",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
         }
     },
-    'formatters': {
-        'verbose': {
-            'class': 'korjo_soft.logging.IgnoreMissingFormatter',
-            'format': "[%(asctime)s] %(levelname)s %(message)s  [%(request_id)s %(name)s:%(lineno)s]",
-            'datefmt': "%Y-%m-%d %H:%M:%S"
-        }
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'korjo_soft.logging.RotatingFileHandlerMakeDir',
-            'filename': 'logs/info.log',
-            'backupCount': 200,
-            'maxBytes': 50 * 1024 * 1024,  # 50 MB
-            'formatter': 'verbose',
-            'filters': ['request_id']
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "korjo_soft.logging.RotatingFileHandlerMakeDir",
+            "filename": "logs/info.log",
+            "backupCount": 200,
+            "maxBytes": 50 * 1024 * 1024,  # 50 MB
+            "formatter": "verbose",
+            "filters": ["request_id"],
         },
-        'console': {
-            'class': 'logging.StreamHandler',
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': False,
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": False,
         },
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': False,
+        "django.request": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": False,
         },
-        'FDL_RECRUITMENT': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+        "FDL_RECRUITMENT": {
+            "handlers": ["file"],
+            "level": "DEBUG",
         },
-        '': {
-            'handlers': ['file'],
-            'level': 'INFO',
+        "": {
+            "handlers": ["file"],
+            "level": "INFO",
         },
     },
 }
+
+# --- Recapcha ---
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")

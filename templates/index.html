@@ -5,31 +5,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>আন-নূর কর্জে হাসানা</title>
-    <meta name="description" content="A social organization dedicated to provide interest free loan to rural people" />
+    <meta
+      name="description"
+      content="A social organization dedicated to provide interest free loan to rural people"
+    />
     <meta name="author" content="আন-নূর কর্জে হাসানা" />
 
-    <link rel="icon" href="{% static '/src/img/annur_logo.png' %}" type="image/x-icon">
+    <link
+      rel="icon"
+      href="{% static '/src/img/annur_logo.png' %}"
+      type="image/x-icon"
+    />
 
     <meta property="og:title" content="আন-নূর কর্জে হাসানা" />
-    <meta property="og:description" content="A social organization dedicated to provide interest free loan to rural people" />
+    <meta
+      property="og:description"
+      content="A social organization dedicated to provide interest free loan to rural people"
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://source.unsplash.com/random/1200x630/?community" />
+    <meta
+      property="og:image"
+      content="https://source.unsplash.com/random/1200x630/?community"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@samajiksongoton" />
-    <meta name="twitter:image" content="https://source.unsplash.com/random/1200x630/?community" />
+    <meta
+      name="twitter:image"
+      content="https://source.unsplash.com/random/1200x630/?community"
+    />
 
     <!-- Hind Siliguri Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- AOS Animation Library -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+    />
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <script>
       tailwind.config = {
@@ -37,44 +62,46 @@
           extend: {
             colors: {
               primary: {
-                DEFAULT: '#1FD19D',
-                50: '#E0FAF3',
-                100: '#C2F5E7',
-                200: '#86EBCF',
-                300: '#4AE0B8',
-                400: '#1FD19D',
-                500: '#19A67C',
-                600: '#14795B',
-                700: '#0E4D3A',
-                800: '#072218',
-                900: '#000000',
+                DEFAULT: "#1FD19D",
+                50: "#E0FAF3",
+                100: "#C2F5E7",
+                200: "#86EBCF",
+                300: "#4AE0B8",
+                400: "#1FD19D",
+                500: "#19A67C",
+                600: "#14795B",
+                700: "#0E4D3A",
+                800: "#072218",
+                900: "#000000",
               },
               secondary: {
-                DEFAULT: '#6C63FF',
-                light: '#8C85FF',
-                dark: '#4B44CC'
+                DEFAULT: "#6C63FF",
+                light: "#8C85FF",
+                dark: "#4B44CC",
               },
               accent: {
-                DEFAULT: '#FF6584',
-                light: '#FF8CA3',
-                dark: '#E13E5F'
-              }
+                DEFAULT: "#FF6584",
+                light: "#FF8CA3",
+                dark: "#E13E5F",
+              },
             },
             fontFamily: {
-              'hind': ['Hind Siliguri', 'sans-serif']
+              hind: ["Hind Siliguri", "sans-serif"],
             },
             backgroundImage: {
-              'hero-pattern': "url('https://images.unsplash.com/photo-1559024094-4a1e4495c3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
-              'cta-pattern': "linear-gradient(90deg, rgba(31,209,157,0.9) 0%, rgba(108,99,255,0.9) 100%)",
-            }
-          }
-        }
-      }
+              "hero-pattern":
+                "url('https://images.unsplash.com/photo-1559024094-4a1e4495c3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
+              "cta-pattern":
+                "linear-gradient(90deg, rgba(31,209,157,0.9) 0%, rgba(108,99,255,0.9) 100%)",
+            },
+          },
+        },
+      };
     </script>
 
     <style>
       body {
-        font-family: 'Hind Siliguri', sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
         scroll-behavior: smooth;
       }
 
@@ -93,16 +120,16 @@
         opacity: 0;
         z-index: 1;
         transition: opacity 1s ease-in-out;
-        pointer-events: none;       /* Prevent clicks on hidden slides */
-        visibility: hidden;         /* Hide from screen readers/layout */
+        pointer-events: none; /* Prevent clicks on hidden slides */
+        visibility: hidden; /* Hide from screen readers/layout */
       }
 
       .slide.active {
-          opacity: 1;
-          z-index: 2;
-          pointer-events: auto;       /* Allow interactions */
-          visibility: visible;
-        }
+        opacity: 1;
+        z-index: 2;
+        pointer-events: auto; /* Allow interactions */
+        visibility: visible;
+      }
 
       .counter-item {
         transition: all 0.5s ease;
@@ -118,7 +145,8 @@
 
       .project-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
 
       .blog-card {
@@ -127,7 +155,8 @@
 
       .blog-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
 
       .navbar-fixed {
@@ -136,7 +165,7 @@
       }
 
       .gradient-text {
-        background: linear-gradient(90deg, #1FD19D 0%, #6C63FF 100%);
+        background: linear-gradient(90deg, #1fd19d 0%, #6c63ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
@@ -159,7 +188,7 @@
       }
 
       .custom-shape-divider-bottom .shape-fill {
-        fill: #FFFFFF;
+        fill: #ffffff;
       }
 
       .section-title::after {
@@ -167,7 +196,7 @@
         display: block;
         width: 80px;
         height: 4px;
-        background: linear-gradient(90deg, #1FD19D 0%, #6C63FF 100%);
+        background: linear-gradient(90deg, #1fd19d 0%, #6c63ff 100%);
         margin: 0.5rem auto 0;
         border-radius: 4px;
       }
@@ -176,68 +205,132 @@
 
   <body class="font-hind bg-gray-50">
     <!-- Header/Navigation -->
-    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
-  <div class="container mx-auto px-4">
-    <div class="flex justify-between items-center py-4">
-      <div class="flex items-center">
-        <a href="#" class="text-2xl font-bold">
-          <span class="text-primary">আন-নূর</span>
-          <span class="text-secondary">কর্জে হাসানা</span>
-        </a>
+    <header
+      class="fixed w-full top-0 z-50 transition-all duration-300"
+      id="navbar"
+    >
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center">
+            <a href="#" class="text-2xl font-bold">
+              <span class="text-primary">আন-নূর</span>
+              <span class="text-secondary">কর্জে হাসানা</span>
+            </a>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-8">
+            <a
+              href="#home"
+              class="text-gray-700 hover:text-primary font-medium transition-colors duration-300"
+              >হোম</a
+            >
+            <a
+              href="#about"
+              class="text-gray-700 hover:text-primary font-medium transition-colors duration-300"
+              >আমাদের সম্পর্কে</a
+            >
+            <a
+              href="#projects"
+              class="text-gray-700 hover:text-primary font-medium transition-colors duration-300"
+              >প্রকল্প</a
+            >
+            <a
+              href="#blog"
+              class="text-gray-700 hover:text-primary font-medium transition-colors duration-300"
+              >ব্লগ</a
+            >
+            <a
+              href="#contact"
+              class="text-gray-700 hover:text-primary font-medium transition-colors duration-300"
+              >যোগাযোগ</a
+            >
+          </nav>
+
+          <!-- CTA Button (Visible on all devices) -->
+          <div class="block">
+            <a
+              href="{% url 'login' %}"
+              class="bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
+            >
+              এডমিন লগিন
+            </a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <div class="md:hidden">
+            <button id="mobile-menu-btn" class="text-gray-700">
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation (Empty or Optional Links) -->
+        <div id="mobile-menu" class="md:hidden hidden pb-4">
+          <!-- Optional: remove all items or just add CTA again here if needed -->
+        </div>
       </div>
-
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex space-x-8">
-        <a href="#home" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">হোম</a>
-        <a href="#about" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">আমাদের সম্পর্কে</a>
-        <a href="#projects" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">প্রকল্প</a>
-        <a href="#blog" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">ব্লগ</a>
-        <a href="#contact" class="text-gray-700 hover:text-primary font-medium transition-colors duration-300">যোগাযোগ</a>
-      </nav>
-
-      <!-- CTA Button (Visible on all devices) -->
-      <div class="block">
-        <a href="{% url 'login' %}" class="bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base">
-          এডমিন লগিন
-        </a>
-      </div>
-
-      <!-- Mobile Menu Button -->
-      <div class="md:hidden">
-        <button id="mobile-menu-btn" class="text-gray-700">
-          <i class="fas fa-bars text-2xl"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Navigation (Empty or Optional Links) -->
-    <div id="mobile-menu" class="md:hidden hidden pb-4">
-      <!-- Optional: remove all items or just add CTA again here if needed -->
-    </div>
-  </div>
-</header>
-
+    </header>
     <!-- Hero Section with Slider -->
     <section id="home" class="slider relative pt-20">
-      <div class="slide active bg-gradient-to-r from-primary-50 to-blue-50 relative overflow-hidden">
+      <div
+        class="slide active bg-gradient-to-r from-primary-50 to-blue-50 relative overflow-hidden"
+      >
         <div class="container mx-auto px-4 h-full flex items-center">
-          <div class="w-full md:w-1/2 z-10" data-aos="fade-right" data-aos-duration="1000">
-            <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4"><span class="gradient-text">আন-নূর কর্জে হাসানা</span></h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-8">সুদ থেকে নিজে বাঁচুন, অন্যকে বাঁচান</p>
+          <div
+            class="w-full md:w-1/2 z-10"
+            data-aos="fade-right"
+            data-aos-duration="1000"
+          >
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+              <span class="gradient-text">আন-নূর কর্জে হাসানা</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">
+              সুদ থেকে নিজে বাঁচুন, অন্যকে বাঁচান
+            </p>
             <div class="flex flex-wrap gap-4">
-              <a href="#about" class="bg-primary hover:bg-primary-600 text-white font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl">আরও জানুন</a>
-              <a href="#contact" class="bg-white border-2 border-primary text-primary hover:bg-primary-50 font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl">যোগাযোগ করুন</a>
+              <a
+                href="#about"
+                class="bg-primary hover:bg-primary-600 text-white font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl"
+                >আরও জানুন</a
+              >
+              <a
+                href="#contact"
+                class="bg-white border-2 border-primary text-primary hover:bg-primary-50 font-medium px-8 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl"
+                >যোগাযোগ করুন</a
+              >
             </div>
           </div>
-          <div class="hidden md:block w-1/2 z-10" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
-            <img src="{% static '/src/img/aqsa.jpg' %}" alt="Community" class="rounded-lg shadow-xl mx-auto w-full max-w-lg">
+          <div
+            class="hidden md:block w-1/2 z-10"
+            data-aos="fade-left"
+            data-aos-duration="1000"
+            data-aos-delay="300"
+          >
+            <img
+              src="{% static '/src/img/aqsa.jpg' %}"
+              alt="Community"
+              class="rounded-lg shadow-xl mx-auto w-full max-w-lg"
+            />
           </div>
-          <div class="absolute -right-32 -bottom-32 w-64 h-64 bg-accent opacity-10 rounded-full"></div>
-          <div class="absolute -left-32 -top-32 w-96 h-96 bg-secondary opacity-10 rounded-full"></div>
+          <div
+            class="absolute -right-32 -bottom-32 w-64 h-64 bg-accent opacity-10 rounded-full"
+          ></div>
+          <div
+            class="absolute -left-32 -top-32 w-96 h-96 bg-secondary opacity-10 rounded-full"
+          ></div>
         </div>
         <div class="custom-shape-divider-bottom">
-          <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+          <svg
+            data-name="Layer 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+              class="shape-fill"
+            ></path>
           </svg>
         </div>
       </div>
@@ -247,33 +340,73 @@
     <section id="about" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">আমাদের সম্পর্কে</h2>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমরা একটি সেচ্ছাসেবী সংগঠন। যার প্রধান উদ্দ্যেশ্য সুদমুক্ত ঋণ বা কর্জে হাসানা প্রদান করা। আমাদের লক্ষ হল, প্রতিষ্ঠানিকভাবে কর্জে হাসানা প্রদান করার মাধ্যমে সুদমুক্ত সমাজ গঠন করা</p>
+          <h2
+            class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block"
+            data-aos="fade-up"
+          >
+            আমাদের সম্পর্কে
+          </h2>
+          <p
+            class="text-lg text-gray-600 max-w-3xl mx-auto mt-6"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            আমরা একটি সেচ্ছাসেবী সংগঠন। যার প্রধান উদ্দ্যেশ্য সুদমুক্ত ঋণ বা
+            কর্জে হাসানা প্রদান করা। আমাদের লক্ষ হল, প্রতিষ্ঠানিকভাবে কর্জে
+            হাসানা প্রদান করার মাধ্যমে সুদমুক্ত সমাজ গঠন করা
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="100">
-            <div class="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+          <div
+            class="bg-white rounded-xl p-8 shadow-xl text-center"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div
+              class="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110"
+            >
               <i class="fas fa-heart text-primary text-3xl"></i>
             </div>
             <h3 class="text-2xl font-bold mb-4">আমাদের মিশন</h3>
-            <p class="text-gray-600">সমাজের সর্বস্তর থেকে সুদ মুক্ত করা, কর্জে হাসানার সুন্নাহকে প্রতিষ্ঠিত করা</p>
+            <p class="text-gray-600">
+              সমাজের সর্বস্তর থেকে সুদ মুক্ত করা, কর্জে হাসানার সুন্নাহকে
+              প্রতিষ্ঠিত করা
+            </p>
           </div>
 
-          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="200">
-            <div class="w-20 h-20 bg-gradient-to-br from-secondary-light to-secondary rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+          <div
+            class="bg-white rounded-xl p-8 shadow-xl text-center"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <div
+              class="w-20 h-20 bg-gradient-to-br from-secondary-light to-secondary rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110"
+            >
               <i class="fas fa-users text-white text-3xl"></i>
             </div>
             <h3 class="text-2xl font-bold mb-4">আমাদের দল</h3>
-            <p class="text-gray-600">আমাদের দলে রয়েছে বিভিন্ন ক্ষেত্রের অভিজ্ঞ ব্যক্তিবর্গ যারা সমাজের উন্নয়নের জন্য নিবেদিত ভাবে কাজ করেন।</p>
+            <p class="text-gray-600">
+              আমাদের দলে রয়েছে বিভিন্ন ক্ষেত্রের অভিজ্ঞ ব্যক্তিবর্গ যারা সমাজের
+              উন্নয়নের জন্য নিবেদিত ভাবে কাজ করেন।
+            </p>
           </div>
 
-          <div class="bg-white rounded-xl p-8 shadow-xl text-center" data-aos="fade-up" data-aos-delay="300">
-            <div class="w-20 h-20 bg-gradient-to-br from-accent-light to-accent rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110">
+          <div
+            class="bg-white rounded-xl p-8 shadow-xl text-center"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div
+              class="w-20 h-20 bg-gradient-to-br from-accent-light to-accent rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-500 hover:scale-110"
+            >
               <i class="fas fa-lightbulb text-white text-3xl"></i>
             </div>
             <h3 class="text-2xl font-bold mb-4">আমাদের দৃষ্টি</h3>
-            <p class="text-gray-600">আমরা একটি সুদমুক্ত ইসলামি অর্থনীতিতে পরিচালিত সমাজ-দেশ-রাষ্ট্র গড়তে চাই</p>
+            <p class="text-gray-600">
+              আমরা একটি সুদমুক্ত ইসলামি অর্থনীতিতে পরিচালিত সমাজ-দেশ-রাষ্ট্র
+              গড়তে চাই
+            </p>
           </div>
         </div>
       </div>
@@ -284,26 +417,64 @@
       <div class="absolute inset-0 bg-black opacity-10"></div>
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 section-title inline-block" data-aos="fade-up">আমাদের অর্জন</h2>
-          <p class="text-lg text-white/90 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">গত কয়েক বছরে আমরা অনেক মানুষের জীবনে পরিবর্তন এনেছি। আমাদের সাফল্যের কিছু পরিসংখ্যান:</p>
+          <h2
+            class="text-3xl md:text-5xl font-bold text-white mb-4 section-title inline-block"
+            data-aos="fade-up"
+          >
+            আমাদের অর্জন
+          </h2>
+          <p
+            class="text-lg text-white/90 max-w-3xl mx-auto mt-6"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            গত কয়েক বছরে আমরা অনেক মানুষের জীবনে পরিবর্তন এনেছি। আমাদের
+            সাফল্যের কিছু পরিসংখ্যান:
+          </p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="100">
-            <div class="text-4xl md:text-6xl font-bold text-primary mb-2 counter" data-target="{{ total_loan_amount }}">০</div>
+          <div
+            class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2"
+            data-aos="zoom-in"
+            data-aos-delay="100"
+          >
+            <div
+              class="text-4xl md:text-6xl font-bold text-primary mb-2 counter"
+              data-target="{{ total_loan_amount }}"
+            >
+              ০
+            </div>
             <p class="text-gray-600 font-medium">কর্জ প্রদান</p>
           </div>
 
-          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="200">
-            <div class="text-4xl md:text-6xl font-bold text-secondary mb-2 counter" data-target="{{ total_loan_count }}">জন</div>
+          <div
+            class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2"
+            data-aos="zoom-in"
+            data-aos-delay="200"
+          >
+            <div
+              class="text-4xl md:text-6xl font-bold text-secondary mb-2 counter"
+              data-target="{{ total_loan_count }}"
+            >
+              জন
+            </div>
             <p class="text-gray-600 font-medium">কর্জ পেয়েছেন</p>
           </div>
 
-          <div class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="300">
-            <div class="text-4xl md:text-6xl font-bold text-accent mb-2 counter" data-target="{{ total_member }}">০</div>
+          <div
+            class="counter-item bg-white rounded-xl p-8 text-center shadow-xl transform transition duration-500 hover:-translate-y-2"
+            data-aos="zoom-in"
+            data-aos-delay="300"
+          >
+            <div
+              class="text-4xl md:text-6xl font-bold text-accent mb-2 counter"
+              data-target="{{ total_member }}"
+            >
+              ০
+            </div>
             <p class="text-gray-600 font-medium">মোট সদস্য</p>
           </div>
-
         </div>
       </div>
     </section>
@@ -312,72 +483,164 @@
     <section id="projects" class="py-20 bg-gray-50">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">আমাদের প্রকল্প</h2>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের বর্তমান ও সম্পূর্ণ হওয়া প্রকল্পগুলি দেখুন। আমরা সর্বদা নতুন প্রকল্প গ্রহণ করি।</p>
+          <h2
+            class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block"
+            data-aos="fade-up"
+          >
+            আমাদের প্রকল্প
+          </h2>
+          <p
+            class="text-lg text-gray-600 max-w-3xl mx-auto mt-6"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            আমাদের বর্তমান ও সম্পূর্ণ হওয়া প্রকল্পগুলি দেখুন। আমরা সর্বদা নতুন
+            প্রকল্প গ্রহণ করি।
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="100">
+          <div
+            class="project-card bg-white rounded-xl overflow-hidden shadow-xl"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
             <div class="relative overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/woman-hand-holding-plant-growing-from-coins-bottle_1150-17738.jpg" alt="Education Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <img
+                src="https://img.freepik.com/free-photo/woman-hand-holding-plant-growing-from-coins-bottle_1150-17738.jpg"
+                alt="Education Project"
+                class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end"
+              >
                 <div class="p-6">
-                  <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">শিক্ষা</span>
+                  <span
+                    class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full"
+                    >শিক্ষা</span
+                  >
                 </div>
               </div>
             </div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-3">কর্জে হাসানা</h3>
-              <p class="text-gray-600 mb-4">শিক্ষা, কর্ম-সংস্থান, চিকিৎসা, কৃষি, সুদ মুক্তি, ইত্যাদি খাতে সুদমুক্ত ঋণ প্রদান করা হয়</p>
-              <a href="#" class="inline-block bg-gradient-to-r from-primary to-primary-500 hover:from-primary-600 hover:to-primary-700 text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+              <p class="text-gray-600 mb-4">
+                শিক্ষা, কর্ম-সংস্থান, চিকিৎসা, কৃষি, সুদ মুক্তি, ইত্যাদি খাতে
+                সুদমুক্ত ঋণ প্রদান করা হয়
+              </p>
+              <a
+                href="#"
+                class="inline-block bg-gradient-to-r from-primary to-primary-500 hover:from-primary-600 hover:to-primary-700 text-white font-medium px-6 py-2 rounded-full transition-all duration-300"
+                >আরও জানুন</a
+              >
             </div>
           </div>
 
-          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="200">
+          <div
+            class="project-card bg-white rounded-xl overflow-hidden shadow-xl"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
             <div class="relative overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/sunset-desert-with-muslim-mosque-foreground_1385-1.jpg" alt="Healthcare Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <img
+                src="https://img.freepik.com/free-photo/sunset-desert-with-muslim-mosque-foreground_1385-1.jpg"
+                alt="Healthcare Project"
+                class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end"
+              >
                 <div class="p-6">
-                  <span class="bg-secondary text-white text-sm font-medium px-3 py-1 rounded-full">স্বাস্থ্য</span>
+                  <span
+                    class="bg-secondary text-white text-sm font-medium px-3 py-1 rounded-full"
+                    >স্বাস্থ্য</span
+                  >
                 </div>
               </div>
             </div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-3">দাওয়াহ</h3>
-              <p class="text-gray-600 mb-4">দ্বীন শিক্ষা এবং দাওয়াতের কার্যক্রম পরিচালনা করা</p>
-              <a href="#" class="inline-block bg-gradient-to-r from-secondary to-secondary-dark hover:from-secondary-dark hover:to-secondary text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+              <p class="text-gray-600 mb-4">
+                দ্বীন শিক্ষা এবং দাওয়াতের কার্যক্রম পরিচালনা করা
+              </p>
+              <a
+                href="#"
+                class="inline-block bg-gradient-to-r from-secondary to-secondary-dark hover:from-secondary-dark hover:to-secondary text-white font-medium px-6 py-2 rounded-full transition-all duration-300"
+                >আরও জানুন</a
+              >
             </div>
           </div>
 
-          <div class="project-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="300">
+          <div
+            class="project-card bg-white rounded-xl overflow-hidden shadow-xl"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
             <div class="relative overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/islamic-elements-with-quran-top-view_23-2148231005.jpg" alt="Environment Project" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <img
+                src="https://img.freepik.com/free-photo/islamic-elements-with-quran-top-view_23-2148231005.jpg"
+                alt="Environment Project"
+                class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end"
+              >
                 <div class="p-6">
-                  <span class="bg-accent text-white text-sm font-medium px-3 py-1 rounded-full">পরিবেশ</span>
+                  <span
+                    class="bg-accent text-white text-sm font-medium px-3 py-1 rounded-full"
+                    >পরিবেশ</span
+                  >
                 </div>
               </div>
             </div>
             <div class="p-6">
               <h3 class="text-2xl font-bold mb-3">সাদাকা</h3>
-              <p class="text-gray-600 mb-4">গরীব এবং দুস্থদের মাঝে সাদাকা প্রদান করা</p>
-              <a href="#" class="inline-block bg-gradient-to-r from-accent to-accent-dark hover:from-accent-dark hover:to-accent text-white font-medium px-6 py-2 rounded-full transition-all duration-300">আরও জানুন</a>
+              <p class="text-gray-600 mb-4">
+                গরীব এবং দুস্থদের মাঝে সাদাকা প্রদান করা
+              </p>
+              <a
+                href="#"
+                class="inline-block bg-gradient-to-r from-accent to-accent-dark hover:from-accent-dark hover:to-accent text-white font-medium px-6 py-2 rounded-full transition-all duration-300"
+                >আরও জানুন</a
+              >
             </div>
           </div>
         </div>
 
         <div class="text-center mt-12">
-          <a href="#" class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up">সব প্রকল্প দেখুন</a>
+          <a
+            href="#"
+            class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            data-aos="fade-up"
+            >সব প্রকল্প দেখুন</a
+          >
         </div>
       </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+    <section
+      class="py-16 bg-gradient-to-r from-primary to-secondary text-white"
+    >
       <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">আমাদের সাথে যোগ দিন এবং পরিবর্তন আনুন</h2>
-        <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90" data-aos="fade-up" data-aos-delay="100">আমরা সবসময় নতুন স্বেচ্ছাসেবী এবং সহযোগী খুঁজছি। আমাদের সাথে যোগ দিন এবং সমাজের উন্নয়নে অবদান রাখুন।</p>
-        <a href="#contact" class="inline-block bg-white text-primary font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">আজই যোগাযোগ করুন</a>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">
+          আমাদের সাথে যোগ দিন এবং পরিবর্তন আনুন
+        </h2>
+        <p
+          class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          আমরা সবসময় নতুন স্বেচ্ছাসেবী এবং সহযোগী খুঁজছি। আমাদের সাথে যোগ দিন
+          এবং সমাজের উন্নয়নে অবদান রাখুন।
+        </p>
+        <a
+          href="#contact"
+          class="inline-block bg-white text-primary font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          data-aos="fade-up"
+          data-aos-delay="200"
+          >আজই যোগাযোগ করুন</a
+        >
       </div>
     </section>
 
@@ -385,17 +648,39 @@
     <section id="blog" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">সাম্প্রতিক ব্লগ</h2>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের সাম্প্রতিক ব্লগ পোস্ট পড়ুন এবং আমাদের কাজ সম্পর্কে জানুন।</p>
+          <h2
+            class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block"
+            data-aos="fade-up"
+          >
+            সাম্প্রতিক ব্লগ
+          </h2>
+          <p
+            class="text-lg text-gray-600 max-w-3xl mx-auto mt-6"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            আমাদের সাম্প্রতিক ব্লগ পোস্ট পড়ুন এবং আমাদের কাজ সম্পর্কে জানুন।
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {% for blog in blogs %}
-            <div class="blog-card bg-white rounded-xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="100">
+          <div
+            class="blog-card bg-white rounded-xl overflow-hidden shadow-xl"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
             <div class="relative overflow-hidden">
-              <img src="{% if blog.image %}{{ blog.image.url }}{% else %}{{ '/media/default_image.jpg' }}{% endif %}" alt="Blog 1" class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110">
+              <img
+                src="{% if blog.image %}{{ blog.image.url }}{% else %}{{ '/media/default_image.jpg' }}{% endif %}"
+                alt="Blog 1"
+                class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
+              />
               <div class="absolute top-4 right-4">
-                <span class="bg-primary/90 text-white text-sm font-medium px-3 py-1 rounded-full backdrop-blur-sm">শিক্ষা</span>
+                <span
+                  class="bg-primary/90 text-white text-sm font-medium px-3 py-1 rounded-full backdrop-blur-sm"
+                  >শিক্ষা</span
+                >
               </div>
             </div>
             <div class="p-6">
@@ -408,18 +693,25 @@
               </div>
               <h3 class="text-xl font-bold mb-3">{{ blog.title }}</h3>
               <p class="text-gray-600 mb-4">{{ blog.short_description }}</p>
-              <a href="{% url 'blog-detail' blog.id %}" class="inline-flex items-center text-primary hover:text-primary-600 font-medium transition-colors">
+              <a
+                href="{% url 'blog-detail' blog.id %}"
+                class="inline-flex items-center text-primary hover:text-primary-600 font-medium transition-colors"
+              >
                 আরও পড়ুন
                 <i class="fas fa-arrow-right ml-2 text-sm"></i>
               </a>
             </div>
           </div>
           {% endfor %}
-
         </div>
 
         <div class="text-center mt-12">
-          <a href="#" class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-aos="fade-up">সব ব্লগ দেখুন</a>
+          <a
+            href="#"
+            class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            data-aos="fade-up"
+            >সব ব্লগ দেখুন</a
+          >
         </div>
       </div>
     </section>
@@ -428,40 +720,93 @@
     <section id="contact" class="py-20 bg-gray-50">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block" data-aos="fade-up">যোগাযোগ করুন</h2>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-6" data-aos="fade-up" data-aos-delay="200">আমাদের সাথে যোগাযোগ করতে নিচের ফর্মটি পূরণ করুন বা আমাদের অফিসে আসুন।</p>
+          <h2
+            class="text-3xl md:text-5xl font-bold mb-4 section-title inline-block"
+            data-aos="fade-up"
+          >
+            যোগাযোগ করুন
+          </h2>
+          <p
+            class="text-lg text-gray-600 max-w-3xl mx-auto mt-6"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            আমাদের সাথে যোগাযোগ করতে নিচের ফর্মটি পূরণ করুন বা আমাদের অফিসে
+            আসুন।
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div data-aos="fade-right">
+            {% comment %}
             <form class="bg-white p-8 rounded-xl shadow-xl">
               <div class="mb-6">
-                <label for="name" class="block text-gray-700 mb-2 font-medium">নাম</label>
-                <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার নাম">
+                <label for="name" class="block text-gray-700 mb-2 font-medium"
+                  >নাম</label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                  placeholder="আপনার নাম"
+                />
               </div>
 
               <div class="mb-6">
-                <label for="email" class="block text-gray-700 mb-2 font-medium">ইমেইল</label>
-                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার ইমেইল">
+                <label for="email" class="block text-gray-700 mb-2 font-medium"
+                  >ইমেইল</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                  placeholder="আপনার ইমেইল"
+                />
               </div>
 
               <div class="mb-6">
-                <label for="subject" class="block text-gray-700 mb-2 font-medium">বিষয়</label>
-                <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="বার্তার বিষয়">
+                <label
+                  for="subject"
+                  class="block text-gray-700 mb-2 font-medium"
+                  >বিষয়</label
+                >
+                <input
+                  type="text"
+                  id="subject"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                  placeholder="বার্তার বিষয়"
+                />
               </div>
 
               <div class="mb-6">
-                <label for="message" class="block text-gray-700 mb-2 font-medium">বার্তা</label>
-                <textarea id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" placeholder="আপনার বার্তা লিখুন"></textarea>
+                <label
+                  for="message"
+                  class="block text-gray-700 mb-2 font-medium"
+                  >বার্তা</label
+                >
+                <textarea
+                  id="message"
+                  rows="4"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                  placeholder="আপনার বার্তা লিখুন"
+                ></textarea>
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">পাঠিয়ে দিন</button>
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-dark text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              >
+                পাঠিয়ে দিন
+              </button>
             </form>
+            {% endcomment %} {% include 'contact_us.html' %}
           </div>
 
           <div class="flex flex-col h-full" data-aos="fade-left">
             <div class="bg-white p-8 rounded-xl shadow-xl mb-8">
-              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">আমাদের ঠিকানা</h3>
+              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">
+                আমাদের ঠিকানা
+              </h3>
               <div class="flex items-start mb-6">
                 <div class="bg-primary-100 rounded-full p-3 mr-4">
                   <i class="fas fa-map-marker-alt text-primary text-xl"></i>
@@ -481,23 +826,29 @@
                   <p class="text-gray-600">annurkorjehasana@gmail.com</p>
                 </div>
               </div>
-
-
             </div>
 
             <div class="bg-white p-8 rounded-xl shadow-xl">
-              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">সামাজিক মাধ্যম</h3>
+              <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">
+                সামাজিক মাধ্যম
+              </h3>
               <div class="flex justify-center space-x-6">
-                <a href="https://www.facebook.com/annurkorjehasana" class="bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">
+                <a
+                  href="https://www.facebook.com/annurkorjehasana"
+                  class="bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
+                >
                   <i class="fab fa-facebook-f text-xl"></i>
                 </a>
-<!--                <a href="#" class="bg-sky-500 hover:bg-sky-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
-<!--                  <i class="fab fa-twitter text-xl"></i>-->
-<!--                </a>-->
-<!--                <a href="#" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
-<!--                  <i class="fab fa-instagram text-xl"></i>-->
-<!--                </a>-->
-                <a href="https://www.youtube.com/@annurkorjehasana" class="bg-red-600 hover:bg-red-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">
+                <!--                <a href="#" class="bg-sky-500 hover:bg-sky-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
+                <!--                  <i class="fab fa-twitter text-xl"></i>-->
+                <!--                </a>-->
+                <!--                <a href="#" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">-->
+                <!--                  <i class="fab fa-instagram text-xl"></i>-->
+                <!--                </a>-->
+                <a
+                  href="https://www.youtube.com/@annurkorjehasana"
+                  class="bg-red-600 hover:bg-red-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
+                >
                   <i class="fab fa-youtube text-xl"></i>
                 </a>
               </div>
@@ -509,7 +860,15 @@
 
     <!-- Map Section -->
     <div class="h-96 w-full">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116758.44731228056!2d89.16803331537962!3d23.864731968559962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fe91fa6bfcc263%3A0x8b46bb4a0ef47a22!2sKumarkhali%20Upazila!5e0!3m2!1sen!2sbd!4v1747455480127!5m2!1sen!2sbd" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116758.44731228056!2d89.16803331537962!3d23.864731968559962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fe91fa6bfcc263%3A0x8b46bb4a0ef47a22!2sKumarkhali%20Upazila!5e0!3m2!1sen!2sbd!4v1747455480127!5m2!1sen!2sbd"
+        width="100%"
+        height="100%"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
     </div>
 
     <!-- Footer -->
@@ -521,13 +880,24 @@
               <span class="text-primary">আন-নূর</span>
               <span class="text-secondary">কর্জে হাসানা</span>
             </a>
-            <p class="text-gray-400 mb-6">আন-নূর কর্জে হাসানা একটি সমবায়ভিত্তিক আর্থিক মডেল,
-              যা সুদমুক্ত লেনদেনের মাধ্যমে আর্থিকভাবে দুর্বল মানুষদের সহায়তা করে। এটি ইসলামিক নীতিমালার আলোকে পরিচালিত হয় এবং সম্পূর্ণরূপে কর্জে হাসানার ভিত্তিতে গঠিত, যেখানে কোনো প্রকার সুদ গ্রহণ বা প্রদান করা হয় না।</p>
+            <p class="text-gray-400 mb-6">
+              আন-নূর কর্জে হাসানা একটি সমবায়ভিত্তিক আর্থিক মডেল, যা সুদমুক্ত
+              লেনদেনের মাধ্যমে আর্থিকভাবে দুর্বল মানুষদের সহায়তা করে। এটি
+              ইসলামিক নীতিমালার আলোকে পরিচালিত হয় এবং সম্পূর্ণরূপে কর্জে
+              হাসানার ভিত্তিতে গঠিত, যেখানে কোনো প্রকার সুদ গ্রহণ বা প্রদান করা
+              হয় না।
+            </p>
             <div class="flex space-x-4">
-              <a href="https://www.facebook.com/annurkorjehasana" class="text-gray-400 hover:text-primary transition-colors">
+              <a
+                href="https://www.facebook.com/annurkorjehasana"
+                class="text-gray-400 hover:text-primary transition-colors"
+              >
                 <i class="fab fa-facebook-f"></i>
               </a>
-              <a href="https://www.youtube.com/@annurkorjehasana" class="text-gray-400 hover:text-primary transition-colors">
+              <a
+                href="https://www.youtube.com/@annurkorjehasana"
+                class="text-gray-400 hover:text-primary transition-colors"
+              >
                 <i class="fab fa-youtube"></i>
               </a>
             </div>
@@ -536,63 +906,132 @@
           <div>
             <h3 class="text-xl font-bold mb-4">দ্রুত লিঙ্ক</h3>
             <ul class="space-y-3">
-              <li><a href="#home" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> হোম
-              </a></li>
-              <li><a href="#about" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> আমাদের সম্পর্কে
-              </a></li>
-              <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> প্রকল্প
-              </a></li>
-              <li><a href="#blog" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> ব্লগ
-              </a></li>
-              <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> যোগাযোগ
-              </a></li>
+              <li>
+                <a
+                  href="#home"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  হোম
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#about"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  আমাদের সম্পর্কে
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#projects"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  প্রকল্প
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#blog"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  ব্লগ
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  যোগাযোগ
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 class="text-xl font-bold mb-4">প্রকল্প</h3>
             <ul class="space-y-3">
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> শিক্ষা প্রকল্প
-              </a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> স্বাস্থ্য সেবা
-              </a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> বৃক্ষ রোপণ
-              </a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> পানি প্রকল্প
-              </a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
-                <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i> নারী উন্নয়ন
-              </a></li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  শিক্ষা প্রকল্প
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  স্বাস্থ্য সেবা
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  বৃক্ষ রোপণ
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  পানি প্রকল্প
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors inline-flex items-center"
+                >
+                  <i class="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                  নারী উন্নয়ন
+                </a>
+              </li>
             </ul>
           </div>
 
-          <div>
-          </div>
+          <div></div>
         </div>
 
-        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-400 text-center md:text-left">© ২০২৫ আন-নূর কর্জে হাসানা। সর্বস্বত্ব সংরক্ষিত।</p>
+        <div
+          class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-400 text-center md:text-left">
+            © ২০২৫ আন-নূর কর্জে হাসানা। সর্বস্বত্ব সংরক্ষিত।
+          </p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <p>Powered by <a href="https://lxroot.com" class="text-primary">LxRoot</a></p>
-<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">গোপনীয়তা নীতি</a>-->
-<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">ব্যবহারের শর্তাবলী</a>-->
-<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">সাহায্য</a>-->
+            <p>
+              Powered by
+              <a href="https://lxroot.com" class="text-primary">LxRoot</a>
+            </p>
+            <!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">গোপনীয়তা নীতি</a>-->
+            <!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">ব্যবহারের শর্তাবলী</a>-->
+            <!--            <a href="#" class="text-gray-400 hover:text-white transition-colors">সাহায্য</a>-->
           </div>
         </div>
       </div>
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary hover:bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 z-50 opacity-0 invisible">
+    <button
+      id="back-to-top"
+      class="fixed bottom-6 right-6 bg-primary hover:bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 z-50 opacity-0 invisible"
+    >
       <i class="fas fa-arrow-up"></i>
     </button>
 
@@ -604,35 +1043,35 @@
       // Initialize AOS Animation
       AOS.init({
         duration: 800,
-        once: true
+        once: true,
       });
 
       // Mobile menu toggle
-      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
 
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
       });
 
       // Sticky header
-      const navbar = document.getElementById('navbar');
+      const navbar = document.getElementById("navbar");
 
-      window.addEventListener('scroll', () => {
+      window.addEventListener("scroll", () => {
         if (window.scrollY > 100) {
-          navbar.classList.add('navbar-fixed');
-          navbar.classList.add('shadow-md');
+          navbar.classList.add("navbar-fixed");
+          navbar.classList.add("shadow-md");
         } else {
-          navbar.classList.remove('navbar-fixed');
-          navbar.classList.remove('shadow-md');
+          navbar.classList.remove("navbar-fixed");
+          navbar.classList.remove("shadow-md");
         }
       });
 
       // Counter animation
-      const counters = document.querySelectorAll('.counter');
+      const counters = document.querySelectorAll(".counter");
 
       function runCounter(counter) {
-        const target = parseInt(counter.getAttribute('data-target'));
+        const target = parseInt(counter.getAttribute("data-target"));
         const duration = 2000; // 2 seconds
         const step = (target / duration) * 10;
         let current = 0;
@@ -640,66 +1079,67 @@
         const updateCounter = () => {
           current += step;
           if (current < target) {
-            counter.innerText = Math.floor(current).toLocaleString('bn-BD');
+            counter.innerText = Math.floor(current).toLocaleString("bn-BD");
             setTimeout(updateCounter, 10);
           } else {
-            counter.innerText = target.toLocaleString('bn-BD');
+            counter.innerText = target.toLocaleString("bn-BD");
           }
         };
 
         updateCounter();
       }
 
-
-
       // Intersection Observer for counters
-      const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            runCounter(entry.target);
-            counterObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              runCounter(entry.target);
+              counterObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
 
-      counters.forEach(counter => {
+      counters.forEach((counter) => {
         counterObserver.observe(counter);
       });
 
       // Back to top button
-      const backToTopBtn = document.getElementById('back-to-top');
+      const backToTopBtn = document.getElementById("back-to-top");
 
-      window.addEventListener('scroll', () => {
+      window.addEventListener("scroll", () => {
         if (window.scrollY > 300) {
-          backToTopBtn.classList.remove('opacity-0', 'invisible');
-          backToTopBtn.classList.add('opacity-100', 'visible');
+          backToTopBtn.classList.remove("opacity-0", "invisible");
+          backToTopBtn.classList.add("opacity-100", "visible");
         } else {
-          backToTopBtn.classList.add('opacity-0', 'invisible');
-          backToTopBtn.classList.remove('opacity-100', 'visible');
+          backToTopBtn.classList.add("opacity-0", "invisible");
+          backToTopBtn.classList.remove("opacity-100", "visible");
         }
       });
 
-      backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      backToTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
       // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
           e.preventDefault();
 
-          const targetId = this.getAttribute('href');
+          const targetId = this.getAttribute("href");
           const targetElement = document.querySelector(targetId);
 
           if (targetElement) {
             window.scrollTo({
               top: targetElement.offsetTop - 80,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
 
             // Close mobile menu if open
-            if (!mobileMenu.classList.contains('hidden')) {
-              mobileMenu.classList.add('hidden');
+            if (!mobileMenu.classList.contains("hidden")) {
+              mobileMenu.classList.add("hidden");
             }
           }
         });
