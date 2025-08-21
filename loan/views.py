@@ -1,56 +1,61 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from django.db.models import Q, Sum
+
+from organization.models import Branch
 from transaction.models import Loan
+from .services import LoanService
 
 
-class LoanListView(LoginRequiredMixin, ListView):
+class BaseLoanListView(LoginRequiredMixin, ListView):
+    """Base view for loan lists"""
     model = Loan
-    template_name = 'loan/loan_list.html'  # Adjust to your template path
+    template_name = 'loan/loan_list.html'
     context_object_name = 'loans'
-    paginate_by = 50  # Number of loans per page
-    ordering = ['date']  # Default ordering
+    paginate_by = 50
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.loan_service = LoanService()
+
+    def get_search_params(self):
+        """Extract search parameters from request"""
+        return {
+            'q': self.request.GET.get('q', ''),
+            'startdate': self.request.GET.get('startdate', ''),
+            'enddate': self.request.GET.get('enddate', ''),
+            'order_by': self.request.GET.get('order_by', 'date'),
+            'direction': self.request.GET.get('direction', 'desc'),
+            'branch': self.request.GET.get('branch', ''),
+        }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Calculate total loan amount from the filtered queryset
-        total_loan_amount = self.get_queryset().aggregate(total=Sum('amount'))['total'] or 0
-        # Pass total_loan_amount to context
+        total_loan_amount = self.loan_service.calculate_total_loan_amount(
+            self.get_queryset()
+        )
         context['total_loan'] = total_loan_amount
         return context
 
+
+class LoanListView(BaseLoanListView):
+    """User loan list view - filtered by user's branch"""
+
     def get_queryset(self):
-        # Get the logged-in user's branch
-        user_branch = self.request.user.branch  # Assuming User has a branch field
+        search_params = self.get_search_params()
+        return self.loan_service.get_user_loans(self.request.user, search_params)
 
-        # Base queryset filtering by branch
-        queryset = Loan.objects.filter(member__branch=user_branch, is_paid=False).select_related('member')
 
-        # Handle search query
-        query = self.request.GET.get('q', '')
-        if query:
-            queryset = queryset.filter(
-                Q(member__name__icontains=query) |  # Assuming member has a name field
-                Q(amount__icontains=query) |
-                Q(date__icontains=query)
-            )
+class LoanListAdminView(BaseLoanListView):
+    """Admin loan list view - shows all loans"""
+    template_name = 'loan/loan_list_admin.html'  # Different template if needed
 
-        # Handle date range filtering
-        startdate = self.request.GET.get('startdate', '')
-        enddate = self.request.GET.get('enddate', '')
-        if startdate and enddate:
-            queryset = queryset.filter(date__range=[startdate, enddate])
-        elif startdate:
-            queryset = queryset.filter(date__gte=startdate)
-        elif enddate:
-            queryset = queryset.filter(date__lte=enddate)
+    def get_queryset(self):
+        search_params = self.get_search_params()
+        return self.loan_service.get_admin_loans(search_params)
 
-        # Handle ordering
-        order_by = self.request.GET.get('order_by', '-date')
-        direction = self.request.GET.get('direction', 'asc')
-        if direction == 'desc':
-            order_by = f'-{order_by}'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        queryset = queryset.order_by(order_by)
+        context['branches'] = Branch.objects.filter(is_active=True).order_by('-id')
 
-        return queryset
+        return context
