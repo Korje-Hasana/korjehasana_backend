@@ -1,0 +1,259 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>শাখা পরিসংখ্যান - এডমিন</h4>
+    </div>
+
+    <div class="card-body">
+        <!-- Overall Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_branches }}</h5>
+                        <small>মোট শাখা</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_members }}</h5>
+                        <small>মোট সদস্য</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-secondary text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_loans }}</h5>
+                        <small>মোট কর্জ</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_disbursement|floatformat:0 }}</h5>
+                        <small>মোট বিতরণ</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_repayment|floatformat:0 }}</h5>
+                        <small>মোট পরিশোধ</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h5>{{ overall_stats.total_outstanding|floatformat:0 }}</h5>
+                        <small>মোট বকেয়া</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export and Print Options -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <h5>শাখাওয়ারী বিস্তারিত</h5>
+            </div>
+            <div class="col-md-6 text-right">
+                <button onclick="window.print()" class="btn btn-secondary btn-sm">
+                    <i class="fa fa-print"></i> প্রিন্ট
+                </button>
+                <button onclick="exportToCSV()" class="btn btn-success btn-sm">
+                    <i class="fa fa-download"></i> CSV ডাউনলোড
+                </button>
+            </div>
+        </div>
+
+        <!-- Branch Statistics Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="branchStatsTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ক্রমিক</th>
+                        <th>শাখার নাম</th>
+                        <th>ঠিকানা</th>
+                        <th>মোট সদস্য</th>
+                        <th>মোট কর্জ</th>
+                        <th>কর্জ বিতরণ</th>
+                        <th>কর্জ পরিশোধ</th>
+                        <th>বকেয়া</th>
+                        <th>পরিশোধের হার (%)</th>
+                        <th>কার্যক্রম</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in branch_stats %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <strong>{{ stat.name }}</strong>
+                            </td>
+                            <td>{{ stat.address|default:"-" }}</td>
+                            <td>
+                                <span class="badge badge-info">{{ stat.total_member }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-secondary">{{ stat.total_loan_count }}</span>
+                            </td>
+                            <td>
+                                <span class="text-success">
+                                    <strong>৳{{ stat.total_loan_disbursement|floatformat:0 }}</strong>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-warning">
+                                    <strong>৳{{ stat.total_loan_repayment|floatformat:0 }}</strong>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-danger">
+                                    <strong>৳{{ stat.outstanding_amount|floatformat:0 }}</strong>
+                                </span>
+                            </td>
+                            <td>
+                                {% if stat.total_loan_disbursement > 0 %}
+                                    {% widthratio stat.total_loan_repayment stat.total_loan_disbursement 100 as repayment_rate %}
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-{% if repayment_rate >= 80 %}success{% elif repayment_rate >= 60 %}warning{% else %}danger{% endif %}" 
+                                             role="progressbar" 
+                                             style="width: {{ repayment_rate }}%;" 
+                                             aria-valuenow="{{ repayment_rate }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                            {{ repayment_rate }}%
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'all-loan-list-admin' %}?branch={{ stat.branch.id }}"
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="কর্জ দেখুন">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href=""
+                                       class="btn btn-sm btn-outline-info" 
+                                       title="সদস্য দেখুন">
+                                        <i class="fa fa-users"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center">কোন শাখা পাওয়া যায়নি।</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="thead-light">
+                    <tr>
+                        <th colspan="3"><strong>মোট</strong></th>
+                        <th><strong>{{ overall_stats.total_members }}</strong></th>
+                        <th><strong>{{ overall_stats.total_loans }}</strong></th>
+                        <th><strong>৳{{ overall_stats.total_disbursement|floatformat:0 }}</strong></th>
+                        <th><strong>৳{{ overall_stats.total_repayment|floatformat:0 }}</strong></th>
+                        <th><strong>৳{{ overall_stats.total_outstanding|floatformat:0 }}</strong></th>
+                        <th>
+                            {% if overall_stats.total_disbursement > 0 %}
+                                {% widthratio overall_stats.total_repayment overall_stats.total_disbursement 100 as overall_rate %}
+                                <strong>{{ overall_rate }}%</strong>
+                            {% else %}
+                                <strong>-</strong>
+                            {% endif %}
+                        </th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Print Styles -->
+<style>
+@media print {
+    .card-header, .btn, .btn-group {
+        display: none !important;
+    }
+    .table {
+        font-size: 12px;
+    }
+    .card {
+        border: none;
+        box-shadow: none;
+    }
+}
+</style>
+
+{% endblock %}
+
+{% block script %}
+<script>
+function exportToCSV() {
+    const table = document.getElementById('branchStatsTable');
+    const rows = table.querySelectorAll('tr');
+    let csvContent = '';
+    
+    // Add BOM for UTF-8
+    csvContent += '\uFEFF';
+    
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('th, td');
+        const rowData = [];
+        
+        cells.forEach((cell, cellIndex) => {
+            // Skip the action column (last column)
+            if (cellIndex < cells.length - 1) {
+                let text = cell.textContent.trim();
+                // Remove special characters and clean up
+                text = text.replace(/[৳,]/g, '').replace(/\s+/g, ' ');
+                rowData.push('"' + text + '"');
+            }
+        });
+        
+        if (rowData.length > 0) {
+            csvContent += rowData.join(',') + '\n';
+        }
+    });
+    
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'branch_statistics.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Add some interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effect to table rows
+    const tableRows = document.querySelectorAll('#branchStatsTable tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+{% endblock %}

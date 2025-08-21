@@ -1,26 +1,44 @@
 {% load static %}
+{% load permission_tags %}
+{% has_group request.user "collector" as user_is_collector %}
+{% has_group request.user "admin" as user_is_admin %}
+
+
 <div class="sidebar">
     <nav class="sidebar-nav">
         <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'dashboard' %}"><i class="icon-speedometer"></i> Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'team_list' %}"><i class="icon-people"></i> দল</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'all-loan-list' %}"><i class="icon-wallet"></i>কর্জ তালিকা</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'income_list' %}"><i class="icon-bag"></i>আয়-ব্যয়</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'report' %}"><i class="icon-chart"></i>রিপোর্ট</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'my-detail' %}"><i class="icon-user"></i>আমার একাউন্ট</a>
-            </li>
+            {% if user_is_collector %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}"><i class="icon-speedometer"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'team_list' %}"><i class="icon-people"></i> দল</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'all-loan-list' %}"><i class="icon-wallet"></i>কর্জ তালিকা</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'income_list' %}"><i class="icon-bag"></i>আয়-ব্যয়</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'report' %}"><i class="icon-chart"></i>রিপোর্ট</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my-detail' %}"><i class="icon-user"></i>আমার একাউন্ট</a>
+                </li>
 
+            {% endif %}
+
+            <!------ Admin specific links ------>
+
+            {% if user_is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'branch_statistics' %}"><i class="icon-wallet"></i>ব্রাঞ্চ তালিকা</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'all-loan-list-admin' %}"><i class="icon-wallet"></i>কর্জ তালিকা</a>
+                </li>
+            {% endif %}
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

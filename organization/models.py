@@ -78,6 +78,7 @@ class Branch(models.Model):
     # thana = models.ForeignKey(Thana, on_delete=models.CASCADE)
     address = models.CharField(max_length=255, blank=True, null=True)
     bank_account = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = [["organization", "code"], ["organization", "name"]]
