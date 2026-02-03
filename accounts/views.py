@@ -21,6 +21,10 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'You have successfully logged in.')
+
+                # General user group should redirect to my account page
+                if user.groups.filter(name='user').exists():
+                    return redirect('my-detail')
                 return redirect('dashboard')  # Redirect to the homepage or any other page
             else:
                 messages.error(request, 'Invalid username or password.')

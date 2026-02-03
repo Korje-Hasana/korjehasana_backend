@@ -2,6 +2,7 @@
 {% load permission_tags %}
 {% has_group request.user "collector" as user_is_collector %}
 {% has_group request.user "admin" as user_is_admin %}
+{% has_group request.user "user" as user_is_general %}
 
 
 <div class="sidebar">
@@ -37,6 +38,14 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'all-loan-list-admin' %}"><i class="icon-wallet"></i>কর্জ তালিকা</a>
+                </li>
+            {% endif %}
+
+            <!------ General User links ------>
+
+            {% if user_is_general %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my-detail' %}"><i class="icon-user"></i>আমার একাউন্ট</a>
                 </li>
             {% endif %}
         </ul>
