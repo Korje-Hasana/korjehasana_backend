@@ -1,10 +1,5 @@
-import calendar
-from datetime import date
-from django.db.models import Q, Sum, Count
-from django.db.models.functions import TruncMonth
-from collections import OrderedDict
+from django.db.models import Q, Sum, Case, When, F, IntegerField
 from journal.models import GeneralJournal, Ledger
-from peoples.models import Member
 
 
 class GeneralJournalRepository:
@@ -83,6 +78,44 @@ class GeneralJournalRepository:
     def get_member_installment(self, member_id):
         """Fetch journal entries for a specific member where account type is 'IN' (Installment Ledger)"""
         return GeneralJournal.objects.filter(Q(member_id=member_id) & Q(accounts__code='IN')).order_by('-date')
+
+    def stat_by_branch(self):
+        """
+        [
+          {
+            "branch__id": 1,
+            "branch__name": "Dhaka",
+            "total_loan_disbursement": 50000,
+            "total_loan_paid": 30000,
+            "unpaid_loan": 20000,
+          },
+          ]
+        """
+
+        journals = (
+            GeneralJournal.objects
+            .values("branch__id", "branch__name")  # group by branch
+            .annotate(
+                total_loan_disbursement=Sum(
+                    Case(
+                        When(accounts__code="LO", then=F("debit")),
+                        default=0,
+                        output_field=IntegerField(),
+                    )
+                ),
+                total_loan_paid=Sum(
+                    Case(
+                        When(accounts__code="IN", then=F("credit")),
+                        default=0,
+                        output_field=IntegerField(),
+                    )
+                ),
+            )
+            .annotate(
+                unpaid_loan=F("total_loan_disbursement") - F("total_loan_paid")
+            )
+        )
+        return journals
 
 
 

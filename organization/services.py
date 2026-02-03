@@ -1,5 +1,5 @@
 # write service class for Organization model
-
+from journal.repositories import GeneralJournalRepository
 from organization.models import Organization
 from organization.repositories import OrganizationRepository, BranchRepository
 
@@ -24,10 +24,12 @@ class BranchService:
 
     def __init__(self):
         self.repository = BranchRepository()
+        self.journal_repository = GeneralJournalRepository()
 
     def get_branch_statistics(self):
         """Get branch statistics with proper handling of null values"""
         branches = self.repository.get_branch_statistics()
+        journal_by_branch = self.journal_repository.stat_by_branch()
 
         # Process the data to handle null values and add calculated fields
         branch_stats = []
