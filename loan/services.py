@@ -66,3 +66,38 @@ class LoanService:
     def calculate_total_loan_amount(self, queryset):
         """Calculate total loan amount for given queryset"""
         return self.repository.calculate_total_amount(queryset)
+
+    def generate_csv_rows(self, queryset):
+        """Generate CSV rows from loan queryset"""
+        rows = []
+        
+        # Header row
+        rows.append([
+            'Date',
+            'Member Name',
+            'Guardian Name',
+            'Mobile No',
+            'Address',
+            'NID Number',
+            'Loan Amount',
+            'Branch',
+            'Loan Reason',
+            'Loan Status'
+        ])
+        
+        # Data rows
+        for loan in queryset:
+            rows.append([
+                loan.date.strftime('%Y-%m-%d') if loan.date else '',
+                loan.member.name if loan.member else '',
+                loan.member.guardian_name if loan.member and loan.member.guardian_name else '',
+                loan.member.mobile_number if loan.member and loan.member.mobile_number else '',
+                loan.branch.address if loan.branch else '',
+                loan.member.nid_number if loan.member and loan.member.nid_number else '',
+                loan.amount,
+                loan.branch.name if loan.branch else '',
+                loan.loan_reason.name if loan.loan_reason else '',
+                'পরিশোধ' if loan.is_paid else 'কর্জ গ্রহন'
+            ])
+        
+        return rows
