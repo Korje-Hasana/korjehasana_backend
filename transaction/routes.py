@@ -6,11 +6,16 @@ from . import api as views
 
 app_name = 'transaction'
 
-urlpatterns =[
+urlpatterns = [
     path('deposit/', views.DepositView.as_view()),
+    path('deposit-bulk/', views.DepositBulkView.as_view(), name='deposit_bulk'),
     path('withdraw/', views.WithdrawView.as_view()),
+    # Both spellings for backwards compatibility (web uses 'disbursment').
+    path('loan-disbursement/', views.LoanDisbursementView.as_view(), name='loan_disbursement'),
     path('loan-disbursment/', views.LoanDisbursementView.as_view()),
     path('loan-installment/', views.LoanInstallmentView.as_view()),
+    path('installment-bulk/', views.InstallmentBulkView.as_view(), name='installment_bulk'),
+    path('finance-summary/', views.FinanceSummaryView.as_view(), name='finance_summary'),
     path('member-savings-list', views.MemberSavingsData.as_view()),
     path('member-installment-list', views.MemberLoanData.as_view()),
     path('income/', views.IncomeTransactionListCreate.as_view(), name='income_create_list'),

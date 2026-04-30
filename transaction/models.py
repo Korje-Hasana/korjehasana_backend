@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from organization.models import BaseModel
-from report.models import CIHCalculation
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -55,16 +54,10 @@ class GeneralTransaction(BaseModel):
     category = models.ForeignKey(TransactionCategory, models.PROTECT)
     summary = models.TextField(blank=True, max_length=150)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.transaction_type == "income":
-            CIHCalculation.objects.add_cash_in_hand(
-                branch=self.branch, date=self.date, amount=self.amount
-            )
-        else:
-            CIHCalculation.objects.deduct_cash_in_hand(
-                branch=self.branch, date=self.date, amount=self.amount
-            )
+    # Cash-in-hand is derived from GeneralJournal (CA ledger) — no separate
+    # snapshot table needed. The corresponding journal entries are written by
+    # the API layer (see transaction.api.IncomeTransactionListCreate /
+    # ExpenseTransactionListCreate calling GeneralJournal.objects.create_*_entry).
 
 
 class Savings(BaseModel):
@@ -78,26 +71,15 @@ class Savings(BaseModel):
     team = models.ForeignKey("organization.Team", on_delete=models.PROTECT)
 
     def deposit(self):
-        """
-        balance = last balance + savings amount
-        """
+        """balance = last balance + savings amount."""
         latest_savings = Savings.objects.filter(member=self.member).last()
-        if latest_savings:
-            last_balance = latest_savings.balance
-        else:
-            last_balance = 0
+        last_balance = latest_savings.balance if latest_savings else 0
         self.balance = self.amount + last_balance
         self.transaction_type = "deposit"
         self.save()
-        # cash in hand calculation
-        CIHCalculation.objects.add_cash_in_hand(
-            branch=self.branch, date=self.date, amount=self.amount
-        )
 
     def withdraw(self):
-        """
-        balance = last balance - withdrawal amount
-        """
+        """balance = last balance - withdrawal amount."""
         latest_savings = Savings.objects.filter(member=self.member).last()
         if not latest_savings:
             raise ValueError("Withdraw not possible")
@@ -106,10 +88,6 @@ class Savings(BaseModel):
         self.balance = latest_savings.balance - self.amount
         self.transaction_type = "withdraw"
         self.save()
-        # Cash in hand calculation
-        CIHCalculation.objects.deduct_cash_in_hand(
-            branch=self.branch, date=self.date, amount=self.amount
-        )
 
     class Meta:
         unique_together = ("member", "date", "transaction_type")

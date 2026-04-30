@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import GeneralTransaction, Savings, Loan, Installment, TransactionCategory
-from journal.models import GeneralJournal, Ledger
+from .models import GeneralTransaction, Loan, Installment, TransactionCategory
+from journal.models import GeneralJournal
 
 
 class DepositSerializer(serializers.ModelSerializer):
@@ -24,12 +24,44 @@ class LoanInstallmentSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         loan = attrs.get("loan")
-        if loan.is_paid:
-            raise serializers.ValidationError("Loan is already paid")
+        amount = attrs.get("amount")
+        if loan and loan.is_paid:
+            raise serializers.ValidationError(
+                {"loan": ["এই কর্জ ইতিমধ্যে পরিশোধিত।"]}
+            )
+        if loan and amount and amount > loan.total_due:
+            raise serializers.ValidationError(
+                {"amount": [f"অতিরিক্ত পরিমাণ — সর্বাধিক {loan.total_due}।"]}
+            )
         return attrs
 
 
+class TransactionCategorySerializer(serializers.ModelSerializer):
+    """Mobile expects `kind` (alias of `category_type`)."""
+
+    kind = serializers.CharField(source="category_type", required=False)
+
+    class Meta:
+        model = TransactionCategory
+        fields = ("id", "name", "kind")
+
+
 class GeneralTransactionSerializer(serializers.ModelSerializer):
+    """Income / expense transaction.
+
+    Mobile contract: `{id, kind, category: {...}, amount, date, remark}`.
+    Web legacy: still accepts `summary` on write, returns it as `remark`.
+    """
+
+    kind = serializers.CharField(source="transaction_type", read_only=True)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=TransactionCategory.objects.all(), write_only=True
+    )
+    category_detail = TransactionCategorySerializer(source="category", read_only=True)
+    remark = serializers.CharField(
+        source="summary", required=False, allow_blank=True, allow_null=True, default=""
+    )
+
     class Meta:
         model = GeneralTransaction
         fields = (
@@ -37,24 +69,16 @@ class GeneralTransactionSerializer(serializers.ModelSerializer):
             "amount",
             "date",
             "category",
-            "summary",
+            "category_detail",
+            "remark",
+            "kind",
         )
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data.update(
-            {
-                "category": instance.category.name,
-            }
-        )
+        # Surface category_detail as `category` for the client and drop
+        # the write-only id duplicate.
+        cat = data.pop("category_detail", None)
+        if cat is not None:
+            data["category"] = cat
         return data
-
-
-class TransactionCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TransactionCategory
-        fields = (
-            "id",
-            "name",
-            "category_type"
-        )

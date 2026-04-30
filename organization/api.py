@@ -15,7 +15,6 @@ from rest_framework_simplejwt.exceptions import TokenError
 
 
 from peoples.models import Staff
-from report.models import CIHCalculation
 from journal.models import GeneralJournal
 
 # from transaction.models import Savings, Loan
@@ -23,6 +22,7 @@ from journal.models import GeneralJournal
 from .serializers import (
     LoginSerializer,
     TeamDetailSerializer,
+    UserDetailSerializer,
     UserSerializer,
     UserSerilizerWithToken,
     MyRefreshSerializer,
@@ -85,19 +85,37 @@ class ChangePasswordAPIView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         if not request.user.check_password(serializer.validated_data["old_password"]):
-            return Response({"old_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"old_password": ["পুরনো পাসওয়ার্ড ভুল।"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         request.user.set_password(serializer.validated_data["new_password"])
         request.user.save()
         return Response({"detail": "Successfully changed password."}, status=status.HTTP_200_OK)
 
+
+class MeView(APIView):
+    """Return the current authenticated user's full profile."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(UserDetailSerializer(request.user).data)
+
+
 class TeamCreateListApiView(ListCreateAPIView):
-    queryset = Team.objects.all().order_by("-id")
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
     filterset_fields = ["owner", "branch"]
+    pagination_class = None  # mobile expects flat list
+
+    def get_queryset(self):
+        return Team.objects.filter(branch=self.request.user.branch).order_by("-id")
 
     def perform_create(self, serializer):
-        serializer.save(branch=serializer.validated_data["owner"].branch)
+        # Branch comes from the authenticated user; owner defaults to current user.
+        owner = serializer.validated_data.get("owner") or self.request.user
+        serializer.save(branch=self.request.user.branch, owner=owner)
 
 
 class TeamRetriveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
@@ -195,13 +213,7 @@ class BranchDetailView(APIView):
             serializer = BranchSerializer(branch)
             data = {**serializer.data, **transaction_data}
             return Response(data)
-        except Branch.DoesNotExist as e:
-            print(str(e))
+        except Branch.DoesNotExist:
             return Response(
                 {"detail": "branch not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        except CIHCalculation.DoesNotExist:
-            return Response(
-                {"detail": "CIHCalculation not found for this branch"},
-                status=status.HTTP_400_BAD_REQUEST,
             )

@@ -1,6 +1,8 @@
-from datetime import datetime
+from datetime import date as date_cls, datetime
 
+from django.db import transaction as db_transaction
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,7 +18,7 @@ from rest_framework.generics import (
 from journal.models import GeneralJournal
 from peoples.models import Member
 from peoples.permissions import IsSameBranch
-from .models import GeneralTransaction, Loan, Savings, TransactionCategory
+from .models import GeneralTransaction, Installment, Loan, Savings, TransactionCategory
 from .serializers import (
     GeneralTransactionSerializer,
     DepositSerializer,
@@ -42,7 +44,7 @@ class DepositView(APIView):
         already_deposited = GeneralJournal.objects.is_already_deposited(date, member, amount)
         if already_deposited:
             return Response(
-                {"detail": "Member already have deposit with this date"},
+                {"detail": "এই তারিখে এই পরিমাণ ইতিমধ্যে জমা আছে।"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -82,21 +84,20 @@ class LoanDisbursementView(APIView):
         # check member already have unpaid loan
         unpaid_loan = Loan.objects.filter(member=member, is_paid=False).exists()
         if unpaid_loan:
-            resp = {
-                "status": "failed",
-                "message": "Member already have unpaid loan",
-            }
-            return Response(resp, status=400)
+            return Response(
+                {"detail": "এই সদস্যের চলমান কর্জ আছে।"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        serializer.save(
+        loan = serializer.save(
             amount=amount,
+            total_due=amount,  # full principal is due at disbursement
             branch=request.user.branch,
             team=member.team,
-            organization=request.user.branch.organization,
             created_by=request.user,
         )
         GeneralJournal.objects.create_loan_entry(date, member, amount)
-        return Response({"status": "success"}, status=201)
+        return Response({"status": "success", "id": loan.id}, status=201)
 
 
 class LoanInstallmentView(APIView):
@@ -190,81 +191,209 @@ class MemberLoanData(APIView):
 
 class IncomeTransactionListCreate(ListCreateAPIView):
     serializer_class = GeneralTransactionSerializer
-    permission_classes = [IsBranchOwner]
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(
-            transaction_type="income",
-            branch=user.branch,
-            organization=user.branch.organization,
-        )
+        serializer.save(transaction_type="income", branch=user.branch)
         data = serializer.validated_data
         category = data["category"].name
+        remark = data.get("summary", "") or ""
         GeneralJournal.objects.create_income_entry(
             date=data["date"],
             branch=user.branch,
             amount=data["amount"],
-            remarks=category + ": " + data["summary"]
+            remarks=f"{category}: {remark}".strip(": "),
         )
 
     def get_queryset(self):
         return GeneralTransaction.objects.filter(
             transaction_type="income", branch=self.request.user.branch
-        )
+        ).select_related("category").order_by("-date", "-id")
 
 
 class IncomeTransactionDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = GeneralTransactionSerializer
-    permission_classes = [IsBranchOwner]
+    permission_classes = [IsAuthenticated]
     http_method_names = ["get", "patch", "delete"]
 
     def get_object(self):
-        return get_object_or_404(GeneralTransaction, id=self.kwargs.get("id"))
+        obj = get_object_or_404(GeneralTransaction, id=self.kwargs.get("id"))
+        if obj.branch_id != self.request.user.branch_id:
+            self.permission_denied(self.request)
+        return obj
 
 
 class ExpenseTransactionListCreate(ListCreateAPIView):
     serializer_class = GeneralTransactionSerializer
-    permission_classes = [IsBranchOwner]
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(
-            transaction_type="expense",
-            branch=user.branch,
-            organization=user.branch.organization,
-        )
+        serializer.save(transaction_type="expense", branch=user.branch)
         data = serializer.validated_data
         category = data["category"].name
+        remark = data.get("summary", "") or ""
         GeneralJournal.objects.create_expense_entry(
             date=data["date"],
             branch=user.branch,
             amount=data["amount"],
-            remarks=category + ": " + data["summary"]
+            remarks=f"{category}: {remark}".strip(": "),
         )
 
     def get_queryset(self):
         return GeneralTransaction.objects.filter(
             transaction_type="expense", branch=self.request.user.branch
-        )
+        ).select_related("category").order_by("-date", "-id")
 
 
 class ExpenseTransactionDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = GeneralTransactionSerializer
-    permission_classes = [IsBranchOwner]
+    permission_classes = [IsAuthenticated]
     http_method_names = ["get", "patch", "delete"]
 
     def get_object(self):
-        return get_object_or_404(GeneralTransaction, id=self.kwargs.get("id"))
+        obj = get_object_or_404(GeneralTransaction, id=self.kwargs.get("id"))
+        if obj.branch_id != self.request.user.branch_id:
+            self.permission_denied(self.request)
+        return obj
 
 
 class TransactionCategoryList(ListAPIView):
     serializer_class = TransactionCategorySerializer
-    permission_classes = []
-    authentication_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = TransactionCategory.objects.all()
-    filter_backends = [
-        DjangoFilterBackend,
-    ]
+    filter_backends = [DjangoFilterBackend]
     filterset_fields = ["category_type"]
     pagination_class = None
+
+    def get_queryset(self):
+        # Mobile passes ?kind=income|expense for naming-consistency with the
+        # client. Normalize to the model's category_type.
+        qs = TransactionCategory.objects.all().order_by("category_type", "name")
+        kind = self.request.query_params.get("kind")
+        if kind in {"income", "expense"}:
+            qs = qs.filter(category_type=kind)
+        return qs
+
+
+class _BulkBaseView(APIView):
+    """Shared bulk-transaction skeleton.
+
+    Subclass implements `process_item(branch, date, item)` which returns a
+    dict shaped `{member, status, id?, error?}`. The base view aggregates
+    results, returning 201 if all succeed or 207 (Multi-Status) on partial
+    failure.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        branch = request.user.branch
+        if not branch:
+            return Response({"detail": "User has no branch"}, status=400)
+
+        items = request.data.get("items") or []
+        date = request.data.get("date") or date_cls.today().isoformat()
+        if not isinstance(items, list) or not items:
+            return Response({"detail": "items must be a non-empty list"}, status=400)
+
+        results = []
+        with db_transaction.atomic():
+            for item in items:
+                try:
+                    results.append(self.process_item(branch=branch, date=date, item=item))
+                except Exception as exc:  # noqa: BLE001
+                    results.append(
+                        {
+                            "member": item.get("member", 0) or 0,
+                            "status": "error",
+                            "error": str(exc),
+                        }
+                    )
+
+        any_error = any(r.get("status") == "error" for r in results)
+        return Response({"results": results}, status=207 if any_error else 201)
+
+    def process_item(self, branch, date, item):
+        raise NotImplementedError
+
+
+class DepositBulkView(_BulkBaseView):
+    """Atomic bulk-deposit for Meeting Mode."""
+
+    def process_item(self, branch, date, item):
+        member_id = item.get("member")
+        amount = int(item.get("amount") or 0)
+        if not member_id or amount <= 0:
+            return {"member": member_id or 0, "status": "error", "error": "সদস্য ও পরিমাণ দরকার।"}
+        member = Member.objects.filter(id=member_id, branch=branch).first()
+        if not member:
+            return {"member": member_id, "status": "error", "error": "সদস্য পাওয়া যায়নি।"}
+        if GeneralJournal.objects.is_already_deposited(date, member, amount):
+            return {"member": member_id, "status": "error", "error": "এই পরিমাণ ইতিমধ্যে জমা আছে।"}
+        entry = GeneralJournal.objects.deposit_entry(date, member, amount)
+        return {"member": member_id, "status": "ok", "id": entry.id}
+
+
+class InstallmentBulkView(_BulkBaseView):
+    """Atomic bulk loan-installment for Meeting Mode."""
+
+    def process_item(self, branch, date, item):
+        loan_id = item.get("loan")
+        amount = int(item.get("amount") or 0)
+        if not loan_id or amount <= 0:
+            return {"member": 0, "status": "error", "error": "কর্জ ও পরিমাণ দরকার।"}
+        loan = (
+            Loan.objects.filter(id=loan_id, branch=branch)
+            .select_related("member")
+            .first()
+        )
+        if not loan:
+            return {"member": 0, "status": "error", "error": "কর্জ পাওয়া যায়নি।"}
+        member_id = loan.member_id
+        if loan.is_paid:
+            return {"member": member_id, "status": "error", "error": "এই কর্জ ইতিমধ্যে পরিশোধিত।"}
+        if amount > loan.total_due:
+            return {"member": member_id, "status": "error", "error": f"অতিরিক্ত পরিমাণ — সর্বাধিক {loan.total_due}।"}
+        Installment.objects.create(loan=loan, amount=amount, date=date)
+        loan.pay_installment(amount)
+        GeneralJournal.objects.create_installment_entry(date, loan.member, amount)
+        return {"member": member_id, "status": "ok", "id": loan.id}
+
+
+class FinanceSummaryView(APIView):
+    """Today + month income/expense totals for the user's branch."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        branch = request.user.branch
+        today = date_cls.today()
+        month_start = today.replace(day=1)
+
+        qs = GeneralTransaction.objects.filter(branch=branch)
+
+        income_today = (
+            qs.filter(transaction_type="income", date=today).aggregate(s=Sum("amount"))["s"] or 0
+        )
+        expense_today = (
+            qs.filter(transaction_type="expense", date=today).aggregate(s=Sum("amount"))["s"] or 0
+        )
+        income_month = (
+            qs.filter(transaction_type="income", date__gte=month_start).aggregate(s=Sum("amount"))["s"] or 0
+        )
+        expense_month = (
+            qs.filter(transaction_type="expense", date__gte=month_start).aggregate(s=Sum("amount"))["s"] or 0
+        )
+
+        return Response(
+            {
+                "income_today": income_today,
+                "expense_today": expense_today,
+                "income_month": income_month,
+                "expense_month": expense_month,
+            }
+        )

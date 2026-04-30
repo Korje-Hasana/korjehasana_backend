@@ -20,8 +20,10 @@ SECRET_KEY = env("SECRET_KEY")
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
-#ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
-ALLOWED_HOSTS = ['korjehasana.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["korjehasana.com", "localhost", "127.0.0.1", "0.0.0.0", "10.206.159.241"],
+)
 
 # Application definition
 
@@ -93,16 +95,25 @@ WSGI_APPLICATION = "korjo_soft.wsgi.application"
 
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+# In development, set USE_SQLITE=True in .env to skip the Postgres requirement.
+if env.bool("USE_SQLITE", default=False):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST', default='localhost'),
+            'PORT': env('DB_PORT', default='5432'),
+        }
+    }
 
 # Update database configuration from $DATABASE_URL.
 

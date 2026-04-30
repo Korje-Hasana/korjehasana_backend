@@ -14,6 +14,34 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    """Full user info returned by login + /auth/me/."""
+
+    branch_name = serializers.SerializerMethodField()
+    organization_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "role",
+            "branch",
+            "branch_name",
+            "organization_name",
+            "is_active",
+            "is_staff",
+        ]
+
+    def get_branch_name(self, obj):
+        return obj.branch.name if obj.branch else None
+
+    def get_organization_name(self, obj):
+        if obj.branch and obj.branch.organization:
+            return obj.branch.organization.name
+        return None
+
+
 class UserSerilizerWithToken(UserSerializer):
     token = serializers.SerializerMethodField(read_only=True)
 
@@ -44,7 +72,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Add custom claims
+        # Custom claims kept in the token (used by web)
         user_data = {
             "username": user.username,
             "branch": user.branch.id if user.branch else None,
@@ -52,6 +80,12 @@ class LoginSerializer(TokenObtainPairSerializer):
         }
         token["user"] = user_data
         return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Mobile reads branch_name + organization_name from this user object.
+        data["user"] = UserDetailSerializer(self.user).data
+        return data
 
 
 class MyRefreshSerializer(serializers.Serializer):
@@ -80,18 +114,44 @@ class MyRefreshSerializer(serializers.Serializer):
 
 
 class TeamSerializerBase(serializers.ModelSerializer):
+    member_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Team
         fields = (
             "id",
             "name",
             "address",
+            "member_count",
         )
+
+    def get_member_count(self, obj):
+        return obj.members.filter(is_active=True).count()
 
 
 class TeamSerializer(TeamSerializerBase):
+    owner = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False, allow_null=True
+    )
+
     class Meta(TeamSerializerBase.Meta):
         fields = TeamSerializerBase.Meta.fields + ("owner",)
+
+    def validate_name(self, value):
+        value = (value or "").strip()
+        if not value:
+            raise serializers.ValidationError("দলের নাম দরকার।")
+        request = self.context.get("request")
+        branch = request.user.branch if request and request.user.is_authenticated else None
+        if branch:
+            qs = Team.objects.filter(branch=branch, name=value)
+            if self.instance is not None:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError(
+                    f"এই শাখায় ‘{value}’ নামে একটি দল ইতিমধ্যে আছে।"
+                )
+        return value
 
 
 class TeamDetailSerializer(TeamSerializerBase):
@@ -128,6 +188,7 @@ class BranchSerializer(serializers.ModelSerializer):
 # Logout Serializer
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
