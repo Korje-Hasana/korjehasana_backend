@@ -21,10 +21,14 @@ class LoanInstallmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Installment
         fields = ("amount", "date", "loan")
+        # Auto-generated UniqueTogetherValidator returns its message in
+        # English; we run our own check in validate() with a Bengali one.
+        validators = []
 
     def validate(self, attrs):
         loan = attrs.get("loan")
         amount = attrs.get("amount")
+        date = attrs.get("date")
         if loan and loan.is_paid:
             raise serializers.ValidationError(
                 {"loan": ["এই কর্জ ইতিমধ্যে পরিশোধিত।"]}
@@ -33,6 +37,11 @@ class LoanInstallmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"amount": [f"অতিরিক্ত পরিমাণ — সর্বাধিক {loan.total_due}।"]}
             )
+        if loan and date:
+            if Installment.objects.filter(loan=loan, date=date).exists():
+                raise serializers.ValidationError(
+                    {"date": ["এই তারিখে এই কর্জের কিস্তি ইতিমধ্যে জমা আছে।"]}
+                )
         return attrs
 
 

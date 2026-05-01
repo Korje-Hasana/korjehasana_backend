@@ -1,6 +1,6 @@
 from datetime import date as date_cls, datetime
 
-from django.db import transaction as db_transaction
+from django.db import IntegrityError, transaction as db_transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
@@ -301,18 +301,29 @@ class _BulkBaseView(APIView):
             return Response({"detail": "items must be a non-empty list"}, status=400)
 
         results = []
-        with db_transaction.atomic():
-            for item in items:
-                try:
+        # Each item gets its own savepoint so a failure on one doesn't
+        # roll back the rest. Meeting Mode wants partial success — branch
+        # owners can re-collect the failed entries later.
+        for item in items:
+            try:
+                with db_transaction.atomic():
                     results.append(self.process_item(branch=branch, date=date, item=item))
-                except Exception as exc:  # noqa: BLE001
-                    results.append(
-                        {
-                            "member": item.get("member", 0) or 0,
-                            "status": "error",
-                            "error": str(exc),
-                        }
-                    )
+            except IntegrityError:
+                results.append(
+                    {
+                        "member": item.get("member", 0) or 0,
+                        "status": "error",
+                        "error": "ডাটা সংরক্ষণে সমস্যা — সম্ভবত ডুপ্লিকেট এন্ট্রি।",
+                    }
+                )
+            except Exception as exc:  # noqa: BLE001
+                results.append(
+                    {
+                        "member": item.get("member", 0) or 0,
+                        "status": "error",
+                        "error": str(exc),
+                    }
+                )
 
         any_error = any(r.get("status") == "error" for r in results)
         return Response({"results": results}, status=207 if any_error else 201)
@@ -358,6 +369,14 @@ class InstallmentBulkView(_BulkBaseView):
             return {"member": member_id, "status": "error", "error": "এই কর্জ ইতিমধ্যে পরিশোধিত।"}
         if amount > loan.total_due:
             return {"member": member_id, "status": "error", "error": f"অতিরিক্ত পরিমাণ — সর্বাধিক {loan.total_due}।"}
+        # Pre-check the (loan, date) unique constraint so we surface a friendly
+        # message instead of a 500 from the DB-level IntegrityError.
+        if Installment.objects.filter(loan=loan, date=date).exists():
+            return {
+                "member": member_id,
+                "status": "error",
+                "error": "এই তারিখে এই কর্জের কিস্তি ইতিমধ্যে জমা আছে।",
+            }
         Installment.objects.create(loan=loan, amount=amount, date=date)
         loan.pay_installment(amount)
         GeneralJournal.objects.create_installment_entry(date, loan.member, amount)
