@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import GeneralTransaction, Loan, Installment, TransactionCategory
+from .models import GeneralTransaction, Loan, LoanRequest, Installment, TransactionCategory
 from journal.models import GeneralJournal
 
 
@@ -53,6 +53,37 @@ class TransactionCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionCategory
         fields = ("id", "name", "kind")
+
+
+class LoanRequestSerializer(serializers.ModelSerializer):
+    member_name = serializers.CharField(source="member.name", read_only=True)
+    member_serial = serializers.IntegerField(source="member.serial_number", read_only=True)
+    team_name = serializers.CharField(source="member.team.name", read_only=True)
+    loan_reason_name = serializers.CharField(source="loan_reason.name", read_only=True, default=None)
+    has_active_loan = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LoanRequest
+        fields = (
+            "id",
+            "member",
+            "member_name",
+            "member_serial",
+            "team_name",
+            "requested_amount",
+            "total_installment",
+            "loan_reason",
+            "loan_reason_name",
+            "note",
+            "position",
+            "status",
+            "has_active_loan",
+            "created_at",
+        )
+        read_only_fields = ("position", "status", "created_at")
+
+    def get_has_active_loan(self, obj):
+        return Loan.objects.filter(member=obj.member, is_paid=False).exists()
 
 
 class GeneralTransactionSerializer(serializers.ModelSerializer):

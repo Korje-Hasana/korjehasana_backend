@@ -189,3 +189,27 @@ class Installment(models.Model):
 
     class Meta:
         unique_together = ("loan", "date")
+
+
+LOAN_REQUEST_STATUS = (
+    ("pending", "Pending"),
+    ("disbursed", "Disbursed"),
+    ("cancelled", "Cancelled"),
+)
+
+
+class LoanRequest(BaseModel):
+    member = models.ForeignKey("peoples.Member", on_delete=models.PROTECT)
+    requested_amount = models.IntegerField(default=0)
+    total_installment = models.IntegerField(default=0)
+    loan_reason = models.ForeignKey(LoanReason, on_delete=models.SET_NULL, blank=True, null=True)
+    note = models.CharField(max_length=255, blank=True, default="")
+    position = models.IntegerField(default=0)
+    status = models.CharField(max_length=10, choices=LOAN_REQUEST_STATUS, default="pending")
+
+    class Meta:
+        ordering = ("position", "id")
+        indexes = [models.Index(fields=("branch", "status", "position"))]
+
+    def __str__(self):
+        return f"Request from {self.member.name} ({self.status})"

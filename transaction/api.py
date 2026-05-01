@@ -18,12 +18,13 @@ from rest_framework.generics import (
 from journal.models import GeneralJournal
 from peoples.models import Member
 from peoples.permissions import IsSameBranch
-from .models import GeneralTransaction, Installment, Loan, Savings, TransactionCategory
+from .models import GeneralTransaction, Installment, Loan, LoanRequest, Savings, TransactionCategory
 from .serializers import (
     GeneralTransactionSerializer,
     DepositSerializer,
     LoanDisbursementSerializer,
     LoanInstallmentSerializer,
+    LoanRequestSerializer,
     TransactionCategorySerializer,
 )
 from .utils import format_savings_date, format_loan_data
@@ -416,3 +417,105 @@ class FinanceSummaryView(APIView):
                 "expense_month": expense_month,
             }
         )
+
+
+class LoanRequestListCreate(APIView):
+    """List pending loan requests for the user's branch (ordered by queue
+    position) and create a new request at the end of the queue."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        qs = LoanRequest.objects.filter(
+            branch=request.user.branch, status="pending"
+        ).select_related("member", "member__team", "loan_reason").order_by("position", "id")
+        return Response(LoanRequestSerializer(qs, many=True).data)
+
+    def post(self, request):
+        serializer = LoanRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        member = serializer.validated_data["member"]
+        if member.branch_id != request.user.branch_id:
+            return Response(
+                {"detail": "Member does not belong to your branch."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        last = (
+            LoanRequest.objects.filter(branch=request.user.branch, status="pending")
+            .order_by("-position")
+            .first()
+        )
+        next_position = (last.position + 1) if last else 0
+        instance = serializer.save(
+            branch=request.user.branch,
+            created_by=request.user,
+            position=next_position,
+            status="pending",
+        )
+        return Response(LoanRequestSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+
+class LoanRequestDetail(APIView):
+    """Update fields (e.g. requested_amount) or soft-cancel via DELETE."""
+
+    permission_classes = [IsAuthenticated]
+
+    def _get(self, request, pk):
+        return get_object_or_404(
+            LoanRequest, pk=pk, branch=request.user.branch
+        )
+
+    def patch(self, request, pk):
+        instance = self._get(request, pk)
+        serializer = LoanRequestSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        instance = self._get(request, pk)
+        instance.status = "cancelled"
+        instance.save(update_fields=["status"])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LoanRequestReorder(APIView):
+    """Bulk-reorder pending loan requests.
+
+    Body: {"order": [id1, id2, id3, ...]}  // top-to-bottom queue order
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        order = request.data.get("order")
+        if not isinstance(order, list):
+            return Response(
+                {"detail": "`order` must be a list of loan-request ids."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        branch = request.user.branch
+        valid = list(
+            LoanRequest.objects.filter(
+                branch=branch, status="pending", id__in=order
+            ).values_list("id", flat=True)
+        )
+        valid_set = set(valid)
+        with db_transaction.atomic():
+            for idx, rid in enumerate(order):
+                if rid in valid_set:
+                    LoanRequest.objects.filter(pk=rid).update(position=idx)
+        return Response({"updated": len(valid_set)})
+
+
+class LoanRequestMarkDisbursed(APIView):
+    """Mark a request as disbursed (called by the loan-disbursement page after
+    a successful disbursement, so it falls out of the queue)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        instance = get_object_or_404(LoanRequest, pk=pk, branch=request.user.branch)
+        instance.status = "disbursed"
+        instance.save(update_fields=["status"])
+        return Response(LoanRequestSerializer(instance).data)

@@ -23,4 +23,8 @@ urlpatterns = [
     path('expense/', views.ExpenseTransactionListCreate.as_view(), name='expense_create_list'),
     path('expense/<int:id>/', views.ExpenseTransactionDetailUpdateDelete.as_view(), name='expense_re_up_del'),
     path('transaction-category-list/', views.TransactionCategoryList.as_view(), name='transaction_category_list'),
+    path('loan-request/', views.LoanRequestListCreate.as_view(), name='loan_request_list_create'),
+    path('loan-request/reorder/', views.LoanRequestReorder.as_view(), name='loan_request_reorder'),
+    path('loan-request/<int:pk>/', views.LoanRequestDetail.as_view(), name='loan_request_detail'),
+    path('loan-request/<int:pk>/disburse/', views.LoanRequestMarkDisbursed.as_view(), name='loan_request_disburse'),
 ]
