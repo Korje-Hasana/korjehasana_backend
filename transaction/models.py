@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from organization.models import BaseModel
@@ -112,8 +114,48 @@ class Loan(BaseModel):
     total_due = models.IntegerField(default=0)
     loan_reason = models.ForeignKey(LoanReason, on_delete=models.SET_NULL, blank=True, null=True)
 
+    # 1 installment = 1 week. First installment is due 7 days after
+    # disbursement; an installment is "overdue" once 7 more days have passed
+    # without payment (so installment N is overdue at day N*7 + 7).
+    OVERDUE_GRACE_DAYS = 7
+
     def __str__(self):
         return f"Loan of {self.amount} to {self.member.name}"
+
+    @property
+    def weekly_installment(self):
+        if not self.total_installment:
+            return 0
+        return self.amount // self.total_installment
+
+    @property
+    def final_due_date(self):
+        return self.date + timedelta(weeks=self.total_installment)
+
+    def expected_installments_by(self, as_of):
+        """How many weekly installments were scheduled to have been paid by `as_of`.
+
+        Used for the monthly collection-efficiency report. Strict schedule —
+        ignores the overdue grace period. First installment is scheduled at
+        loan.date + 7 days.
+        """
+        if as_of < self.date:
+            return 0
+        weeks_elapsed = (as_of - self.date).days // 7
+        return min(weeks_elapsed, self.total_installment)
+
+    def installments_overdue(self, as_of=None):
+        """Number of installments past due *and* past the grace period."""
+        as_of = as_of or date.today()
+        graced = as_of - timedelta(days=self.OVERDUE_GRACE_DAYS)
+        expected = self.expected_installments_by(graced)
+        return max(0, expected - self.installment_paid)
+
+    def is_overdue(self, as_of=None):
+        return not self.is_paid and self.installments_overdue(as_of) > 0
+
+    def amount_overdue(self, as_of=None):
+        return self.installments_overdue(as_of) * self.weekly_installment
 
     # def clean(self):
     #     # Ensure that total_paid and total_due are consistent

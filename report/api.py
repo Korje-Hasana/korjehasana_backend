@@ -4,10 +4,11 @@ All views are scoped to `request.user.branch`. They are designed for low
 latency on a single branch (≤ a few hundred members), so they prefer
 aggregate SQL over Python loops where possible.
 """
+import calendar
 from collections import OrderedDict
 from datetime import date, timedelta
 
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Max, Q, Sum
 from django.db.models.functions import TruncMonth
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,7 +17,7 @@ from rest_framework.views import APIView
 from journal.models import GeneralJournal
 from peoples.models import Member
 from organization.models import Team
-from transaction.models import GeneralTransaction, Loan
+from transaction.models import GeneralTransaction, Installment, Loan
 
 
 def _parse_date(raw, default):
@@ -191,20 +192,45 @@ class MonthlyView(APIView):
         disburse_map = {row["month"].strftime("%Y-%m"): row["s"] or 0 for row in disburse_qs}
         collect_map = {row["month"].strftime("%Y-%m"): row["s"] or 0 for row in collect_qs}
 
+        # For collection_percent we need the expected installment dues per
+        # month. Pull every loan in the branch that could overlap any of the
+        # months we're reporting — i.e. disbursed before the last month ends.
+        last_month_end = _end_of_month(
+            (start.year + (start.month - 1 + months - 1) // 12),
+            ((start.month - 1 + months - 1) % 12) + 1,
+        )
+        loans = list(
+            Loan.objects.filter(branch=branch, date__lte=last_month_end).only(
+                "date", "amount", "total_installment"
+            )
+        )
+
         results = []
-        # Iterate forward through `months` months
         cur_year, cur_month = start.year, start.month
         for _ in range(months):
             key = f"{cur_year:04d}-{cur_month:02d}"
+            month_start = date(cur_year, cur_month, 1)
+            month_end = _end_of_month(cur_year, cur_month)
+            prev_day = month_start - timedelta(days=1)
+
+            expected_amount = 0
+            for loan in loans:
+                if loan.date > month_end:
+                    continue
+                installments_in_month = loan.expected_installments_by(month_end) - loan.expected_installments_by(prev_day)
+                if installments_in_month > 0:
+                    expected_amount += installments_in_month * loan.weekly_installment
+
             disb = disburse_map.get(key, 0)
             coll = collect_map.get(key, 0)
-            pct = round((coll / disb) * 100) if disb else 0
+            pct = round((coll / expected_amount) * 100) if expected_amount else 0
             results.append(
                 {
                     "month": key,
                     "disbursement": disb,
                     "collection": coll,
-                    "collection_percent": min(pct, 100),
+                    "expected_collection": expected_amount,
+                    "collection_percent": pct,
                 }
             )
             cur_month += 1
@@ -212,6 +238,142 @@ class MonthlyView(APIView):
                 cur_month = 1
                 cur_year += 1
         return Response(results)
+
+
+def _end_of_month(year, month):
+    return date(year, month, calendar.monthrange(year, month)[1])
+
+
+class LoansListView(APIView):
+    """All loans for the branch with derived overdue info.
+
+    Filtering / sorting is done client-side (low cardinality per branch). The
+    response includes both active and paid loans by default — pass
+    `?status=active|overdue|paid|all` to narrow.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        branch = request.user.branch
+        today = _parse_date(request.query_params.get("date"), date.today())
+        status = (request.query_params.get("status") or "active").lower()
+
+        loans = Loan.objects.filter(branch=branch).select_related("member", "team")
+        if status == "active":
+            loans = loans.filter(is_paid=False)
+        elif status == "paid":
+            loans = loans.filter(is_paid=True)
+        # "overdue" filtering happens after we compute weeks_overdue
+        # "all" returns everything
+
+        last_paid_qs = (
+            Installment.objects.filter(loan__branch=branch)
+            .values("loan_id")
+            .annotate(last=Max("date"))
+        )
+        last_paid_map = {row["loan_id"]: row["last"] for row in last_paid_qs}
+
+        out = []
+        for loan in loans:
+            weeks = loan.installments_overdue(today) if not loan.is_paid else 0
+            if status == "overdue" and weeks <= 0:
+                continue
+            m = loan.member
+            last_paid = last_paid_map.get(loan.id)
+            out.append(
+                {
+                    "loan_id": loan.id,
+                    "member_id": m.id,
+                    "name": m.name,
+                    "guardian_name": m.guardian_name,
+                    "mobile": m.mobile_number,
+                    "team_name": loan.team.name if loan.team else (m.team.name if m.team else ""),
+                    "serial_number": m.serial_number,
+                    "loan_amount": loan.amount,
+                    "loan_date": loan.date.isoformat(),
+                    "final_due_date": loan.final_due_date.isoformat(),
+                    "weekly_installment": loan.weekly_installment,
+                    "total_installment": loan.total_installment,
+                    "installment_paid": loan.installment_paid,
+                    "total_paid": loan.total_paid,
+                    "total_due": loan.total_due,
+                    "is_paid": loan.is_paid,
+                    "weeks_overdue": weeks,
+                    "amount_overdue": weeks * loan.weekly_installment,
+                    "last_payment_date": last_paid.isoformat() if last_paid else None,
+                    "days_since_last_payment": (today - last_paid).days if last_paid else None,
+                    "past_final_due_date": (not loan.is_paid) and today > loan.final_due_date,
+                }
+            )
+        return Response(out)
+
+
+class OverdueLoansView(APIView):
+    """Active loans whose borrower is past due (after a 7-day grace per installment).
+
+    Sorted by weeks_overdue descending so the worst cases surface first.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        branch = request.user.branch
+        today = _parse_date(request.query_params.get("date"), date.today())
+        try:
+            limit = max(1, min(int(request.query_params.get("limit") or 100), 500))
+        except (TypeError, ValueError):
+            limit = 100
+        try:
+            min_weeks = max(0, int(request.query_params.get("min_weeks") or 0))
+        except (TypeError, ValueError):
+            min_weeks = 0
+
+        loans = (
+            Loan.objects.filter(branch=branch, is_paid=False)
+            .select_related("member", "team")
+        )
+
+        # Last installment payment date per loan (for "days_since_last_payment").
+        last_paid_qs = (
+            Installment.objects.filter(loan__branch=branch)
+            .values("loan_id")
+            .annotate(last=Max("date"))
+        )
+        last_paid_map = {row["loan_id"]: row["last"] for row in last_paid_qs}
+
+        out = []
+        for loan in loans:
+            weeks = loan.installments_overdue(today)
+            if weeks <= 0 or weeks < min_weeks:
+                continue
+            m = loan.member
+            last_paid = last_paid_map.get(loan.id)
+            out.append(
+                {
+                    "loan_id": loan.id,
+                    "member_id": m.id,
+                    "name": m.name,
+                    "guardian_name": m.guardian_name,
+                    "mobile": m.mobile_number,
+                    "team_name": loan.team.name if loan.team else (m.team.name if m.team else ""),
+                    "serial_number": m.serial_number,
+                    "loan_amount": loan.amount,
+                    "loan_date": loan.date.isoformat(),
+                    "final_due_date": loan.final_due_date.isoformat(),
+                    "weekly_installment": loan.weekly_installment,
+                    "total_installment": loan.total_installment,
+                    "installment_paid": loan.installment_paid,
+                    "weeks_overdue": weeks,
+                    "amount_overdue": loan.amount_overdue(today),
+                    "total_due": loan.total_due,
+                    "last_payment_date": last_paid.isoformat() if last_paid else None,
+                    "days_since_last_payment": (today - last_paid).days if last_paid else None,
+                    "past_final_due_date": today > loan.final_due_date,
+                }
+            )
+        out.sort(key=lambda r: (-r["weeks_overdue"], -r["amount_overdue"]))
+        return Response(out[:limit])
 
 
 class TopBorrowersView(APIView):
